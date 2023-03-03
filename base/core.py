@@ -15,14 +15,14 @@ class googleDrive:
         auth.authenticate_user()
         return gspread.authorize(self.creds)
 
-    def load_spreadsheet_data(self, spreadsheet, sheet):
+    def load_spreadsheet_data(self, spreadsheet: str, sheet="Sheet1") -> pd.DataFrame:
         """
         Loads data from a specified sheet in a given Google
         Spreadsheet.
 
         Parameters:
-        spreadsheet (str): The name of the Google Spreadsheet.
-        sheet (str): The name of the sheet in the Spreadsheet.
+        spreadsheet : The name of the Google Spreadsheet.
+        sheet : The name of the sheet in the Spreadsheet.
 
         Returns:
         pd.DataFrame: A DataFrame containing the data from the
@@ -34,3 +34,12 @@ class googleDrive:
         df = pd.DataFrame.from_records(
             values, columns=values[0]).iloc[1:]
         return df
+
+    def mount_drive(self):
+        drive.mount('/gdrive')
+
+    class Mouse:
+        def __init__(self, name):
+            self.name = name
+
+        pass
