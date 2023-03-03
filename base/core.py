@@ -38,8 +38,7 @@ class googleDrive:
     def mount_drive(self):
         drive.mount('/gdrive')
 
-    class Mouse:
-        def __init__(self, name):
+class Mouse:
+    def __init__(self, name):
             self.name = name
-
-        pass
+    pass
