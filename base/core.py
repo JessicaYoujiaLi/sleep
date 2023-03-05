@@ -13,7 +13,6 @@ from pprint import pprint
 import pandas as pd
 
 
-
 def mount_drive():
     drive.mount('/gdrive')
 
@@ -55,32 +54,34 @@ class Mouse:
 
     def add_mouse_database(self, path: str) -> int:
         """
-    Appends a row of values to the first sheet of a Google Sheets document.
+        Appends a row of values to the first sheet of a Google Sheets document.
 
-    Args:
-        path (str): A list of values to append to the first row of the sheet.
+        Args:
+            path (str): A list of values to append to the first row of the sheet.
 
-    Returns:
-        int: The number of cells that were updated in the sheet.
-    """
-    credentials, _ = google.auth.default()
-    service = build('sheets', 'v4', credentials=credentials)
-    body = {
-        "range": "A1:C1",
-        "majorDimension": "ROWS",
-        "values": [self].append(path)
-    }
-    try:
-        response = service.spreadsheets().values().append(
-            spreadsheetId='1H8wvotuf1hyx-VHeft5ZvuAH6b_C8t4u_taySKdDneg',
-            range="A1:C1",
-            valueInputOption="RAW",
-            body=body
-        ).execute()
-        # pprint(response)
-        return pprint(response)
+        Returns:
+            int: The number of cells that were updated in the sheet.
+        """
+        credentials, _ = google.auth.default()
+        service = build('sheets', 'v4', credentials=credentials)
+        body = {
+            "range": "A1:C1",
+            "majorDimension": "ROWS",
+            "values": [self.name].append(path)
+        }
+        try:
+            response = service.spreadsheets().values().append(
+                spreadsheetId='1H8wvotuf1hyx-VHeft5ZvuAH6b_C8t4u_taySKdDneg',
+                range="A1:C1",
+                valueInputOption="RAW",
+                body=body
+            ).execute()
+            # pprint(response)
+            return pprint(response)
 
-    except HttpError as error:
-        print(f"An error occurred: {error}")
-        return 0
+        except HttpError as error:
+            print(f"An error occurred: {error}")
+            return 0
+
+
 pass
