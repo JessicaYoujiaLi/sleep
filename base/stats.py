@@ -36,4 +36,4 @@ def ci_difference(awake_arr, nrem_arr, resamples=5000):
     significance = stats.results['pvalue_students_t'][0] < 0.05
     difference = stats.results['difference'][0]
 
-    return (difference, significance)
+    return difference, significance
