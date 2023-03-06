@@ -82,7 +82,7 @@ class Mouse:
         body = {
             "range": "A1:C1",
             "majorDimension": "ROWS",
-            "values": [self.name].append(path)
+            "values": [[self.name] + path.split()]
         }
         try:
             response = service.spreadsheets().values().append(
