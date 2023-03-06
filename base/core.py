@@ -17,6 +17,21 @@ def mount_drive():
     drive.mount('/gdrive')
 
 
+def mean_activity(data: str, direction='Upregulated') -> pd.DataFrame:
+    """
+    Calculates the mean activity of upregulated/downregulated cells.
+    :param data: str, path to the data folder
+    :param direction: str, 'Upregulated' or 'Downregulated'
+    :return: pd.DataFrame, mean activity of upregulated/downregulated cells
+    """
+    dfof = pd.read_csv(join(data, 'dfof.csv'))
+    stat_results = pd.read_csv(join(data, 'Significant_DABEST_NREM.csv'))
+    upregulated = list(stat_results.query("Direction == @direction")['roi_label'].unique())
+    upreg_cells = dfof[dfof['roi_label'].isin(upregulated)]
+    upreg_cells.set_index('roi_label', drop=True, inplace=True)
+    return upreg_cells.mean()
+
+
 class GoogleDrive:
 
     def __init__(self):
@@ -52,7 +67,7 @@ class Mouse:
     def __init__(self, name):
         self.name = name
 
-    def add_mouse_database(self, path: str) -> int:
+    def add_mouse_to_database(self, path: str) -> int:
         """
         Appends a row of values to the first sheet of a Google Sheets document.
 
@@ -76,7 +91,6 @@ class Mouse:
                 valueInputOption="RAW",
                 body=body
             ).execute()
-            # pprint(response)
             return pprint(response)
 
         except HttpError as error:
