@@ -17,7 +17,7 @@ def mount_drive():
     drive.mount('/gdrive')
 
 
-def mean_activity(data: str, direction='Upregulated') -> pd.DataFrame:
+def mean_activity(data: str, direction: str='Upregulated') -> pd.DataFrame:
     """
     Calculates the mean activity of upregulated/downregulated cells.
     :param data: str, path to the data folder
@@ -31,6 +31,56 @@ def mean_activity(data: str, direction='Upregulated') -> pd.DataFrame:
     upreg_cells.set_index('roi_label', drop=True, inplace=True)
     return upreg_cells.mean()
 
+def label_consecutive_states(data: pd.DataFrame, state: str='NREM') -> pd.DataFrame:
+
+    """    
+    Labels consecutive occurrences of a particular state in a Pandas DataFrame.
+    
+    Parameters:
+    -----------
+    data : pandas.DataFrame
+        The DataFrame containing the state data to be labeled.
+    state : str, optional (default='NREM')
+        The state to label. Consecutive occurrences of this state will be marked with a label.
+        
+    Returns:
+    --------
+    pandas.DataFrame
+        A DataFrame with a new column indicating consecutive occurrences of the specified state.
+        
+    Example:
+    --------
+    >>> data = pd.DataFrame({'NREM': [True, True, True, False, True, True, False, True]})
+    >>> label_consecutive_states(data, 'NREM')
+       NREM_label
+    0       False
+    1  NREM1
+    2  NREM1
+    3       False
+    4  NREM2
+    5  NREM2
+    6       False
+    7  NREM3
+
+    """
+
+    df = pd.DataFrame({f'{state}_label': False}, index=data.index)
+
+    consecutive_count = 0
+    label_count = 1
+
+    for i, val in data[state].items():
+        if val:
+            consecutive_count += 1
+            if consecutive_count > 100:
+                df.loc[i-consecutive_count+1:i, f'{state}_label'] = f'{state}{label_count}'
+                label_count += 1
+                consecutive_count = 0
+
+        else:
+            consecutive_count = 0
+
+    return df
 
 class GoogleDrive:
 
@@ -41,7 +91,7 @@ class GoogleDrive:
         auth.authenticate_user()
         return gspread.authorize(self.creds)
 
-    def load_spreadsheet_data(self, spreadsheet: str, sheet="Sheet1") -> pd.DataFrame:
+    def load_spreadsheet_data(self, spreadsheet: str, sheet: str="Sheet1") -> pd.DataFrame:
         """
         Loads data from a specified sheet in a given Google
         Spreadsheet.
