@@ -39,14 +39,16 @@ def label_consecutive_states(data: pd.Series, state: str='NREM') -> pd.Series:
     Parameters:
     -----------
     data : pandas.Series
-        The Series containing the state data to be labeled.
+        The Series containing booleans referring to the state to be labeled.
     state : str, optional (default='NREM')
-        The state to label. Consecutive occurrences of this state will be marked with a label.
+        The state to label. At least 100 consecutive occurrences of this state
+        will be marked with a label.
         
     Returns:
     --------
     pandas.Series
-        A Series with a new index indicating consecutive occurrences of the specified state.
+        A Series with a new index indicating consecutive occurrences of the
+        specified state.
         
     Example:
     --------
