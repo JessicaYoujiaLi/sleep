@@ -69,7 +69,7 @@ def label_consecutive_states(data: pd.Series, state: str='NREM') -> pd.Series:
     consecutive_count = 0
     label_count = 1
 
-    for i, val in data[state].items():
+    for i, val in data.items():
         if val:
             consecutive_count += 1
             if consecutive_count > 100:
