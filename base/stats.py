@@ -1,32 +1,39 @@
 import dabest
+import numpy as np
 import pandas as pd
 
 
-# calculating significant cells during sleep
-def ci_difference_unpaired(awake_arr, nrem_arr, resamples=5000):
+def ci_difference_unpaired(awake_arr: np.array, nrem_arr: np.array, resamples: int=5000) -> tuple:
     """
-    uses estimation stats to evaluate the difference between two sets of numbers.
-    the documentation can be found here: https://acclab.github.io/DABEST-python-docs/tutorial.html
+
+    Calculates the Cohen's d effect size and p-value for an unpaired student t-test between two sets of numbers
+    Uses estimation stats to evaluate the difference between two sets of numbers.
+    The documentation can be found here: https://acclab.github.io/DABEST-python-docs/tutorial.html
 
     Parameters:
     ===========
     awake_arr: numpy array
-        compiled dfof of awake periods
+        1-D array of compiled dfof values for awake periods
     nrem_arr: numpy array
-        compiled dfof of NREM periods
+        1-D array of compiled dfof values for NREM periods
     resamples: int
         number of resamples to generate the effect size bootstrap
 
     Returns:
     ========
-    difference: float
-        this is the Cohen D effect size between the two arrays
-    significance: float
-        the p value for the (unpaired) student test
+    A tuple of two floats:
+    - difference: The Cohen's d effect size between the two arrays
+    - significance: boolean depending on the p-value for the (unpaired) student t-test
     """
+    if not isinstance(awake_arr, np.ndarray) or not isinstance(nrem_arr, np.ndarray):
+        raise TypeError("Inputs must be NumPy arrays.")
+    if awake_arr.ndim != 1 or nrem_arr.ndim != 1:
+        raise ValueError("Inputs must be 1-D arrays.")
+    if awake_arr.shape != nrem_arr.shape:
+        raise ValueError("Inputs must have the same shape.")
+
     dabest_dict = {'awake': awake_arr, 'nrem': nrem_arr}
-    dabest_df = pd.DataFrame.from_dict(dabest_dict, orient='index')
-    dabest_df = dabest_df.transpose()
+    dabest_df = pd.DataFrame.from_dict(dabest_dict, orient='index').transpose()
 
     # calculating the stats
     two_groups_unpaired = dabest.load(dabest_df, idx=("awake", "nrem"),
@@ -37,30 +44,36 @@ def ci_difference_unpaired(awake_arr, nrem_arr, resamples=5000):
 
     return difference, significance
 
-def ci_difference_paired(awake_arr, nrem_arr, resamples=5000):
+def ci_difference_paired(awake_arr: np.array, nrem_arr: np.array, resamples: int=5000) -> tuple:
     """
-    uses estimation stats to evaluate the difference between two sets of numbers.
-    the documentation can be found here: https://acclab.github.io/DABEST-python-docs/tutorial.html
+    Calculates the Cohen's d effect size and p-value for a paired student t-test between two sets of numbers
+    Uses estimation stats to evaluate the difference between two sets of numbers.
+    The documentation can be found here: https://acclab.github.io/DABEST-python-docs/tutorial.html
 
     Parameters:
     ===========
     awake_arr: numpy array
-        compiled dfof of awake periods
+        1-D array of compiled dfof values for awake periods
     nrem_arr: numpy array
-        compiled dfof of NREM periods
+        1-D array of compiled dfof values for NREM periods
     resamples: int
         number of resamples to generate the effect size bootstrap
 
     Returns:
     ========
-    difference: float
-        this is the Cohen D effect size between the two arrays
-    significance: float
-        the p value for the (paired) student test
+    A tuple of two floats:
+    - difference: The Cohen's d effect size between the two arrays
+    - significance: boolean depending p-value for the (paired) student t-test
     """
+    if not isinstance(awake_arr, np.ndarray) or not isinstance(nrem_arr, np.ndarray):
+        raise TypeError("Inputs must be NumPy arrays.")
+    if awake_arr.ndim != 1 or nrem_arr.ndim != 1:
+        raise ValueError("Inputs must be 1-D arrays.")
+    if awake_arr.shape != nrem_arr.shape:
+        raise ValueError("Inputs must have the same shape.")
+
     dabest_dict = {'awake': awake_arr, 'nrem': nrem_arr}
-    dabest_df = pd.DataFrame.from_dict(dabest_dict, orient='index')
-    dabest_df = dabest_df.transpose()
+    dabest_df = pd.DataFrame.from_dict(dabest_dict, orient='index').transpose()
 
     # calculating the stats
     two_groups_paired = dabest.load(dabest_df, idx=("awake", "nrem"),
@@ -70,3 +83,17 @@ def ci_difference_paired(awake_arr, nrem_arr, resamples=5000):
     difference = stats.results['difference'][0]
 
     return difference, significance
+
+def mean_activity(data: str, direction: str='Upregulated') -> pd.DataFrame:
+    """
+    Calculates the mean activity of upregulated/downregulated cells.
+    :param data: str, path to the data folder
+    :param direction: str, 'Upregulated' or 'Downregulated'
+    :return: pd.DataFrame, mean activity of upregulated/downregulated cells
+    """
+    dfof = pd.read_csv(join(data, 'dfof.csv'))
+    stat_results = pd.read_csv(join(data, 'Significant_DABEST_NREM.csv'))
+    upregulated = list(stat_results.query("Direction == @direction")['roi_label'].unique())
+    upreg_cells = dfof[dfof['roi_label'].isin(upregulated)]
+    upreg_cells.set_index('roi_label', drop=True, inplace=True)
+    return upreg_cells.mean()
