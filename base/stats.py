@@ -29,8 +29,6 @@ def ci_difference_unpaired(awake_arr: np.array, nrem_arr: np.array, resamples: i
         raise TypeError("Inputs must be NumPy arrays.")
     if awake_arr.ndim != 1 or nrem_arr.ndim != 1:
         raise ValueError("Inputs must be 1-D arrays.")
-    if awake_arr.shape != nrem_arr.shape:
-        raise ValueError("Inputs must have the same shape.")
 
     dabest_dict = {'awake': awake_arr, 'nrem': nrem_arr}
     dabest_df = pd.DataFrame.from_dict(dabest_dict, orient='index').transpose()
@@ -69,8 +67,6 @@ def ci_difference_paired(awake_arr: np.array, nrem_arr: np.array, resamples: int
         raise TypeError("Inputs must be NumPy arrays.")
     if awake_arr.ndim != 1 or nrem_arr.ndim != 1:
         raise ValueError("Inputs must be 1-D arrays.")
-    if awake_arr.shape != nrem_arr.shape:
-        raise ValueError("Inputs must have the same shape.")
 
     dabest_dict = {'awake': awake_arr, 'nrem': nrem_arr}
     dabest_df = pd.DataFrame.from_dict(dabest_dict, orient='index').transpose()
