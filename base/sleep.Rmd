@@ -1,0 +1,142 @@
+---
+title: "lda"
+author: "Fiona Li"
+date: '2023-01-17'
+output: pdf_document
+---
+
+```{r}
+library(tidyverse)
+library(geepack)
+library(viridis)
+library(lme4)
+library(doBy)
+```
+
+```{r}
+library(tidyverse)
+dat = read.csv("dfof_all_cells_with_statuses.csv")
+head(dat)
+```
+```{r}
+## combine 
+dat_long = dat %>%  pivot_longer(cols = c("state.awake", "state.NREM"), names_to = "sleep", values_to = "yesno")
+head(dat_long)
+dat_long = dat_long  %>%filter(yesno == "True")
+dat_long$sleepn = as.numeric(dat_long$sleep == "state.NREM")
+sum(dat_long$sleepn)
+dat_long
+```
+
+```{r}
+dat_long$roi_label = gsub("-", "", dat_long$roi_label)
+dat_long$roi_label = as.numeric(dat_long$roi_label)
+head
+dat_long$sleepn = as.numeric(dat_long$sleep == "state.NREM")
+sum(dat_long$sleepn)
+```
+
+```{r}
+dat_long = dat_long %>% 
+  group_by(roi_label) %>%
+  mutate(time = 1:n())
+max(dat_long$time)
+
+dat_long
+```
+
+```{r}
+dat_long$sleep_numeric = as.numeric(dat_long$sleep == "state.awake")
+dat_long=dat_long %>% select(roi_label,dfof,sleep_numeric,time)
+sum(dat_long$sleep_numeric)
+
+write.csv(dat_long, "sleep.csv", row.names=FALSE)
+
+
+
+```
+
+```{r}
+spike = read.csv("spikes.csv")
+spike %>%  pivot_longer(col = X0:X36000, names_to = "time", values_to = "spikes")
+head(spike)
+```
+
+```{r}
+dat2 = read.csv("spikes_all_cells_with_statuses.csv")
+
+head(dat2)
+
+```
+```{r}
+## combine 
+dat_long2 = dat2 %>%  pivot_longer(cols = c("state.awake", "state.NREM"), names_to = "sleep", values_to = "yesno")
+dat_long2 = dat_long2  %>%filter(yesno == "True")
+head(dat_long2)
+dat_long2$roi_label = gsub("-", "", dat_long2$roi_label)
+dat_long2$roi_label = as.numeric(dat_long2$roi_label)
+head(dat_long2)
+```
+
+```{r}
+dat_long2 = dat_long2 %>% 
+  group_by(roi_label) %>%
+  mutate(time = 1:n())
+max(dat_long2$time)
+```
+
+```{r}
+dat_long2$sleep_numeric = as.numeric(dat_long2$sleep == "awake")
+dat_long2=dat_long2 %>% select(roi_label,spikes,sleep_numeric,time)
+sum(dat_long2$sleep_numeric)
+
+write.csv(dat_long2, "spike_clean.csv", row.names=FALSE)
+
+```
+
+```{r}
+gc = read.csv("dfof_all_cells_with_statuses_5b_1_gc1_001.csv")
+mc = read.csv("dfof_all_cells_with_statuses_5b_1_mc1_002.csv")
+gc2 = read.csv("dfof_all_cells_with_statuses_5b_1_gc2_003.csv")
+mc2 = read.csv("dfof_all_cells_with_statuses_5b_1_mc2_004.csv")
+```
+
+```{r}
+gc = gc %>% mutate(cell = "gc")
+mc = mc %>% mutate(cell = "mc")
+gc2 = gc2 %>% mutate(cell = "gc")
+mc2 = mc2 %>% mutate(cell = "mc")
+merged =  rbind(gc, mc,gc2, mc2)
+head(merged)
+
+```
+
+```{r}
+dat_long3 = merged %>%  pivot_longer(cols = c("state.awake", "state.NREM"), names_to = "sleep", values_to = "yesno")
+dat_long3 = dat_long3  %>%filter(yesno == "True")
+head(dat_long3)
+dat_long3$roi_label = gsub("-", "", dat_long3$roi_label)
+dat_long3$roi_label = as.numeric(dat_long3$roi_label)
+head(dat_long3)
+```
+
+```{r}
+dat_long3$sleep_numeric = as.numeric(dat_long3$sleep == "state.awake")
+dat_long3$cell_numeric = as.numeric(dat_long3$cell == "gc")
+dat_long3=dat_long3 %>% select(roi_label,dfof,sleep_numeric,cell_numeric)
+head(dat_long3)
+sum(dat_long3$sleep_numeric)
+write.csv(dat_long3, "cell2.csv", row.names=FALSE)
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
