@@ -125,12 +125,14 @@ def data_loader(data_dir: str, data_type: str, mouseID: str,
     path like object pointing to the location of the data
     mouseID, day, sessionID: str
     data_type: str
-    'calcium' or 'spikes'
+    'dfof' or 'spikes'
 
     Retrurns:
     =========
     dictionary
     """
+    if data_type != 'dfof' or 'spikes':
+        raise ValueError('data_type must be "dfof" or "spikes"')
     data_loc = Path(data_dir).joinpath(mouseID, day, sessionID)
     data = pd.read_csv(Path(data_loc).joinpath(data_type+'.csv')).set_index('roi_label')
 
