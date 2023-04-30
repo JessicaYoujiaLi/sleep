@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"python.formatting.provider": "black",
+		"editor.wordWrap": "on",
+		"python.terminal.activateEnvironment": true,
+	}
+}

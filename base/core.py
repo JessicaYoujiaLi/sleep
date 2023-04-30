@@ -1,5 +1,10 @@
 # created by: @gergelyturi
+"""Core functions for the project."""
 from __future__ import print_function
+from pprint import pprint
+
+import pandas as pd
+
 from google.colab import auth
 import gspread
 from google.auth import default
@@ -9,13 +14,12 @@ import google.auth
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-from pprint import pprint
-import pandas as pd
+
 
 
 def mount_drive():
+    """Mounts the Google Drive to the Colab notebook."""
     drive.mount('/gdrive')
-
 
 def label_consecutive_states(data: pd.Series, state: str='NREM') -> pd.Series:
 
@@ -71,11 +75,13 @@ def label_consecutive_states(data: pd.Series, state: str='NREM') -> pd.Series:
     return df
 
 class GoogleDrive:
+    """functions for interacting with Google Drive"""
 
     def __init__(self):
         self.creds, self._ = default()
 
     def get_gspread_client(self):
+        """Function for authenticating a Google Sheets client."""
         auth.authenticate_user()
         return gspread.authorize(self.creds)
 
@@ -137,6 +143,4 @@ class Mouse:
         except HttpError as error:
             print(f"An error occurred: {error}")
             return 0
-
-
-pass
+        
