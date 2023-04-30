@@ -132,7 +132,7 @@ def data_loader(data_dir: str, data_type: str, mouseID: str,
     dictionary
     """
     data_loc = Path(data_dir).joinpath(mouseID, day, sessionID)
-    data = pd.read_csv(Path(data_loc).joinpath(data_type,'.csv')).set_index('roi_label')
+    data = pd.read_csv(Path(data_loc).joinpath(data_type+'.csv')).set_index('roi_label')
 
     # loading stat results for significantly up and downregulated cells
     # during NREM
