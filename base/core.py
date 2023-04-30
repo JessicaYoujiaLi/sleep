@@ -101,6 +101,9 @@ class GoogleDrive:
 
 
 class Mouse:
+    """
+    A class representing a mouse. Supposed to read and write a google spreadsheet. WIP.
+    """
 
     def __init__(self, name):
         self.name = name
