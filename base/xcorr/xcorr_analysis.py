@@ -106,7 +106,7 @@ def data_loader(data_dir: str, data_type: str, mouseID: str,
     # loading stat results for significantly up and downregulated cells
     # during NREM
     sig_cells = pd.read_csv(Path(data_loc).joinpath('Significant_paired_DABEST_NREM.csv'))
-    print(f'number of cells in this recording: {len(significant_cells)}')
+    print(f'number of cells in this recording: {len(sig_cells)}')
 
     # loadig EEG and behavior data
     eeg_velocity = pd.read_csv(Path(data_loc).joinpath('velo_eeg.csv'))
