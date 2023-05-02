@@ -143,4 +143,19 @@ class Mouse:
         except HttpError as error:
             print(f"An error occurred: {error}")
             return 0
-        
+
+class MouseDatabase(GoogleDrive):
+    """A class representing a database of mice. The database is a Google Sheets document."""
+
+    def __init__(self, spreadsheet: str, sheet: str="Sheet1"):
+        super().__init__()
+        self.spreadsheet = spreadsheet
+        self.sheet = "useful datasets"
+
+    def load_spreadsheet_data(self):
+        gc = self.get_gspread_client()
+        workbook = gc.open(self.spreadsheet)
+        values = workbook.worksheet(self.sheet).get_all_values()
+        df = pd.DataFrame.from_records(
+            values, columns=values[0]).iloc[1:]
+        return df
