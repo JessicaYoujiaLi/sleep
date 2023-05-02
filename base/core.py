@@ -152,7 +152,7 @@ class MouseDatabase(GoogleDrive):
         self.spreadsheet = "useful datasets"
         self.sheet = "Sheet1"
 
-    def load_spreadsheet_data(self):
+    def load_mouse_database(self):
         """Loads mouse data from the Google Sheets database.
         Initialize like this:
         >>> from base import core
@@ -167,3 +167,19 @@ class MouseDatabase(GoogleDrive):
         df = pd.DataFrame.from_records(
             values, columns=values[0]).iloc[1:]
         return df
+    
+    def add_mouse_to_database(self, values: list) -> int:
+        """
+        Appends a row of values to the first sheet of a Google Sheets document.
+
+        Args:
+            values (list): A list of values to append to the first row of the sheet.
+
+        Returns:
+            int: The number of cells that were updated in the sheet.
+        """
+        gc = self.get_gspread_client()
+        sheet = gc.open(self.spreadsheet).sheet1
+        row_to_append = [self.name] + values
+        sheet.append_row(row_to_append)
+        return len(row_to_append)
