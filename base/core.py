@@ -153,6 +153,14 @@ class MouseDatabase(GoogleDrive):
         self.sheet = "Sheet1"
 
     def load_spreadsheet_data(self):
+        """Loads mouse data from the Google Sheets database.
+        Initialize like this:
+        >>> from base import core
+        >>> core.mount_drive()
+        >>> db = core.MouseDatabase()
+        >>> mice = db.load_spreadsheet_data()
+        >>> mice.head()
+        """
         gc = self.get_gspread_client()
         workbook = gc.open(self.spreadsheet)
         values = workbook.worksheet(self.sheet).get_all_values()

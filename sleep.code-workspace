@@ -8,5 +8,8 @@
 		"python.formatting.provider": "black",
 		"editor.wordWrap": "on",
 		"python.terminal.activateEnvironment": true,
+		"remote.SSH.defaultForwardedPorts": [
+			
+		],
 	}
 }
