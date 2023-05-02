@@ -147,10 +147,10 @@ class Mouse:
 class MouseDatabase(GoogleDrive):
     """A class representing a database of mice. The database is a Google Sheets document."""
 
-    def __init__(self, spreadsheet: str, sheet: str="Sheet1"):
+    def __init__(self, sheet: str="Sheet1"):
         super().__init__()
-        self.spreadsheet = spreadsheet
-        self.sheet = "useful datasets"
+        self.spreadsheet = "useful datasets"
+        self.sheet = "Sheet1"
 
     def load_spreadsheet_data(self):
         gc = self.get_gspread_client()
