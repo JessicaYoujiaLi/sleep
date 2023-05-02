@@ -150,7 +150,7 @@ class MouseDatabase(GoogleDrive):
     def __init__(self, sheet: str="Sheet1"):
         super().__init__()
         self.spreadsheet = "useful datasets"
-        self.sheet = "Sheet1"
+        self.sheet = sheet
 
     def load_mouse_database(self):
         """Loads mouse data from the Google Sheets database.
@@ -180,6 +180,6 @@ class MouseDatabase(GoogleDrive):
         """
         gc = self.get_gspread_client()
         sheet = gc.open(self.spreadsheet).sheet1
-        row_to_append = [self.name] + values
+        row_to_append = [self] + values
         sheet.append_row(row_to_append)
         return len(row_to_append)
