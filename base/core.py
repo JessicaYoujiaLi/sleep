@@ -180,6 +180,6 @@ class MouseDatabase(GoogleDrive):
         """
         gc = self.get_gspread_client()
         sheet = gc.open(self.spreadsheet).sheet1
-        row_to_append = [self] + values
+        row_to_append = [self.__class__.__name__] + values
         sheet.append_row(row_to_append)
         return len(row_to_append)
