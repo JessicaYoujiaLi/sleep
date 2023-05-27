@@ -3,10 +3,10 @@ from setuptools import setup
 setup(
     name='sleep',
     version='0.1',
-    packages=[''],
+    packages=['sleep'],
     url='',
-    license='',
+    license='MIT',
     author='Gergely Turi',
     author_email='gt2253@cumc.columbia.edu',
-    description=''
+    description='some basic analysis code'
 )
