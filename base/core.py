@@ -16,63 +16,9 @@ from googleapiclient.errors import HttpError
 
 
 
-
 def mount_drive():
     """Mounts the Google Drive to the Colab notebook."""
     drive.mount('/gdrive')
-
-def label_consecutive_states(data: pd.Series, state: str='NREM') -> pd.Series:
-
-    """    
-    Labels consecutive occurrences of a particular state in a Pandas Series.
-    
-    Parameters:
-    -----------
-    data : pandas.Series
-        The Series containing booleans referring to the state to be labeled.
-    state : str, optional (default='NREM')
-        The state to label. At least 100 consecutive occurrences of this state
-        will be marked with a label.
-        
-    Returns:
-    --------
-    pandas.Series
-        A Series with a new index indicating consecutive occurrences of the
-        specified state.
-        
-    Example:
-    --------
-    >>> data = pd.Series([True, True, True, False, True, True, False, True])
-    >>> label_consecutive_states(data, 'NREM')
-    0       False
-    1    NREM1
-    2    NREM1
-    3       False
-    4    NREM2
-    5    NREM2
-    6       False
-    7    NREM3
-    dtype: object
-
-    """
-
-    df = pd.Series(False, name=f'{state}_label', index=data.index)
-
-    consecutive_count = 0
-    label_count = 1
-
-    for i, val in data.items():
-        if val:
-            consecutive_count += 1
-            if consecutive_count > 100:
-                df.loc[i-consecutive_count+1:i] = f'{state}{label_count}'
-                label_count += 1
-                consecutive_count = 0
-
-        else:
-            consecutive_count = 0
-
-    return df
 
 class GoogleDrive:
     """functions for interacting with Google Drive"""
@@ -164,9 +110,9 @@ class MouseDatabase(GoogleDrive):
         gc = self.get_gspread_client()
         workbook = gc.open(self.spreadsheet)
         values = workbook.worksheet(self.sheet).get_all_values()
-        df = pd.DataFrame.from_records(
+        all_mice = pd.DataFrame.from_records(
             values, columns=values[0]).iloc[1:]
-        return df
+        return all_mice
     
     def add_mouse_to_database(self, values: list) -> int:
         """
@@ -183,3 +129,4 @@ class MouseDatabase(GoogleDrive):
         row_to_append = [self.__class__.__name__] + values
         sheet.append_row(row_to_append)
         return len(row_to_append)
+    
