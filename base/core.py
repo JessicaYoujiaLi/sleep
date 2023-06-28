@@ -16,20 +16,24 @@ from googleapiclient.errors import HttpError
 
 
 
-def mount_drive():
-    """Mounts the Google Drive to the Colab notebook."""
-    drive.mount('/gdrive')
-
 class GoogleDrive:
     """functions for interacting with Google Drive"""
 
     def __init__(self):
         self.creds, self._ = default()
 
+    def mount_drive():
+        """Mounts the Google Drive to the Colab notebook."""
+        drive.mount('/gdrive')
+
     def get_gspread_client(self):
         """Function for authenticating a Google Sheets client."""
         auth.authenticate_user()
         return gspread.authorize(self.creds)
+    
+    def shared_drive_data_path(self):
+        """Returns the path of the Data folder of the Turi_lab Google Drive."""
+        return Path('/gdrive/Shareddrives/Turi_lab/Data/')
 
     def load_spreadsheet_data(self, spreadsheet: str, sheet: str="Sheet1") -> pd.DataFrame:
         """
