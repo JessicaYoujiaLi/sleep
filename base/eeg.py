@@ -12,5 +12,5 @@ def load_eeg_velocity_data(mouse: str, day: str, session:str) -> pd.DataFrame:
   drive = GoogleDrive()
   d_path = Path(drive.shared_drive_data_path(), 'Sleep', '2p',
        'Analysis', 'data', mouse, day, session, 'velo_eeg.csv')
-  df = pd.read_csv(d_path)
+  df = pd.read_csv(d_path, index_col=False)
   return df
