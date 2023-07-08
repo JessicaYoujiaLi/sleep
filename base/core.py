@@ -23,7 +23,7 @@ class GoogleDrive:
     def __init__(self):
         self.creds, self._ = default()
 
-    def mount_drive():
+    def mount_drive(self):
         """Mounts the Google Drive to the Colab notebook."""
         drive.mount('/gdrive')
 
