@@ -5,11 +5,14 @@
 		}
 	],
 	"settings": {
-		"python.formatting.provider": "black",
+		"editor.defaultFormatter": "ms-python.black-formatter",		
 		"editor.wordWrap": "on",
 		"python.terminal.activateEnvironment": true,
 		"remote.SSH.defaultForwardedPorts": [
 			
 		],
+		"workbench.colorCustomizations": {
+			"titleBar.activeBackground": "#6d4a6e",
+		}
 	}
 }
