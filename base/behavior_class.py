@@ -17,7 +17,6 @@ class behaviorData:
     def __post_init__(self):
         self.behavior_folder = join(self.sima_folder, "behavior")
 
-    @property
     def processed_velocity(self, file_name="filtered_velo.csv"):
         """Return the processed velocity of the mouse."""
         try:
@@ -62,14 +61,14 @@ class behaviorData:
                 Whether to center the immobile periods.
         Returns:
             mobile_immobile: pandas Series
-                A one-dimensional ndarray of 0's and 1's, where 1 signifies mobile
-                times and 0 signifies immobile times.
+                A one-dimensional ndarray of booleans, where True signifies mobile
+                times and False signifies immobile times.
 
         """
         window_size = int(framerate * min_duration)
         rolling_max_vel = velocity.rolling(
             window_size, min_periods=min_periods, center=center
         ).max()
-        mobile_immobile = (rolling_max_vel > threshold).astype(int)
+        mobile_immobile = (rolling_max_vel > threshold).astype(bool)
 
         return mobile_immobile
