@@ -2,35 +2,64 @@
 author: @gergelyturi
 date: 2023-10-16"""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from os.path import join
+from os import walk
 
 import numpy as np
 import pandas as pd
 
+from mouse_class import Mouse
+
 
 @dataclass
-class behaviorData:
-    sima_folder: str = None
-    behavior_folder: str = None
+class behaviorData(Mouse):
+    behavior_folders: list = field(default_factory=list)
 
     def __post_init__(self):
-        self.behavior_folder = join(self.sima_folder, "behavior")
+        super().__post_init__()
+        if not self.behavior_folders:
+            self.behavior_folders = self.find_behavior_folders()
 
-    def processed_velocity(self, file_name="filtered_velo.csv"):
+    def find_behavior_folders(self) -> list:
+        """
+        Finds all behavior folders in a given root folder.
+
+        Args:
+            root_folder (str): The root folder to search for behavior folders.
+
+        Returns:
+            list: A list of all behavior folders found in the root folder.
+
+        Raises:
+            ValueError: If no behavior folders are found in the root folder.
+        """
+
+        print(f"Searching for behavior folders in {self.root_folder}")
+        folders = []
+        for dirpath, dirnames, subdirnames in walk(self.root_folder):
+            if "behavior" in dirnames or "behavior" in subdirnames:
+                folders.append(join(dirpath, "behavior"))
+        if len(folders) == 0:
+            raise ValueError(f"No behavior folders found in {self.root_folder}")
+        return folders
+
+    def processed_velocity(
+        self, behavior_folder: str = None, file_name="filtered_velo.csv"
+    ):
         """Return the processed velocity of the mouse."""
         try:
             filtered_velocity = pd.read_csv(
-                join(self.behavior_folder, file_name), index_col=None
+                join(behavior_folder, file_name), index_col=None
             )
         except FileNotFoundError:
             raise FileNotFoundError(
-                f"Could not find processed velocity file in {self.behavior_folder}, or it named other than 'filtered_velo.csv'"
+                f"Could not find processed velocity file in {behavior_folder}, or it named other than 'filtered_velo.csv'"
             )
         return filtered_velocity
 
+    @staticmethod
     def define_immobility(
-        self,
         velocity: pd.Series,
         framerate: float = 10,
         threshold: float = 1.0,

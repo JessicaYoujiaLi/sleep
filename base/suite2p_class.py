@@ -3,13 +3,13 @@ from os import walk
 from os.path import join, isdir
 from dataclasses import dataclass, field
 
+from mouse_class import Mouse
+
 
 @dataclass
-class Suite2p:
+class Suite2p(Mouse):
     """Class for suite2p data"""
 
-    mouse_id: str
-    root_folder: str = None
     s2p_folders: list = field(default_factory=list)
 
     def __post_init__(self):
@@ -19,13 +19,13 @@ class Suite2p:
         If root_folder is not specified, sets it to the default path.
         If s2p_folders is not specified, finds all suite2p folders in the root folder.
         """
-        if self.root_folder is None:
-            self.root_folder = f"/data2/gergely/invivo_DATA/sleep/{self.mouse_id}"
-        if len(self.s2p_folders) is 0:
-            self.s2p_folders = self.find_suite2p_folders(self.root_folder)
+        super().__post_init__()
+        if not self.s2p_folders:
+            self.s2p_folders = self.find_suite2p_folders()
+        # if len(self.s2p_folders) is 0:
+        #     self.s2p_folders = self.find_suite2p_folders(self.root_folder)
 
-    @staticmethod
-    def find_suite2p_folders(root_folder) -> list:
+    def find_suite2p_folders(self) -> list:
         """
         Finds all suite2p folders in a given root folder.
 
@@ -38,15 +38,16 @@ class Suite2p:
         Raises:
             ValueError: If no suite2p folders are found in the root folder.
         """
+
+        print(f"Searching for suite2p folders in {self.root_folder}")
         folders = []
-        for dirpath, dirnames, _ in walk(root_folder):
-            if "suite2p" in dirnames:
+        for dirpath, dirnames, subdirnames in walk(self.root_folder):
+            if "suite2p" in dirnames or "suite2p" in subdirnames:
                 folders.append(join(dirpath, "suite2p"))
         if len(folders) == 0:
-            raise ValueError(f"No suite2p folders found in {root_folder}")
+            raise ValueError(f"No suite2p folders found in {self.root_folder}")
         return folders
 
-    @staticmethod
     def true_cells(s2p_folder: str) -> np.ndarray:
         """
         Returns the raw fluorescence of the true cells in the specified Suite2p folder.
@@ -69,7 +70,6 @@ class Suite2p:
         true_cells = raw_f[cells, :]
         return true_cells
 
-    @staticmethod
     def true_npil(s2p_folder) -> np.ndarray:
         """
         Returns the neuropil signal for a given Suite2p output folder.
@@ -96,7 +96,8 @@ class Suite2p:
         true_npil = raw_npil[cells, :]
         return true_npil
 
-    def cells(self, s2p_folder):
+    @staticmethod
+    def cells(s2p_folder):
         """
         Returns the raw fluorescence of the true cells in the specified Suite2p folder.
 
@@ -106,9 +107,10 @@ class Suite2p:
         Returns:
         np.ndarray: The raw fluorescence of the true cells.
         """
-        return self.true_cells(s2p_folder)
+        return true_cells(s2p_folder)
 
-    def npil(self, s2p_folder):
+    @staticmethod
+    def npil(s2p_folder):
         """
         Returns the neuropil signal for a given Suite2p output folder.
 
@@ -118,4 +120,4 @@ class Suite2p:
         Returns:
             np.ndarray: The true neuropil signal.
         """
-        return self.true_npil(s2p_folder)
+        return true_npil(s2p_folder)

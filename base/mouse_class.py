@@ -26,8 +26,7 @@ class Mouse:
         if len(self.tseries_folders) is 0:
             self.tseries_folders = self.find_tseries_folders(self.root_folder)
 
-    @staticmethod
-    def find_tseries_folders(root_folder: str) -> list:
+    def find_tseries_folders(self, root_folder: str) -> list:
         """
         Finds all TSeries folders for a given mouse.
 

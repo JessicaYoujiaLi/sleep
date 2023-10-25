@@ -2,14 +2,18 @@
 author: @gergelyturi
 date: 2023-10-16"""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from os.path import join
+from os import walk
 from os.path import join
 
 import pandas as pd
 
+from mouse_class import Mouse
+
 
 @dataclass
-class eegData:
+class eegData(Mouse):
     """
     A class for loading and processing EEG data.
 
@@ -28,11 +32,35 @@ class eegData:
         Imports scored eeg data from a csv file.
     """
 
-    sima_folder: str = None
-    eeg_folder: str = None
+    eeg_folders: list = field(default_factory=list)
 
     def __post_init__(self):
-        self.eeg_folder = join(self.sima_folder, "eeg")
+        super().__post_init__()
+        if not self.eeg_folders:
+            self.eeg_folders = self.find_eeg_folders()
+
+    def find_eeg_folders(self) -> list:
+        """
+        Finds all eeg folders in a given root folder.
+
+        Args:
+            root_folder (str): The root folder to search for eeg folders.
+
+        Returns:
+            list: A list of all eeg folders found in the root folder.
+
+        Raises:
+            ValueError: If no eeg folders are found in the root folder.
+        """
+
+        print(f"Searching for eeg folders in {self.root_folder}")
+        folders = []
+        for dirpath, dirnames, subdirnames in walk(self.root_folder):
+            if "eeg" in dirnames or "eeg" in subdirnames:
+                folders.append(join(dirpath, "eeg"))
+        if len(folders) == 0:
+            raise ValueError(f"No eeg folders found in {self.root_folder}")
+        return folders
 
     def import_scored_eeg(self, eeg_file: str, processed: bool = True) -> pd.DataFrame:
         # TODO this always need to generate 'awake_immobile' 'awake_mobile' and 'other' columns
@@ -67,9 +95,8 @@ class eegData:
             ].astype(int)
         return eeg_df
 
-    def load_processed_velocity_eeg(
-        self, file_name: str = "velo_eeg.csv"
-    ) -> pd.DataFrame:
+    @staticmethod
+    def load_processed_velocity_eeg(file_name: str = "velo_eeg.csv") -> pd.DataFrame:
         """
         Returns the processed velocity of the mouse.
 
@@ -84,18 +111,15 @@ class eegData:
             The processed velocity data.
         """
         try:
-            filtered_velocity = pd.read_csv(
-                join(self.eeg_folder, file_name), index_col=None
-            )
+            filtered_velocity = pd.read_csv(file_name, index_col=None)
         except FileNotFoundError as e:
             raise FileNotFoundError(
-                f"Could not find processed velocity file in {self.eeg_folder}, or it named other than 'velo_eeg.csv'"
+                f"Could not find processed velocity {file_name}, or it named other than 'velo_eeg.csv'"
             ) from e
         return filtered_velocity
 
-    def brain_state_filter(
-        self, velo_eeg_df: pd.DataFrame, states: list
-    ) -> pd.DataFrame:
+    @staticmethod
+    def brain_state_filter(velo_eeg_df: pd.DataFrame, states: list) -> pd.DataFrame:
         """
         Filters the given DataFrame based on the specified brain states.
 
