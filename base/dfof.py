@@ -1,9 +1,101 @@
 """Class for calculating the delta F over F.
 based on lab3
 """
+from abc import ABC, abstractmethod
+
 import numpy as np
 import pandas as pd
 import filters
+
+from suite2p_class import Suite2p
+
+
+class DFOFStrategy(ABC):
+
+    """Base class for dF/F calculation strategies. Derived strategies should
+    implement the _filter_final_signal and _calculate_baseline methods."""
+
+    name = "DFOF"
+
+    def __init__(self) -> None:
+        self._baseline = None
+
+    def apply_to(self, mouse_id, s2p_folder, signal_source, **kwargs):
+        """Apply dF/F analysis to an experiment object.
+
+        Parameters
+        ----------
+        experiment : lab3.experiment.base.ImagingExperiment
+            Instance of ImagingExperiment to analyze
+        channel :
+        label :
+
+        Additional keyword arguments are passed directly to `calculate`.
+        """
+        sig_dict = self._load_signals(mouse_id, s2p_folder, signal_source)
+        return self.calculate(**sig_dict, **kwargs)
+
+    def calculate(self, signal, *args, **kwargs):
+        """Calculate dF/F
+
+        Parameters
+        ----------
+        signal : array-like (n_rois, n_samples)
+            2D array of roi signals
+
+        Returns
+        -------
+        dfof : pd.DataFrame (n_rois, n_samples)
+            2D array of roi dF/F
+        """
+
+        if len(signal.shape) != 2:
+            raise ValueError("Input signal must be 2D")
+
+        base = self.calculate_baseline(signal, *args, **kwargs)
+        return self._filter_final_signal((signal - base) / base, *args, **kwargs)
+
+    # ----------------- Implement these methods to subclass ----------------- #
+
+    @abstractmethod
+    def _filter_final_signal(self, signal):
+        """Apply smoothing to the final trace. This method should be implemented by subclasses."""
+        pass
+
+    @abstractmethod
+    def _calculate_baseline(self, signal):
+        """Estimate baseline for dFOF calculation. This method should be implemented by subclasses."""
+        pass
+
+    def calculate_baseline(self, signal, *args, **kwargs):
+        """
+        Parameters
+        ----------
+        signal : array-like (n_rois, n_samples)
+            2D array of roi signals
+
+        Returns
+        -------
+        baseline : pd.DataFrame (n_rois, n_samples)
+            2D array of roi baselines
+        """
+        try:
+            return self.baseline
+        except AttributeError:
+            self.baseline = self._calculate_baseline(signal, *args, **kwargs)
+            return self.baseline
+
+    # ------------------------------- Optional ------------------------------ #
+
+    def _load_signals(self, mouse_id, s2p_folder, signal_source):
+        """By default only the raw signal dataframe is passed to `calculate`
+        when using `apply`. If you override `calculate` to take additional
+        arguments in your custom strategy, you should load and add them to the
+        dictionary here, which will be unpacked as arguments to `calculate`.
+        """
+        s2p_instance = Suite2p(mouse_id)
+        sig_dict = {"signal": s2p_instance.true_signal(s2p_folder, signal_source)}
+        return sig_dict
 
 
 class SlowTrendMixin:
@@ -31,26 +123,22 @@ class SlowTrendMixin:
         slow_trend : pd.DataFrame (n_rois, n_samples)
             2D array of roi slow trends (rolling median)
         """
-        try:
+        if window is None:
+            return pd.DataFrame(np.zeros(signal.shape))
+        else:
+            print("Calculating slow trend")
+            if not isinstance(signal, pd.DataFrame):
+                signal = pd.DataFrame(signal)
+            self.slow_trend = signal.rolling(
+                window=window,
+                min_periods=int(window * min_periods),
+                center=True,
+                axis=1,
+            ).median()
             return self.slow_trend
-        except AttributeError:
-            if window is None:
-                return pd.DataFrame(np.zeros(signal.shape))
-            else:
-                self.slow_trend = (
-                    pd.DataFrame(signal)
-                    .rolling(
-                        window=window,
-                        min_periods=int(window * min_periods),
-                        center=True,
-                        axis=1,
-                    )
-                    .median()
-                )
-                return self.slow_trend
 
 
-class Suite2pDFOF:
+class Suite2pDFOF(DFOFStrategy):
 
     """Class for calculating dF/F that takes into account Suite2p neuropil
     estimations. Subtracting the scaled neuropil from the raw trace can be
@@ -94,19 +182,21 @@ class Suite2pDFOF:
     baseline : tuple
         Contains 3 DataFrames containing the total baseline ([0]),
         signal residual baseline ([1]), and neuropil baseline ([2]).
+
+    Examples:
+    >>> sig = s2p_mouse.true_signal(s2p_folder=s2p_folder)
+    >>> npil = s2p_mouse.true_signal(s2p_folder=s2p_folder, signal_source="Fneu")
+    >>> dfof_strategy = Suite2pDFOF()
+    >>> dfof_calc = dfof_strategy.calculate(signal=sig, npil="Fneu")
     """
 
     def __init__(
         self,
-        signal,
-        npil,
         window=600,
         sigma=10,
         min_periods=0.2,
         constant_denominator=False,
     ):
-        self.signal = signal
-        self.npil = npil
         self.window = window
         self.sigma = sigma
         self.min_periods = min_periods
@@ -116,7 +206,7 @@ class Suite2pDFOF:
         """No final filtering"""
         return signal
 
-    def calculate_baseline(self, signal, npil):
+    def _calculate_baseline(self, signal, npil):
         """Calculates the baseline signal from a raw signal and its neuropil component.
 
         Parameters
@@ -186,7 +276,7 @@ class Suite2pDFOF:
         return self._filter_final_signal(((signal - npil) - base[1]) / base[0])
 
 
-class JiaDFOF(SlowTrendMixin):
+class JiaDFOF(DFOFStrategy, SlowTrendMixin):
 
     """Implements the dF/F calculation method of Jia et al 2010 (Nat. Protocols)
     with additional options to detrend slow changes.
@@ -215,11 +305,16 @@ class JiaDFOF(SlowTrendMixin):
     ----------
     baseline : pd.DataFrame
     slow_trend : pd.DataFrame
+
+    Examples:
+    Examples:
+    >>> sig = s2p_mouse.true_signal(s2p_folder=s2p_folder)
+    >>> dfof_strategy = JiaDFOF()
+    >>> dfof_calc = dfof_strategy.calculate(signal=sig)
     """
 
     def __init__(
         self,
-        signal,
         t1=90,
         t2=1800,
         exp=None,
@@ -228,7 +323,7 @@ class JiaDFOF(SlowTrendMixin):
         slow_trend_window=None,
         min_periods_slow=0.2,
     ):
-        self.signal = signal
+        super().__init__()
         self.t1 = t1
         self.t2 = t2
         self.exp = exp
@@ -236,31 +331,24 @@ class JiaDFOF(SlowTrendMixin):
         self.min_periods_t2 = min_periods_t2
         self.slow_trend_window = slow_trend_window
         self.min_periods_slow = min_periods_slow
+        self.slow_trend = None
 
-    def filter_final_signal(self, data):
+    def _filter_final_signal(self, signal):
         """Filter with exponential kernel."""
 
-        # apply exponential filter
-        if self.exp is None:
-            pass
-        else:
-            raise NotImplementedError
+        # # remove slow changes
+        # if self.slow_trend is None:
+        #     raise AttributeError("No slow trend to remove")
 
-        # remove slow changes
-        try:
-            del self.slow_trend
-        except AttributeError:
-            pass
-
-        return data - SlowTrendMixin.calculate_slow_trend(
-            data, self.slow_trend_window, self.min_periods_slow
+        return signal - self.calculate_slow_trend(
+            signal, self.slow_trend_window, self.min_periods_slow
         )
 
-    def calculate_baseline(self):
+    def _calculate_baseline(self, signal):
         # first smooth with t1 rolling window
         kwargs = {"center": True, "axis": 1}
         smooth_signal = (
-            pd.DataFrame(self.signal)
+            pd.DataFrame(signal)
             .rolling(
                 window=self.t1, min_periods=int(self.min_periods_t1 * self.t1), **kwargs
             )
@@ -271,28 +359,3 @@ class JiaDFOF(SlowTrendMixin):
         return smooth_signal.rolling(
             window=self.t2, min_periods=int(self.min_periods_t2 * self.t2), **kwargs
         ).min()
-
-    def calculate(self):
-        """Calculate dF/F
-
-        Parameters
-        ----------
-        signal : array-like (n_rois, n_timepoints)
-
-        Returns
-        -------
-        dfof : pd.DataFrame
-        """
-
-        if len(self.signal.shape) != 2:
-            raise ValueError("Input signal must be 2D")
-
-        try:
-            del self.baseline
-        except AttributeError:
-            pass
-        bline = self.calculate_baseline()
-        base = self.filter_final_signal(self.calculate_baseline())
-        signal = self.filter_final_signal(self.signal)
-
-        return (signal - base) / base

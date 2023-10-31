@@ -2,3 +2,4 @@ sleep.code-workspace
 settings.json
 .idea
 *.pyc
+*.h5
