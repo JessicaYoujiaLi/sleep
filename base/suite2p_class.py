@@ -40,9 +40,9 @@ class Suite2p:
         raw_f = np.load(join(path, f"{signal_source}.npy"))
         return iscells, raw_f
 
-    def true_signal(self, signal_source: str = "F") -> np.ndarray:
+    def is_cell_signal(self, signal_source: str = "F") -> np.ndarray:
         """
-        Returns the true signal of the cells in the Suite2p output directory.
+        Returns the signal of the `is_cell` cells in the Suite2p output directory.
 
         Args:
             s2p_folder (str): The path to the Suite2p output directory.
@@ -60,7 +60,30 @@ class Suite2p:
         return raw_f[signal, :]
 
     def cells(self):
-        return self.true_signal(signal_source="F")
+        """
+        Returns the cell signals for the fluorescence data.
+
+        Returns:
+        numpy.ndarray: An array of cell signals for the fluorescence data.
+        """
+        return self.is_cell_signal(signal_source="F")
 
     def npil(self):
-        return self.true_signal(signal_source="Fneu")
+        """
+        Computes the neuropil signal for each cell in the Suite2p object.
+
+        Returns:
+        -------
+        npil : numpy.ndarray
+            The neuropil signal for each cell.
+        """
+        return self.is_cell_signal(signal_source="Fneu")
+
+    def spikes(self):
+        """
+        Returns the spike signal for each cell in the Suite2p object.
+
+        :return: numpy.ndarray
+            Array of shape (num_cells, num_frames) containing the spike signal for each cell.
+        """
+        return self.is_cell_signal(signal_source="spks")

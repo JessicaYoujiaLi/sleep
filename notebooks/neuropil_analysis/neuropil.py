@@ -114,7 +114,7 @@ def spectral_density_plot(
 
     ax.set_xlabel("Frequency (Hz)")
     ax.set_ylabel("Power/Frequency (dB/Hz)")
-    ax.set_xlim(0.01, 0.1)
+    ax.set_xlim(0.01, 1)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 
@@ -126,6 +126,18 @@ class statistics:
 
     @staticmethod
     def significance_calc(nrem_array: np.array, awake_array: np.array) -> np.array:
+        """
+        Calculates the significance of the difference between two arrays of
+        data using the Mann-Whitney U test.
+
+        Parameters:
+        nrem_array (np.array): An array of data representing NREM sleep.
+        awake_array (np.array): An array of data representing wakefulness.
+
+        Returns:
+        np.array: An array of indices representing the cells that have
+                 a significant difference between NREM and wakefulness.
+        """
         p_values = []
 
         for nrem_a, awake_a in zip(nrem_array, awake_array):
