@@ -1,4 +1,6 @@
 """
+author: GT
+date: 1/10/24
 This script adds a time-averaged image to suite2p data.
 
 Usage:
