@@ -1,5 +1,5 @@
 import numpy as np
-from os import walk
+import matplotlib.pyplot as plt
 from os.path import join, isdir
 from dataclasses import dataclass
 
@@ -87,3 +87,69 @@ class Suite2p:
             Array of shape (num_cells, num_frames) containing the spike signal for each cell.
         """
         return self.is_cell_signal(signal_source="spks")
+
+    def time_avg_image(self, save_path=None):
+        """
+        Plot and display the time-averaged image(s) from the ops_array.
+
+        Args:
+            save_path (str): Optional. The file path to save the plot.
+
+        Returns:
+            str or None: If save_path is provided, returns the path where the plot is saved. Otherwise, returns None.
+        """
+        ops_path = join(self.s2p_folder, "ops1.npy")
+        ops_array = np.load(ops_path, allow_pickle=True)
+
+        # Check the number of elements in ops_array
+        num_elements = len(ops_array)
+
+        # Define a consistent plot size for both scenarios
+        plot_width_per_image = 5  # Width per image in inches
+        plot_height_per_image = 5  # Height per image in inches
+
+        # Single element handling
+        if num_elements == 1:
+            fig, ax = plt.subplots(
+                figsize=(plot_width_per_image, plot_height_per_image)
+            )
+            image_data = ops_array[0]["meanImg"]
+            ax.imshow(
+                image_data, cmap="gray"
+            )  # cmap='gray' for grayscale, remove if your images are in color
+            ax.set_title("Mean Image")
+            ax.axis("off")
+
+        # Multiple elements handling
+        else:
+            # Set up the subplot grid
+            cols = int(np.ceil(np.sqrt(num_elements)))
+            rows = int(np.ceil(num_elements / cols))
+
+            # Calculate the total plot size
+            total_width = plot_width_per_image * cols
+            total_height = plot_height_per_image * rows
+
+            # Create subplots
+            fig, axes = plt.subplots(rows, cols, figsize=(total_width, total_height))
+            axes = axes.flatten()
+
+            # Loop through each item and plot
+            for i, ops in enumerate(ops_array):
+                image_data = ops["meanImg"]
+                axes[i].imshow(image_data, cmap="gray")
+                axes[i].set_title(f"Mean Image {i+1}")
+                axes[i].axis("off")
+
+            # Turn off any unused subplots
+            for j in range(i + 1, len(axes)):
+                axes[j].axis("off")
+        plt.tight_layout()
+
+        if save_path is not None:
+            plt.savefig(save_path)
+            plt.close()  # Close the plot to free up memory
+            return save_path
+        else:
+            plt.show()
+            return None
