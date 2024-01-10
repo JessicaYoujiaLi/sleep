@@ -147,7 +147,7 @@ class Suite2p:
         plt.tight_layout()
 
         if save_path is not None:
-            plt.savefig(save_path)
+            plt.savefig(join(save_path, "time_avg_image.png"))
             plt.close()  # Close the plot to free up memory
             return save_path
         else:
