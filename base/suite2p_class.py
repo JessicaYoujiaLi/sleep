@@ -1,7 +1,9 @@
-import numpy as np
-import matplotlib.pyplot as plt
-from os.path import join, isdir
+import datetime
 from dataclasses import dataclass
+from os.path import isdir, join
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 COMBINED_DIR_NAME = "combined"
 PLANE0_DIR_NAME = "plane0"
@@ -113,7 +115,7 @@ class Suite2p:
             fig, ax = plt.subplots(
                 figsize=(plot_width_per_image, plot_height_per_image)
             )
-            image_data = ops_array[0]["meanImg"]
+            image_data = np.flipud(ops_array[0]["meanImg"])
             ax.imshow(
                 image_data, cmap="gray"
             )  # cmap='gray' for grayscale, remove if your images are in color
@@ -136,7 +138,7 @@ class Suite2p:
 
             # Loop through each item and plot
             for i, ops in enumerate(ops_array):
-                image_data = ops["meanImg"]
+                image_data = np.flipud(ops["meanImg"])
                 axes[i].imshow(image_data, cmap="gray")
                 axes[i].set_title(f"Mean Image {i+1}")
                 axes[i].axis("off")
@@ -147,8 +149,14 @@ class Suite2p:
         plt.tight_layout()
 
         if save_path is not None:
-            plt.savefig(join(save_path, "time_avg_image.png"))
-            plt.close()  # Close the plot to free up memory
+            filename = f"time_avg_image_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
+            full_save_path = join(save_path, filename)
+
+            try: 
+                plt.savefig(full_save_path)
+                plt.close()  # Close the plot to free up memory
+            except Exception as e:
+                print(f"Error saving plot to {full_save_path}: {e}")
             return save_path
         else:
             plt.show()
