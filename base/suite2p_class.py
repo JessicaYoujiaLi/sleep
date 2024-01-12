@@ -1,6 +1,6 @@
 import datetime
 from dataclasses import dataclass
-from os.path import isdir, join
+from os.path import isdir, join, exists
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -101,6 +101,12 @@ class Suite2p:
             str or None: If save_path is provided, returns the path where the plot is saved. Otherwise, returns None.
         """
         ops_path = join(self.s2p_folder, "ops1.npy")
+
+        # Check if ops1.npy exists
+        if not exists(ops_path):
+            print(f"File not found: {ops_path}")
+            return None
+
         ops_array = np.load(ops_path, allow_pickle=True)
 
         # Check the number of elements in ops_array
@@ -152,7 +158,7 @@ class Suite2p:
             filename = f"time_avg_image_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
             full_save_path = join(save_path, filename)
 
-            try: 
+            try:
                 plt.savefig(full_save_path)
                 plt.close()  # Close the plot to free up memory
             except Exception as e:

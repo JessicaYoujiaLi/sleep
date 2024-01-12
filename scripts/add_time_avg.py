@@ -41,8 +41,11 @@ def add_time_avg(directory):
             save_dir = dirname(s2p_path)
             print(f"Processing suite2p data in: {s2p_path}")
             s2p = Suite2p(s2p_path)
-            s2p.time_avg_image(save_path=save_dir)
-            print(f"Time-averaged image saved in: {save_dir}")
+            result = s2p.time_avg_image(save_path=save_dir)
+            if result is None:
+                print(f"No time-averaged image was saved in: {save_dir}")
+            else:
+                print(f"Time-averaged image saved in: {save_dir}")
 
 
 if __name__ == "__main__":
