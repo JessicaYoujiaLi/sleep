@@ -14,11 +14,11 @@ python -m add_time_avg -d /path/to/mouse
 """
 
 import argparse as arg
-from os.path import join, dirname, isdir
-from os import walk
 import sys
+from os import walk
+from os.path import dirname, isdir, join
 
-from base.suite2p_class import Suite2p
+from src.suite2p_class import Suite2p
 
 
 def add_time_avg(directory):

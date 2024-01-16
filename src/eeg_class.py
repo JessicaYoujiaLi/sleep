@@ -3,13 +3,12 @@ author: @gergelyturi
 date: 2023-10-16"""
 
 from dataclasses import dataclass, field
-from os.path import join
 from os import walk
 from os.path import join
 
 import pandas as pd
 
-from mouse_class import Mouse
+from src.imaging_data_class import Mouse
 
 
 @dataclass

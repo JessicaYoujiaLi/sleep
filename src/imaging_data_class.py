@@ -1,21 +1,22 @@
-import numpy as np
+from dataclasses import dataclass, field
 from os import walk
 from os.path import join
-from dataclasses import dataclass, field
+
+import numpy as np
 
 ROOT_FOLDER = "/data2/gergely/invivo_DATA/sleep"
 
 
 @dataclass
-class Mouse:
-    """Class for mouse data"""
+class ImagingData:
+    """Class for imaging data"""
 
     mouse_id: str
     root_folder: str = None
 
     def __post_init__(self):
         """
-        Initializes the Mouse object.
+        Initializes the imaging data object.
 
         If root_folder is not specified, sets it to the default path.
         If s2p_folders is not specified, finds all suite2p folders in the root folder.
