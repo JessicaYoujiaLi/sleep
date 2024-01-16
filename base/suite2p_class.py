@@ -158,11 +158,18 @@ class Suite2p:
             filename = f"time_avg_image_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
             full_save_path = join(save_path, filename)
 
-            try:
-                plt.savefig(full_save_path)
-                plt.close()  # Close the plot to free up memory
-            except Exception as e:
-                print(f"Error saving plot to {full_save_path}: {e}")
+            # Check if the file already exists
+            if not exists(full_save_path):
+                try:
+                    plt.savefig(full_save_path)
+                    print(f"Saved plot to {full_save_path}")
+                except Exception as e:
+                    print(f"Error saving plot to {full_save_path}: {e}")
+                finally:
+                    plt.close()  # Ensure the plot is closed in any case
+            else:
+                print(f"File already exists: {full_save_path}")
+
             return save_path
         else:
             plt.show()
