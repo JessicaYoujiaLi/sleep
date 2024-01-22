@@ -26,7 +26,7 @@ class ImagingData:
         if self.root_folder is None:
             self.root_folder = join(ROOT_FOLDER, self.mouse_id)
 
-    def find_tseries_folders(self, root_folder: str) -> list:
+    def find_tseries_folders(self) -> list:
         """
         Finds all TSeries folders for a given mouse.
 
@@ -40,12 +40,12 @@ class ImagingData:
             ValueError: If no suite2p folders are found in the root folder.
         """
         folders = []
-        for dirpath, dirnames, _ in walk(root_folder):
+        for dirpath, dirnames, _ in walk(self.root_folder):
             for dirname in dirnames:
                 if dirname.startswith("TSeries"):
                     folders.append(join(dirpath, dirname))
         if len(folders) == 0:
-            raise ValueError(f"No TSeries found in {root_folder}")
+            raise ValueError(f"No TSeries found in {self.root_folder}")
         return folders
 
     def find_suite2p_folders(self) -> list:

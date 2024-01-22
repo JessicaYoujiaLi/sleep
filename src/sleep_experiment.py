@@ -3,10 +3,9 @@ Class for sleep experiment data
 """
 ROOT_FOLDER = "/data2/gergely/invivo_DATA/sleep"
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from os import walk, listdir, makedirs
 from os.path import join, exists
-from dataclasses import dataclass, field
 
 @dataclass
 class SleepExperiment():
@@ -61,50 +60,4 @@ class SleepExperiment():
                 print(f"Created directory: {path}")
             else:
                 print(f"Directory already exists: {path}")
-
-
-    def find_tseries_folders(self, root_folder: str) -> list:
-        """
-        Finds all TSeries folders for a given mouse.
-
-        Args:
-            root_folder (str): The root folder to search for suite2p folders.
-
-        Returns:
-            list: A list of all suite2p folders found in the root folder.
-
-        Raises:
-            ValueError: If no suite2p folders are found in the root folder.
-        """
-        folders = []
-        for dirpath, dirnames, _ in walk(root_folder):
-            for dirname in dirnames:
-                if dirname.startswith("TSeries"):
-                    folders.append(join(dirpath, dirname))
-        if len(folders) == 0:
-            raise ValueError(f"No TSeries found in {root_folder}")
-        return folders
-
-    def find_suite2p_folders(self) -> list:
-        """
-        Finds all suite2p folders in a given root folder.
-
-        Args:
-            root_folder (str): The root folder to search for suite2p folders.
-
-        Returns:
-            list: A list of all suite2p folders found in the root folder.
-
-        Raises:
-            ValueError: If no suite2p folders are found in the root folder.
-        """
-
-        folders = []
-        for dirpath, dirnames, _ in walk(self.root_folder):
-            for dirname in dirnames:
-                if dirname.startswith("suite2p"):
-                    folders.append(join(dirpath, dirname))
-        if len(folders) == 0:
-            raise ValueError(f"No suite2p folders found in {self.root_folder}")
-        return folders
 
