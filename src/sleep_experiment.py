@@ -4,7 +4,7 @@ Class for sleep experiment data
 ROOT_FOLDER = "/data2/gergely/invivo_DATA/sleep"
 
 from dataclasses import dataclass, field
-from os import walk
+from os import walk, listdir, makedirs
 from os.path import join, exists
 from dataclasses import dataclass, field
 
@@ -33,17 +33,35 @@ class SleepExperiment():
         if self.root_folder is None:
             self.root_folder = join(ROOT_FOLDER, self.mouse_id, self.experiment_date)
 
-    def create_exp_folder_structure(self):
-        """
-        Creates the folder structure for the experiment.
+    def create_folder_structure(self) -> None:
+        """Creates a custom folder structure for the experiment within the .sima folder if it exists,
+        otherwise in the tseries_folder."""
+        base_path = join(self.root_folder, self.mouse_id, self.experiment_date, self.tseries_folder)
+        sima_folder = None
 
-        Returns:
-            None
-        """
-        
+        # Check for .sima folder
+        for folder_name in listdir(base_path):
+            if folder_name.endswith('.sima'):
+                sima_folder = folder_name
+                break
 
-        if not exists(join(self.root_folder, self.tseries_folder, )):
-            os.makedirs(self.root_folder)
+        # Define the base path for new directories
+        if sima_folder:
+            base_path = join(base_path, sima_folder)
+            print(f"Using .sima folder: {sima_folder}")
+        else:
+            print("No .sima folder found. Using TSeries folder.")
+
+        # Create the directories
+        directories = ["behavior", "eeg", "plots"]
+        for dir_name in directories:
+            path = join(base_path, dir_name)
+            if not exists(path):
+                makedirs(path)
+                print(f"Created directory: {path}")
+            else:
+                print(f"Directory already exists: {path}")
+
 
     def find_tseries_folders(self, root_folder: str) -> list:
         """
@@ -90,6 +108,3 @@ class SleepExperiment():
             raise ValueError(f"No suite2p folders found in {self.root_folder}")
         return folders
 
-    def find_suite2p_folders(self) -> list:
-        """
-        Finds all suite2p folders in a given root folder.
