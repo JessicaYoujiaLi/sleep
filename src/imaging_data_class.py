@@ -31,13 +31,13 @@ class ImagingData:
         Finds all TSeries folders for a given mouse.
 
         Args:
-            root_folder (str): The root folder to search for suite2p folders.
+            root_folder (str): The root folder to search for TSeries folders.
 
         Returns:
-            list: A list of all suite2p folders found in the root folder.
+            list: A list of all TSeries folders found in the root folder.
 
         Raises:
-            ValueError: If no suite2p folders are found in the root folder.
+            ValueError: If no TSeries folders are found in the root folder.
         """
         folders = []
         for dirpath, dirnames, _ in walk(self.root_folder):
