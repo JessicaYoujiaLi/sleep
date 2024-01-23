@@ -4,24 +4,23 @@ Class for sleep experiment data
 ROOT_FOLDER = "/data2/gergely/invivo_DATA/sleep"
 
 from dataclasses import dataclass
-from os import walk, listdir, makedirs
+from os import listdir, makedirs
 from os.path import join, exists
 
+
 @dataclass
-class SleepExperiment():
+class SleepExperiment:
     """Class for sleep experiment data"""
 
     mouse_id: str
     experiment_date: str
     tseries_folder: str
-    root_folder: str = None
+    root_folder: str = ROOT_FOLDER
 
     def __post_init__(self):
         """
         Initializes the SleepExperiment object.
 
-        If root_folder is not specified, sets it to the default path.
-        If s2p_folders is not specified, finds all suite2p folders in the root folder.
         """
         if not self.mouse_id:
             raise ValueError("Mouse ID must be a non-empty string")
@@ -29,20 +28,26 @@ class SleepExperiment():
             raise ValueError("Experiment date must be a non-empty string")
         if not self.tseries_folder:
             raise ValueError("TSeries folder must be a non-empty string")
-        if self.root_folder is None:
-            self.root_folder = join(ROOT_FOLDER, self.mouse_id, self.experiment_date)
+
+        self.root_folder = join(
+            self.root_folder, self.mouse_id, self.experiment_date, self.tseries_folder
+        )
 
     def create_folder_structure(self) -> None:
         """Creates a custom folder structure for the experiment within the .sima folder if it exists,
         otherwise in the tseries_folder."""
-        base_path = join(self.root_folder, self.mouse_id, self.experiment_date, self.tseries_folder)
+        base_path = self.root_folder
         sima_folder = None
-
+        print(f"Base path: {base_path}")
         # Check for .sima folder
-        for folder_name in listdir(base_path):
-            if folder_name.endswith('.sima'):
-                sima_folder = folder_name
-                break
+        try:
+            for folder_name in listdir(base_path):
+                if folder_name.endswith(".sima"):
+                    sima_folder = folder_name
+                    break
+        except FileNotFoundError:
+            print(f"Error: Base path {base_path} does not exist.")
+            return
 
         # Define the base path for new directories
         if sima_folder:
@@ -60,4 +65,3 @@ class SleepExperiment():
                 print(f"Created directory: {path}")
             else:
                 print(f"Directory already exists: {path}")
-
