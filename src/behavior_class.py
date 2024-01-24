@@ -9,11 +9,19 @@ from os.path import join
 import numpy as np
 import pandas as pd
 
-from src.imaging_data_class import Mouse
+from src.imaging_data_class import ImagingData
 
 
 @dataclass
-class behaviorData(Mouse):
+class behaviorData(ImagingData):
+    """Class for behavior data
+    Initializing this class with a mouse ID will automatically find
+     all behavior folders for that mouse.
+
+     Example:
+        behavior = bc.behaviorData("M1")
+    """
+
     behavior_folders: list = field(default_factory=list)
 
     def __post_init__(self):
@@ -56,7 +64,7 @@ class behaviorData(Mouse):
             raise FileNotFoundError(
                 f"Could not find processed velocity file in {behavior_folder}, or it named other than 'filtered_velo.csv'"
             )
-        return filtered_velocity
+        return filtered_velocity["filtered velo"]
 
     @staticmethod
     def define_immobility(

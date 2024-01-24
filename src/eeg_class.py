@@ -8,11 +8,11 @@ from os.path import join
 
 import pandas as pd
 
-from src.imaging_data_class import Mouse
+from src.imaging_data_class import ImagingData
 
 
 @dataclass
-class eegData(Mouse):
+class eegData(ImagingData):
     """
     A class for loading and processing EEG data.
 

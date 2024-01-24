@@ -28,10 +28,11 @@ class Suite2p:
         Args:
             s2p_folder (str): The path to the directory containing the data.
             subdir_name (str): The name of the subdirectory containing the data.
-            signal_source (str): The name of the signal source file. Either "F" or "Fneu".
+            signal_source (str): The name of the signal source file. "F" - cell fluorescence data,
+              "Fneu" - neuropil data, "spks" - deconvolvd spike data.
 
         Returns:
-            Tuple: A tuple containing the iscells and raw_f arrays, or None if the directory does not exist.
+            Tuple: A tuple containing the iscells and raw_signal arrays, or None if the directory does not exist.
         """
 
         path = join(self.s2p_folder, subdir_name)
@@ -39,8 +40,8 @@ class Suite2p:
             raise DirectoryNotFoundError(f"Directory {path} does not exist")
 
         iscells = np.load(join(path, "iscell.npy"))
-        raw_f = np.load(join(path, f"{signal_source}.npy"))
-        return iscells, raw_f
+        raw_signal = np.load(join(path, f"{signal_source}.npy"))
+        return iscells, raw_signal
 
     def is_cell_signal(self, signal_source: str = "F") -> np.ndarray:
         """
@@ -54,14 +55,18 @@ class Suite2p:
             np.ndarray: The true signal of the cells.
         """
         try:
-            iscells, raw_f = self._load_data_from_dir(COMBINED_DIR_NAME, signal_source)
+            iscells, raw_signal = self._load_data_from_dir(
+                COMBINED_DIR_NAME, signal_source
+            )
         except DirectoryNotFoundError:
-            iscells, raw_f = self._load_data_from_dir(PLANE0_DIR_NAME, signal_source)
+            iscells, raw_signal = self._load_data_from_dir(
+                PLANE0_DIR_NAME, signal_source
+            )
 
         signal = np.where(iscells[:, 0])[0]
-        return raw_f[signal, :]
+        return raw_signal[signal, :]
 
-    def cells(self):
+    def get_cells(self):
         """
         Returns the cell signals for the fluorescence data.
 
@@ -70,7 +75,7 @@ class Suite2p:
         """
         return self.is_cell_signal(signal_source="F")
 
-    def npil(self):
+    def get_npil(self):
         """
         Computes the neuropil signal for each cell in the Suite2p object.
 
@@ -81,7 +86,7 @@ class Suite2p:
         """
         return self.is_cell_signal(signal_source="Fneu")
 
-    def spikes(self):
+    def get_spikes(self):
         """
         Returns the spike signal for each cell in the Suite2p object.
 
