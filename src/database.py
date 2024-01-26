@@ -3,8 +3,12 @@ import os.path
 import pickle
 import time
 
-import MySQLdb
-import MySQLdb.cursors
+# import MySQLdb
+# import MySQLdb.cursors
+
+import pymysql
+
+pymysql.install_as_MySQLdb()  # needed for pymysql to work with MySQLdb
 
 
 class ExperimentDatabase:
@@ -44,12 +48,12 @@ class ExperimentDatabase:
         password = "CipoFuzo1"  # TODO: update credentials
         database = "experiments"
 
-        self._database = MySQLdb.connect(
+        self._database = pymysql.connect(
             host=host,
             user=user,
             passwd=password,
             db=database,
-            cursorclass=MySQLdb.cursors.DictCursor,
+            cursorclass=pymysql.cursors.DictCursor,
         )
 
     def disconnect(self):
@@ -66,7 +70,7 @@ class ExperimentDatabase:
             Raw SQL to pass to the database.
         args : list, optional
             List of variables to sub into SQL statement in accordiance see
-            MySQLdb. Defaults to an empty list.
+            pymysql. Defaults to an empty list.
         verbose : bool, optional
             If set to True print the SQL query. Defaults to False
 
@@ -94,7 +98,7 @@ class ExperimentDatabase:
             Raw SQL to pass to the database.
         args : list, optional
             List of variables to sub into SQL statement in accordiance see
-            MySQLdb. Defaults to an empty list.
+            pymysql. Defaults to an empty list.
         verbose : bool, optional
             If set to True print the SQL query. Defaults to False
 
@@ -115,7 +119,7 @@ class ExperimentDatabase:
 
     def query(self, sql, args=[], verbose=False, ignore_duplicates=True):
         """Run an arbitrary SQL query i.e. INSERT or DELETE commands. SQL
-        statement is passsed directory MySQLdb.
+        statement is passsed directory pymysql.
 
         Parameters
         ----------

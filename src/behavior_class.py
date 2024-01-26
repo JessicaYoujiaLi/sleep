@@ -2,6 +2,7 @@
 author: @gergelyturi
 date: 2023-10-16"""
 
+import json
 from dataclasses import dataclass, field
 from os import walk
 from os.path import join
@@ -53,22 +54,34 @@ class behaviorData(ImagingData):
         return folders
 
     def processed_velocity(
-        self, behavior_folder: str = None, file_name="filtered_velo.csv"
-    ):
-        """Return the processed velocity of the mouse."""
+        self, behavior_folder: str = None, file_name="filtered_velocity.json"
+    ) -> np.ndarray:
+        """
+        Return the processed velocity of the mouse.
+
+        Parameters:
+        - behavior_folder (str): The path to the folder containing the velocity file.
+        - file_name (str): The name of the velocity file.
+
+        Returns:
+        - np.ndarray: The processed velocity as a NumPy array.
+
+        Raises:
+        - FileNotFoundError: If the velocity file is not found in the specified folder.
+        """
         try:
-            filtered_velocity = pd.read_csv(
-                join(behavior_folder, file_name), index_col=None
-            )
+            with open(join(behavior_folder, file_name), "r") as f:
+                processed_velocity = np.array(json.load(f))
+
         except FileNotFoundError:
             raise FileNotFoundError(
                 f"Could not find processed velocity file in {behavior_folder}, or it named other than 'filtered_velo.csv'"
             )
-        return filtered_velocity["filtered velo"]
+        return processed_velocity
 
     @staticmethod
     def define_immobility(
-        velocity: pd.Series,
+        velocity: np.ndarray,
         framerate: float = 10,
         threshold: float = 1.0,
         min_duration: float = 1.0,
@@ -84,8 +97,8 @@ class behaviorData(ImagingData):
         Stefanini...Fusi et al. 2018 (https://doi.org/10.1101/292953)
 
         Args:
-            velocity: pandas Series
-                The velocity of the mouse.
+            velocity: numpy array
+                The filtered and processed velocity of the mouse.
             framerate: float
                 The framerate of the velocity data.
             threshold: float
@@ -102,8 +115,10 @@ class behaviorData(ImagingData):
                 times and False signifies immobile times.
 
         """
+
+        velocity_series = pd.Series(velocity).astype(float)
         window_size = int(framerate * min_duration)
-        rolling_max_vel = velocity.rolling(
+        rolling_max_vel = velocity_series.rolling(
             window_size, min_periods=min_periods, center=center
         ).max()
         mobile_immobile = (rolling_max_vel > threshold).astype(bool)

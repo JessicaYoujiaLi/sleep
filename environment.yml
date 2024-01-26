@@ -13,5 +13,5 @@ dependencies:
   - seaborn
   - pandas
   - pip:
-    - mysqlclient
+    - pymysql
 
