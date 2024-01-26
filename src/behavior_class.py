@@ -45,10 +45,10 @@ class behaviorData(ImagingData):
 
         print(f"Searching for behavior folders in {self.root_folder}")
         folders = []
-        for dirpath, dirnames, subdirnames in walk(self.root_folder):
-            if "behavior" in dirnames or "behavior" in subdirnames:
+        for dirpath, dirnames, _ in walk(self.root_folder):
+            if "behavior" in dirnames:
                 folders.append(join(dirpath, "behavior"))
-        if len(folders) == 0:
+        if not folders:
             raise ValueError(f"No behavior folders found in {self.root_folder}")
         return folders
 
