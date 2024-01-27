@@ -351,67 +351,78 @@ def insert_mouse_weight(mouse_name, weight, date=None):
     read_mouse_weights(mouse_name)
 
 
-# def pair_imaging_data(imaging_path, trial_id=None, behavior_file=None,
-#                       start_time=None):
-#     """ Pair a tSeries directory with a trial record in the database.
-#
-#     Parameters
-#     ----------
-#     imaging_path : str
-#         tSeries directory to add to trial record.
-#     trial_id : int, optional
-#         Trial id from the SQL trials table to match SQL record. Defaults to
-#         None.
-#     behavior_file : str, optional
-#         Path to a behavior file which matches a SQL record. Defaults to None.
-#     start_time : str, optional
-#         Date time string to match a to  SQL record. Defaults to None.
-#     """
-#
-#     db = ExperimentDatabase()
-#
-#     if trial_id and behavior_file:
-#         raise ValueError('Cannot use both trial id and behavior file path')
-#     elif trial_id is not None:
-#         db.query("""
-#             UPDATE trials
-#             SET `tSeries_path` = %s
-#             WHERE `trial_id` = %s
-#             """, args=[imaging_path, trial_id], verbose=False)
-#     elif behavior_file is not None:
-#         behavior_file = os.path.splitext(behavior_file)[0] + '%'
-#         db.query("""
-#             UPDATE trials
-#             SET `tSeries_path` = %s
-#             WHERE behavior_file LIKE %s
-#         """, args=[imaging_path, behavior_file], verbose=False)
-#         trial_id = fetch_trial_id(behavior_file=behavior_file)
-#
-#     # TODO: should be start_time/mouse_name combination to ensure this value
-#     # is unique.
-#     elif start_time is not None:
-#         start_time = _resolve_start_time(start_time)
-#         # TODO: experiments table is not working (or used) necessary for
-#         # legacy saliance compatibilty. Update or remove...
-#
-#         # expt_id = fetch_experiment_ID(start_time)
-#         # if expt_id is not None:
-#         #     db.query("""
-#         #         UPDATE trials
-#         #         SET `tSeries_path` = %s
-#         #         WHERE `experiment_id` = %s
-#         #     """, args=[imaging_path, expt_id], verbose=False)
-#         # else:
-#         db.query("""
-#             UPDATE trials
-#             SET `tSeries_path` = %s
-#             WHERE `start_time` = %s
-#         """, args=[imaging_path, start_time], verbose=False)
-#
-#     else:
-#         raise ValueError('Need either trial id or behavior file path')
-#
-#     db.disconnect()
+def pair_imaging_data(imaging_path, trial_id=None, behavior_file=None, start_time=None):
+    """Pair a tSeries directory with a trial record in the database.
+
+    Parameters
+    ----------
+    imaging_path : str
+        tSeries directory to add to trial record.
+    trial_id : int, optional
+        Trial id from the SQL trials table to match SQL record. Defaults to
+        None.
+    behavior_file : str, optional
+        Path to a behavior file which matches a SQL record. Defaults to None.
+    start_time : str, optional
+        Date time string to match a to  SQL record. Defaults to None.
+    """
+
+    db = ExperimentDatabase()
+
+    if trial_id and behavior_file:
+        raise ValueError("Cannot use both trial id and behavior file path")
+    elif trial_id is not None:
+        db.query(
+            """
+            UPDATE trials
+            SET `tSeries_path` = %s
+            WHERE `trial_id` = %s
+            """,
+            args=[imaging_path, trial_id],
+            verbose=False,
+        )
+    elif behavior_file is not None:
+        behavior_file = os.path.splitext(behavior_file)[0] + "%"
+        db.query(
+            """
+            UPDATE trials
+            SET `tSeries_path` = %s
+            WHERE behavior_file LIKE %s
+        """,
+            args=[imaging_path, behavior_file],
+            verbose=False,
+        )
+        trial_id = fetch_trial_id(behavior_file=behavior_file)
+
+    # TODO: should be start_time/mouse_name combination to ensure this value
+    # is unique.
+    elif start_time is not None:
+        start_time = _resolve_start_time(start_time)
+        # TODO: experiments table is not working (or used) necessary for
+        # legacy saliance compatibilty. Update or remove...
+
+        # expt_id = fetch_experiment_ID(start_time)
+        # if expt_id is not None:
+        #     db.query("""
+        #         UPDATE trials
+        #         SET `tSeries_path` = %s
+        #         WHERE `experiment_id` = %s
+        #     """, args=[imaging_path, expt_id], verbose=False)
+        # else:
+        db.query(
+            """
+            UPDATE trials
+            SET `tSeries_path` = %s
+            WHERE `start_time` = %s
+        """,
+            args=[imaging_path, start_time],
+            verbose=False,
+        )
+
+    else:
+        raise ValueError("Need either trial id or behavior file path")
+
+    db.disconnect()
 
 
 def update_behavior_filename(old_filename, new_filename):
@@ -658,6 +669,14 @@ def delete_mouse_page_attr(mouse_name, attribute):
 
 
 def update_trial_attr(trial_id, attribute, value):
+    """
+    Update the attribute of a trial in the database.
+
+    Args:
+        trial_id (int): The ID of the trial.
+        attribute (str): The name of the attribute to update.
+        value: The new value of the attribute.
+    """
     update_attr("trial_attributes", "trial_id", trial_id, attribute, value)
 
 
@@ -805,6 +824,20 @@ def delete_mouse(mouse_id):
 
 
 def fetch_mouse_ID(mouse_name, create=False, project_name=None):
+    """
+    Fetches the mouse ID from the database based on the given mouse name.
+
+    Args:
+        mouse_name (str): The name of the mouse.
+        create (bool, optional): If True, creates a new mouse entry if the mouse does not exist in the database. Defaults to False.
+        project_name (str, optional): The name of the project associated with the mouse. Defaults to None.
+
+    Returns:
+        int: The mouse ID.
+
+    Raises:
+        KeyError: If the mouse cannot be uniquely identified.
+    """
     db = ExperimentDatabase()
 
     if project_name is not None:
@@ -860,6 +893,15 @@ def fetch_mouse_ID(mouse_name, create=False, project_name=None):
 
 
 def fetch_mouse(mouse_id):
+    """
+    Fetches a mouse from the database based on the given mouse_id.
+
+    Args:
+        mouse_id (int): The ID of the mouse to fetch.
+
+    Returns:
+        dict: A dictionary containing the details of the fetched mouse.
+    """
     db = ExperimentDatabase()
     mouse = db.select(
         """
@@ -874,6 +916,15 @@ def fetch_mouse(mouse_id):
 
 
 def fetch_trial(trial_id):
+    """
+    Fetches a trial from the database based on the given trial_id.
+
+    Args:
+        trial_id (int): The ID of the trial to fetch.
+
+    Returns:
+        dict: A dictionary representing the fetched trial.
+    """
     db = ExperimentDatabase()
     trial = db.select(
         """
@@ -889,6 +940,18 @@ def fetch_trial(trial_id):
 def fetch_trial_id(
     behavior_file=None, tSeries_path=None, mouse_name=None, startTime=None
 ):
+    """
+    Fetches the trial ID from the database based on the provided parameters.
+
+    Args:
+        behavior_file (str): The path to the behavior file.
+        tSeries_path (str): The path to the tSeries file.
+        mouse_name (str): The name of the mouse.
+        startTime (str): The start time of the trial.
+
+    Returns:
+        int: The trial ID if found, None otherwise.
+    """
     db = ExperimentDatabase()
 
     arg_names = ["tSeries_path", "behavior_file", "mouse_name", "startTime"]
@@ -926,6 +989,22 @@ def fetch_trial_id(
 
 
 def fetch_imaged_trials(mouse_name):
+    """
+    Fetches all imaged trials for a given mouse from the database.
+
+    Args:
+        mouse_name (str): The name of the mouse.
+
+    Returns:
+        list: A list of dictionaries representing the fetched trials.
+              Each dictionary contains the following keys:
+              - trial_id (int): The ID of the trial.
+              - start_time (datetime): The start time of the trial.
+              - mouse_name (str): The name of the mouse.
+              - behavior_file (str): The path to the behavior file.
+              - tSeries_path (str): The path to the tSeries file.
+
+    """
     db = ExperimentDatabase()
     trials = db.select_all(
         """
@@ -945,6 +1024,16 @@ def fetch_imaged_trials(mouse_name):
 
 
 def fetch_attribute_values(attr, project_name=None):
+    """
+    Fetches the distinct attribute values from the database.
+
+    Args:
+        attr (str): The attribute to fetch values for.
+        project_name (str, optional): The name of the project. Defaults to None.
+
+    Returns:
+        list: A list of distinct attribute values.
+    """
     db = ExperimentDatabase()
 
     table = "mice"
@@ -991,6 +1080,17 @@ def fetch_attribute_values(attr, project_name=None):
 
 
 def fetch_trials_with_attr_value(attr, value):
+    """
+    Fetches the trial IDs from the trial_attributes table in the database
+    that have the specified attribute and value.
+
+    Args:
+        attr (str): The attribute to filter by.
+        value (str): The value to filter by.
+
+    Returns:
+        list: A list of trial IDs (integers) that match the specified attribute and value.
+    """
     db = ExperimentDatabase()
     trials = db.select_all(
         """
@@ -1007,6 +1107,19 @@ def fetch_trials_with_attr_value(attr, value):
 
 
 def fetch_mice(*args, **kwargs):
+    """
+    Fetches a list of mouse IDs based on the provided arguments and keyword arguments.
+
+    Args:
+        *args: Variable length argument list of keys.
+        **kwargs: Arbitrary keyword arguments.
+
+    Returns:
+        A list of mouse IDs.
+
+    Raises:
+        None.
+    """
     db = ExperimentDatabase()
     query_string = """
         SELECT DISTINCT m.mouse_id
@@ -1124,6 +1237,19 @@ def fetch_mice(*args, **kwargs):
 
 
 def fetch_trials(*args, **kwargs):
+    """
+    Fetches trials from the database based on the provided arguments.
+
+    Args:
+        *args: Variable length argument list of trial fields or attributes.
+        **kwargs: Keyword arguments representing trial fields and their corresponding values.
+
+    Returns:
+        A list of trial IDs.
+
+    Example usage:
+        fetch_trials('mouse_id', 'start_time', stop_time='2022-01-01')
+    """
     db = ExperimentDatabase()
 
     query_string = """
@@ -1191,6 +1317,22 @@ def fetch_trials(*args, **kwargs):
 
 
 def fetch_mouse_trials(mouse_name):
+    """
+    Fetches all trials associated with a specific mouse.
+
+    Args:
+        mouse_name (str): The name of the mouse.
+
+    Returns:
+        list: A list of dictionaries representing the fetched trials.
+            Each dictionary contains the following keys:
+            - trial_id (int): The ID of the trial.
+            - start_time (datetime): The start time of the trial.
+            - mouse_name (str): The name of the mouse.
+            - behavior_file (str): The path to the behavior file.
+            - tSeries_path (str): The path to the tSeries file.
+
+    """
     db = ExperimentDatabase()
     trials = db.select_all(
         """
@@ -1209,6 +1351,18 @@ def fetch_mouse_trials(mouse_name):
 
 
 def _resolve_start_time(start_time):
+    """
+    Resolves the start time by parsing it in different formats.
+
+    Args:
+        start_time (str): The start time to be resolved.
+
+    Returns:
+        str: The resolved start time in the format "%Y-%m-%d %H:%M:%S".
+
+    Raises:
+        Exception: If the start time cannot be parsed.
+    """
     try:
         tstruct = time.strptime(start_time, "%Y-%m-%d %H:%M:%S")
     except ValueError:
@@ -1230,6 +1384,15 @@ def _resolve_start_time(start_time):
 
 
 def fetch_experiment_ID(start_time):
+    """
+    Fetches the experiment ID based on the given start time.
+
+    Args:
+        start_time (datetime): The start time of the experiment.
+
+    Returns:
+        int or None: The experiment ID if found, None otherwise.
+    """
     db = ExperimentDatabase()
     start_time = _resolve_start_time(start_time)
 
@@ -1278,6 +1441,15 @@ def fetch_all_projects():
 
 
 def fetch_all_mice(project_name=None):
+    """
+    Fetches all mice from the database.
+
+    Args:
+        project_name (str, optional): The name of the project. If provided, only mice associated with the project will be fetched. Defaults to None.
+
+    Returns:
+        list: A list of mouse names.
+    """
     db = ExperimentDatabase()
 
     if project_name is not None:
@@ -1318,6 +1490,14 @@ def fetch_all_mice(project_name=None):
 
 
 def insert_into_experiment(trial_id, start_time, stop_time=None):
+    """
+    Inserts a trial into the experiment database and updates the corresponding experiment record.
+
+    Args:
+        trial_id (int): The ID of the trial to be inserted.
+        start_time (datetime): The start time of the experiment.
+        stop_time (datetime, optional): The stop time of the experiment. Defaults to None.
+    """
     db = ExperimentDatabase()
     start_time = _resolve_start_time(start_time)
 
