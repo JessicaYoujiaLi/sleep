@@ -3,3 +3,4 @@ settings.json
 .idea
 *.pyc
 *.h5
+notebooks/../**/*.png
