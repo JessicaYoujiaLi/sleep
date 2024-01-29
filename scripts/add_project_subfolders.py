@@ -1,30 +1,19 @@
 import argparse
-from src import sleep_experiment as sle
+from src.imaging_data_class import ImagingData
+from src.sleep_experiment import SleepExperiment
 
 
 def main():
-    # Create the parser
     parser = argparse.ArgumentParser(description="Process the sleep experiment data.")
-
-    # Add arguments
     parser.add_argument("mouse_id", type=str, help="Enter the mouse ID")
-    parser.add_argument(
-        "experiment_date", type=str, help="Enter the experiment date (YYYYMMDD)"
-    )
-    parser.add_argument(
-        "tseries_folder", type=str, help="Enter the TSeries folder name"
-    )
-
-    # Parse the arguments
     args = parser.parse_args()
 
-    # Use the arguments to create the SleepExperiment object
-    experiment = sle.SleepExperiment(
-        args.mouse_id, args.experiment_date, args.tseries_folder
-    )
+    imaging_data = ImagingData(args.mouse_id)
+    tseries_folders = imaging_data.find_tseries_folders()
 
-    # Create the folder structure
-    experiment.create_folder_structure()
+    for tseries_folder in tseries_folders:
+        experiment = SleepExperiment(args.mouse_id, tseries_folder=tseries_folder)
+        experiment.create_folder_structure()
 
 
 if __name__ == "__main__":

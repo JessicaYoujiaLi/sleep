@@ -39,10 +39,11 @@ class ImagingData:
         Raises:
             ValueError: If no TSeries folders are found in the root folder.
         """
+        print(f"Looking for TSeries folders in {self.root_folder}")
         folders = []
         for dirpath, dirnames, _ in walk(self.root_folder):
             for dirname in dirnames:
-                if dirname.startswith("TSeries"):
+                if dirname.startswith("TSeries") and not dirname.endswith(".sima"):
                     folders.append(join(dirpath, dirname))
         if len(folders) == 0:
             raise ValueError(f"No TSeries found in {self.root_folder}")
