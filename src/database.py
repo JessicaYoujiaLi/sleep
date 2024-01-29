@@ -1,4 +1,5 @@
 import json
+import os
 import os.path
 import pickle
 import time
@@ -43,10 +44,10 @@ class ExperimentDatabase:
     def connect(self):
         """Connect to the SQL database."""
 
-        host = "127.0.0.1"
-        user = ""  # TODO: use different credentials
-        password = ""  # TODO: update credentials
-        database = "experiments"
+        host = os.environ.get("DB_HOST", "127.0.0.1")
+        user = os.environ.get("DB_USER")  # TODO: use different credentials
+        password = os.environ.get("DB_PASSWORD")  # TODO: update credentials
+        database = os.environ.get("DB_NAME", "experiments")
 
         self._database = pymysql.connect(
             host=host,
