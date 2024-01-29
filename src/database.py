@@ -44,8 +44,8 @@ class ExperimentDatabase:
         """Connect to the SQL database."""
 
         host = "127.0.0.1"
-        user = "gergely"  # TODO: use different credentials
-        password = "CipoFuzo1"  # TODO: update credentials
+        user = ""  # TODO: use different credentials
+        password = ""  # TODO: update credentials
         database = "experiments"
 
         self._database = pymysql.connect(
