@@ -24,8 +24,7 @@ class SleepExperiment:
 
     def create_folder_structure(self) -> None:
         """
-        Creates a custom folder structure for the experiment within the .sima folder if it exists,
-        otherwise in the tseries_folder.
+        Creates a custom folder structure for the experiment within the .sima folder if it exists.
         """
         # Extract the TSeries folder name from the full path
         tseries_folder_name = self.tseries_folder.rstrip("/").split("/")[-1]
