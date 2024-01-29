@@ -1,9 +1,12 @@
+from os.path import join
 import dabest
 import numpy as np
 import pandas as pd
 
 
-def ci_difference_unpaired(awake_arr: np.array, nrem_arr: np.array, resamples: int=5000) -> tuple:
+def ci_difference_unpaired(
+    awake_arr: np.array, nrem_arr: np.array, resamples: int = 5000
+) -> tuple:
     """
 
     Calculates the Cohen's d effect size and p-value for an unpaired student t-test between two sets of numbers
@@ -30,19 +33,23 @@ def ci_difference_unpaired(awake_arr: np.array, nrem_arr: np.array, resamples: i
     if awake_arr.ndim != 1 or nrem_arr.ndim != 1:
         raise ValueError("Inputs must be 1-D arrays.")
 
-    dabest_dict = {'awake': awake_arr, 'nrem': nrem_arr}
-    dabest_df = pd.DataFrame.from_dict(dabest_dict, orient='index').transpose()
+    dabest_dict = {"awake": awake_arr, "nrem": nrem_arr}
+    dabest_df = pd.DataFrame.from_dict(dabest_dict, orient="index").transpose()
 
     # calculating the stats
-    two_groups_unpaired = dabest.load(dabest_df, idx=("awake", "nrem"),
-                                      resamples=resamples)
+    two_groups_unpaired = dabest.load(
+        dabest_df, idx=("awake", "nrem"), resamples=resamples
+    )
     stats = two_groups_unpaired.cohens_d
-    significance = stats.results['pvalue_students_t'][0] < 0.05
-    difference = stats.results['difference'][0]
+    significance = stats.results["pvalue_students_t"][0] < 0.05
+    difference = stats.results["difference"][0]
 
     return difference, significance
 
-def ci_difference_paired(awake_arr: np.array, nrem_arr: np.array, resamples: int=5000) -> tuple:
+
+def ci_difference_paired(
+    awake_arr: np.array, nrem_arr: np.array, resamples: int = 5000
+) -> tuple:
     """
     Calculates the Cohen's d effect size and p-value for a paired student t-test between two sets of numbers
     Uses estimation stats to evaluate the difference between two sets of numbers.
@@ -68,28 +75,32 @@ def ci_difference_paired(awake_arr: np.array, nrem_arr: np.array, resamples: int
     if awake_arr.ndim != 1 or nrem_arr.ndim != 1:
         raise ValueError("Inputs must be 1-D arrays.")
 
-    dabest_dict = {'awake': awake_arr, 'nrem': nrem_arr}
-    dabest_df = pd.DataFrame.from_dict(dabest_dict, orient='index').transpose()
+    dabest_dict = {"awake": awake_arr, "nrem": nrem_arr}
+    dabest_df = pd.DataFrame.from_dict(dabest_dict, orient="index").transpose()
 
     # calculating the stats
-    two_groups_paired = dabest.load(dabest_df, idx=("awake", "nrem"),
-                                      resamples=resamples)
+    two_groups_paired = dabest.load(
+        dabest_df, idx=("awake", "nrem"), resamples=resamples
+    )
     stats = two_groups_paired.cohens_d
-    significance = stats.results['pvalue_students_t'][0] < 0.05
-    difference = stats.results['difference'][0]
+    significance = stats.results["pvalue_students_t"][0] < 0.05
+    difference = stats.results["difference"][0]
 
     return difference, significance
 
-def mean_activity(data: str, direction: str='Upregulated') -> pd.DataFrame:
+
+def mean_activity(data: str, direction: str = "Upregulated") -> pd.DataFrame:
     """
     Calculates the mean activity of upregulated/downregulated cells.
     :param data: str, path to the data folder
     :param direction: str, 'Upregulated' or 'Downregulated'
     :return: pd.DataFrame, mean activity of upregulated/downregulated cells
     """
-    dfof = pd.read_csv(join(data, 'dfof.csv'))
-    stat_results = pd.read_csv(join(data, 'Significant_DABEST_NREM.csv'))
-    upregulated = list(stat_results.query("Direction == @direction")['roi_label'].unique())
-    upreg_cells = dfof[dfof['roi_label'].isin(upregulated)]
-    upreg_cells.set_index('roi_label', drop=True, inplace=True)
+    dfof = pd.read_csv(join(data, "dfof.csv"))
+    stat_results = pd.read_csv(join(data, "Significant_DABEST_NREM.csv"))
+    upregulated = list(
+        stat_results.query("Direction == @direction")["roi_label"].unique()
+    )
+    upreg_cells = dfof[dfof["roi_label"].isin(upregulated)]
+    upreg_cells.set_index("roi_label", drop=True, inplace=True)
     return upreg_cells.mean()
