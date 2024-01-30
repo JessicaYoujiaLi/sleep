@@ -4,6 +4,14 @@ from src.sleep_experiment import SleepExperiment
 
 
 def main():
+    """
+    This script takes a mouse ID as input and creates the necessary folder structure for the experiment.
+
+    Usage: python add_project_subfolders.py <mouse_id>
+
+    Args:
+        mouse_id (str): The ID of the mouse for which the sleep experiment data will be processed.
+    """
     parser = argparse.ArgumentParser(description="Process the sleep experiment data.")
     parser.add_argument("mouse_id", type=str, help="Enter the mouse ID")
     args = parser.parse_args()
