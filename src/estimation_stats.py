@@ -1,4 +1,18 @@
+"""Module for calculating effect size and significance using estimation statistics.
+
+This module provides functions for calculating Cohen's d effect size and p-value for unpaired and paired student t-tests
+between two sets of numbers. It uses estimation statistics to evaluate the difference between the two sets of numbers.
+
+Functions:
+- ci_difference_unpaired: Calculates Cohen's d effect size and p-value for an unpaired student t-test.
+- ci_difference_paired: Calculates Cohen's d effect size and p-value for a paired student t-test.
+- mean_activity: Calculates the mean activity of upregulated/downregulated cells.
+
+For more information on estimation statistics, refer to the documentation: https://acclab.github.io/DABEST-python-docs/tutorial.html
+"""
+
 from os.path import join
+
 import dabest
 import numpy as np
 import pandas as pd
