@@ -1,6 +1,7 @@
 import datetime
+import warnings
 from dataclasses import dataclass
-from os.path import isdir, join, exists
+from os.path import exists, isdir, join
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -26,13 +27,13 @@ class Suite2p:
         Helper method to load data from a directory.
 
         Args:
-            s2p_folder (str): The path to the directory containing the data.
             subdir_name (str): The name of the subdirectory containing the data.
             signal_source (str): The name of the signal source file. "F" - cell fluorescence data,
-              "Fneu" - neuropil data, "spks" - deconvolvd spike data.
+                "Fneu" - neuropil data, "spks" - deconvolved spike data.
 
         Returns:
-            Tuple: A tuple containing the iscells and raw_signal arrays, or None if the directory does not exist.
+            Tuple: A tuple containing the iscells, raw_signal arrays and the plane index array
+                or None if the directory does not exist.
         """
 
         path = join(self.s2p_folder, subdir_name)
@@ -41,62 +42,86 @@ class Suite2p:
 
         iscells = np.load(join(path, "iscell.npy"))
         raw_signal = np.load(join(path, f"{signal_source}.npy"))
-        return iscells, raw_signal
+        # Load the plane index
+        stat_file = np.load(join(path, "stat.npy"))
+        values_iplane = [d["iplane"] for d in stat_file if "iplane" in d]
+        plane_index = np.array(values_iplane)
+        return iscells, raw_signal, plane_index
 
-    def is_cell_signal(self, signal_source: str = "F") -> np.ndarray:
+    def is_cell_signal(self, signal_source: str = "F", plane=None) -> np.ndarray:
         """
         Returns the signal of the `is_cell` cells in the Suite2p output directory.
 
         Args:
-            s2p_folder (str): The path to the Suite2p output directory.
             signal_source (str, optional): The source of the signal. Defaults to "F".
+            plane (int, optional): The plane index. If provided, returns the signal of cells in the specified plane.
 
         Returns:
             np.ndarray: The true signal of the cells.
         """
         try:
-            iscells, raw_signal = self._load_data_from_dir(
+            iscells, raw_signal, plane_index = self._load_data_from_dir(
                 COMBINED_DIR_NAME, signal_source
             )
         except DirectoryNotFoundError:
-            iscells, raw_signal = self._load_data_from_dir(
+            warnings.warn(f"Combined directory not found, falling back to {PLANE0_DIR_NAME}.")
+            iscells, raw_signal, plane_index = self._load_data_from_dir(
                 PLANE0_DIR_NAME, signal_source
             )
+        if plane is not None:
+            signal = np.where(iscells[:, 0] & (plane_index == plane))[0]
+            return raw_signal[signal, :]
+        else:
+            signal = np.where(iscells[:, 0])[0]
+            return raw_signal[signal, :]
 
-        signal = np.where(iscells[:, 0])[0]
-        return raw_signal[signal, :]
-
-    def get_cells(self):
+    def get_cells(self, plane=None):
         """
         Returns the cell signals for the fluorescence data.
 
-        Returns:
-        numpy.ndarray: An array of cell signals for the fluorescence data.
-        """
-        return self.is_cell_signal(signal_source="F")
+        Args:
+            plane (int, optional): The plane index. Defaults to None.
 
-    def get_npil(self):
+        Returns:
+            numpy.ndarray: An array of cell signals for the fluorescence data.
+        """
+        return self.is_cell_signal(signal_source="F", plane=plane)
+
+    def get_npil(self, plane=None):
         """
         Computes the neuropil signal for each cell in the Suite2p object.
+
+        Parameters:
+        -----------
+        plane : int or None, optional
+            The plane index for which to compute the neuropil signal. If None, the signal will be computed for all planes.
 
         Returns:
         -------
         npil : numpy.ndarray
             The neuropil signal for each cell.
         """
-        return self.is_cell_signal(signal_source="Fneu")
+        return self.is_cell_signal(signal_source="Fneu", plane=plane)
 
-    def get_spikes(self):
+    def get_spikes(self, plane=None):
         """
         Returns the spike signal for each cell in the Suite2p object.
 
-        :return: numpy.ndarray
-            Array of shape (num_cells, num_frames) containing the spike signal for each cell.
+        Parameters:
+        -----------
+        plane: int, optional
+            The plane number for which to retrieve the spike signal. If not specified, all planes are considered.
+        
+        Returns:
+        -------
+        numpy.ndarray: Array of shape (num_cells, num_frames) containing the spike signal for each cell.
         """
-        return self.is_cell_signal(signal_source="spks")
+        return self.is_cell_signal(signal_source="spks", plane=plane)
+    
 
-    def time_avg_image(self, save_path=None):
-        """
+    def load_avg_image(self):
+        """        
+        TODO: make it plane specific
         Plot and display the time-averaged image(s) from the ops_array.
 
         Args:
@@ -105,19 +130,20 @@ class Suite2p:
         Returns:
             str or None: If save_path is provided, returns the path where the plot is saved. Otherwise, returns None.
         """
-        ops_path = join(self.s2p_folder, "ops1.npy")
-
-        # Check if ops1.npy exists
+        ops_path = join(self.s2p_folder, "ops1.npy")        
         if not exists(ops_path):
             print(f"File not found: {ops_path}")
             return None
 
         ops_array = np.load(ops_path, allow_pickle=True)
+        return ops_array
 
-        # Check the number of elements in ops_array
+    def plot_time_avg_image(self, ops_array, save_path=None):
+        if ops_array is None:
+            return None
+
         num_elements = len(ops_array)
 
-        # Define a consistent plot size for both scenarios
         plot_width_per_image = 5  # Width per image in inches
         plot_height_per_image = 5  # Height per image in inches
 
@@ -126,16 +152,16 @@ class Suite2p:
             fig, ax = plt.subplots(
                 figsize=(plot_width_per_image, plot_height_per_image)
             )
+            # the image is flipped upside down to match the FOV
             image_data = np.flipud(ops_array[0]["meanImg"])
             ax.imshow(
                 image_data, cmap="gray"
-            )  # cmap='gray' for grayscale, remove if your images are in color
+            )  
             ax.set_title("Mean Image")
             ax.axis("off")
 
         # Multiple elements handling
-        else:
-            # Set up the subplot grid
+        else:            
             cols = int(np.ceil(np.sqrt(num_elements)))
             rows = int(np.ceil(num_elements / cols))
 
@@ -159,23 +185,22 @@ class Suite2p:
                 axes[j].axis("off")
         plt.tight_layout()
 
+    def _save_or_display_plot(self, fig, save_path=None):
         if save_path is not None:
-            filename = f"time_avg_image_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
+            filename = "time_avg_image.png"
             full_save_path = join(save_path, filename)
-
-            # Check if the file already exists
             if not exists(full_save_path):
                 try:
-                    plt.savefig(full_save_path)
+                    fig.savefig(full_save_path)
                     print(f"Saved plot to {full_save_path}")
                 except Exception as e:
                     print(f"Error saving plot to {full_save_path}: {e}")
                 finally:
-                    plt.close()  # Ensure the plot is closed in any case
+                    plt.close(fig)
             else:
-                print(f"File already exists: {full_save_path}")
-
-            return save_path
+                warnings.warn(f"File already exists: {full_save_path}, saving new file.")
+                filename = f"time_avg_image_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
+                full_save_path = join(save_path, filename)
         else:
             plt.show()
-            return None
+            plt.close(fig)
