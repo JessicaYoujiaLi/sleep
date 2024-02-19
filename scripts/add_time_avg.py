@@ -12,14 +12,15 @@ Arguments:
 Example:
 python -m add_time_avg -d /path/to/mouse
 """
-
 import argparse as arg
+import logging
 import sys
 from os import walk
 from os.path import dirname, isdir, join
 
 from src.suite2p_class import Suite2p
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def add_time_avg(directory):
     """
@@ -32,7 +33,7 @@ def add_time_avg(directory):
         None
     """
     if not isdir(directory):
-        print(f"Error: The directory '{directory}' does not exist.")
+        logging.error(f"Error: The directory '{directory}' does not exist.")
         sys.exit(1)
 
     for root, dirs, files in walk(directory):
@@ -41,11 +42,12 @@ def add_time_avg(directory):
             save_dir = dirname(s2p_path)
             print(f"Processing suite2p data in: {s2p_path}")
             s2p = Suite2p(s2p_path)
-            result = s2p.time_avg_image(save_path=save_dir)
+            time_avg_image = s2p.load_avg_image()                      
+            result = s2p.plot_time_avg_image(time_avg_image, save_path=save_dir)
             if result is None:
-                print(f"No time-averaged image was saved in: {save_dir}")
+                logging.warning(f"No time-averaged image was saved in: {save_dir}")
             else:
-                print(f"Time-averaged image saved in: {save_dir}")
+                logging.info(f"Time-averaged image saved in: {save_dir}")
 
 
 if __name__ == "__main__":

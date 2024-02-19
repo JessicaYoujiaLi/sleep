@@ -184,6 +184,8 @@ class Suite2p:
             for j in range(i + 1, len(axes)):
                 axes[j].axis("off")
         plt.tight_layout()
+        self._save_or_display_plot(fig, save_path)
+        return fig
 
     def _save_or_display_plot(self, fig, save_path=None):
         if save_path is not None:
@@ -201,6 +203,14 @@ class Suite2p:
                 warnings.warn(f"File already exists: {full_save_path}, saving new file.")
                 filename = f"time_avg_image_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
                 full_save_path = join(save_path, filename)
+                try:
+                    fig.savefig(full_save_path)
+                    print(f"Saved new plot to {full_save_path}")                    
+                except Exception as e:
+                    print(f"Error saving new plot to {full_save_path}: {e}")
+                finally:
+                    plt.close(fig)
+            
         else:
             plt.show()
             plt.close(fig)
