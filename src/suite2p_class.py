@@ -2,6 +2,7 @@ import datetime
 import warnings
 from dataclasses import dataclass
 from os.path import exists, isdir, join
+from typing import Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -40,15 +41,18 @@ class Suite2p:
         if not isdir(path):
             raise DirectoryNotFoundError(f"Directory {path} does not exist")
 
-        iscells = np.load(join(path, "iscell.npy"))
-        raw_signal = np.load(join(path, f"{signal_source}.npy"))
-        # Load the plane index
-        stat_file = np.load(join(path, "stat.npy"))
-        values_iplane = [d["iplane"] for d in stat_file if "iplane" in d]
-        plane_index = np.array(values_iplane)
-        return iscells, raw_signal, plane_index
+        iscells = np.load(join(path, "iscell.npy"), allow_pickle=True)
+        # Extract and convert the first column to boolean
+        is_cell_boolean = iscells[:, 0].astype(bool)
 
-    def is_cell_signal(self, signal_source: str = "F", plane=None) -> np.ndarray:
+        raw_signal = np.load(join(path, f"{signal_source}.npy"), allow_pickle=True)
+        # Load the plane index
+        stat_file = np.load(join(path, "stat.npy"), allow_pickle=True)
+        values_iplane = [d["iplane"] for d in stat_file if "iplane" in d]
+        plane_index = np.array(values_iplane) # palne index will be an empty array in case of a single plane dataset
+        return is_cell_boolean, raw_signal, plane_index
+
+    def is_cell_signal(self, signal_source: str = "F", plane: Optional[int] = None) -> np.ndarray:
         """
         Returns the signal of the `is_cell` cells in the Suite2p output directory.
 
@@ -67,13 +71,20 @@ class Suite2p:
             warnings.warn(f"Combined directory not found, falling back to {PLANE0_DIR_NAME}.")
             iscells, raw_signal, plane_index = self._load_data_from_dir(
                 PLANE0_DIR_NAME, signal_source
-            )
-        if plane is not None:
-            signal = np.where(iscells[:, 0] & (plane_index == plane))[0]
-            return raw_signal[signal, :]
+            )            
+        if not plane_index.size:
+            if plane is not None:
+                warnings.warn(f"Single plane dataset detected, but plane {plane} was specified. Ignoring plane parameter.")
+            signal = np.where(iscells)[0]            
         else:
-            signal = np.where(iscells[:, 0])[0]
-            return raw_signal[signal, :]
+            if plane is not None:            
+                if plane < 0 or plane > np.max(plane_index):
+                    raise ValueError(f"Plane {plane} is out of range")         
+                signal = np.where(iscells & (plane_index == plane))[0]
+            else:        
+                signal = np.where(iscells)[0]
+        
+        return raw_signal[signal, :]        
 
     def get_cells(self, plane=None):
         """
@@ -122,6 +133,7 @@ class Suite2p:
     def load_avg_image(self):
         """        
         TODO: make it plane specific
+        TODO: add ROI masks 
         Plot and display the time-averaged image(s) from the ops_array.
 
         Args:
