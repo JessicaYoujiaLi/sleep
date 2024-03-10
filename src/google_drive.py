@@ -1,4 +1,4 @@
-"""functions for interacting with data in the
+"""Convenience functions for interacting with data in the
 Google Drive
 Author: Gergely Turi
 """
