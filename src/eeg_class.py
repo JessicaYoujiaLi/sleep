@@ -14,7 +14,10 @@ from src.imaging_data_class import ImagingData
 @dataclass
 class eegData(ImagingData):
     """
-    A class for loading and processing EEG data.
+    EEG data for a mouse.
+
+    Example usage:
+    >>> eeg = eegData("mouse_id")
     """
 
     eeg_folders: list = field(default_factory=list)
@@ -27,9 +30,6 @@ class eegData(ImagingData):
     def find_eeg_folders(self) -> list:
         """
         Finds all eeg folders in a given root folder.
-
-        Args:
-            root_folder (str): The root folder to search for eeg folders.
 
         Returns:
             list: A list of all eeg folders found in the root folder.

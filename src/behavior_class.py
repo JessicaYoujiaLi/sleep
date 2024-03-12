@@ -44,83 +44,84 @@ class behaviorData(ImagingData):
             ValueError: If no behavior folders are found in the root folder.
         """
 
-        print(f"Searching for behavior folders in {self.root_folder}")
+        print(f"Searching for behavior folders in {self.imaging_folders}")
         folders = []
-        for dirpath, dirnames, _ in walk(self.root_folder):
+        for dirpath, dirnames, _ in walk(self.imaging_folders):
             if "behavior" in dirnames:
                 folders.append(join(dirpath, "behavior"))
         if not folders:
-            raise ValueError(f"No behavior folders found in {self.root_folder}")
+            raise ValueError(f"No behavior folders found in {self.imaging_folders}")
         return folders
 
-    def processed_velocity(
-        self, behavior_folder: str = None, file_name="filtered_velocity.json"
-    ) -> np.ndarray:
-        """
-        Return the processed velocity of the mouse.
 
-        Parameters:
-        - behavior_folder (str): The path to the folder containing the velocity file.
-        - file_name (str): The name of the velocity file.
+def processed_velocity(
+    behavior_folder: str = None, file_name="filtered_velocity.json"
+) -> np.ndarray:
+    """
+    Return the processed velocity of the mouse.
 
-        Returns:
-        - np.ndarray: The processed velocity as a NumPy array.
+    Parameters:
+    - behavior_folder (str): The path to the folder containing the velocity file.
+    - file_name (str): The name of the velocity file.
 
-        Raises:
-        - FileNotFoundError: If the velocity file is not found in the specified folder.
-        """
-        try:
-            with open(join(behavior_folder, file_name), "r") as f:
-                processed_velocity = np.array(json.load(f))
+    Returns:
+    - np.ndarray: The processed velocity as a NumPy array.
 
-        except FileNotFoundError:
-            raise FileNotFoundError(
-                f"Could not find processed velocity file in {behavior_folder}, or it named other than 'filtered_velo.csv'"
-            )
-        return processed_velocity
+    Raises:
+    - FileNotFoundError: If the velocity file is not found in the specified folder.
+    """
+    try:
+        with open(join(behavior_folder, file_name), "r") as f:
+            processed_velocity = np.array(json.load(f))
 
-    @staticmethod
-    def define_immobility(
-        velocity: np.ndarray,
-        framerate: float = 10,
-        threshold: float = 1.0,
-        min_duration: float = 1.0,
-        min_periods: int = 1,
-        center: bool = True,
-    ):
-        """Define time periods of immobility based on a rolling window of velocity.
+    except FileNotFoundError:
+        raise FileNotFoundError(
+            f"Could not find processed velocity file in {behavior_folder}, or it named other than 'filtered_velo.csv'"
+        )
+    return processed_velocity
 
-        A Mouse is considered immobile if velocity has not exceeded min_vel for the
-        previous min_dur seconds.
 
-        Default values for min_dur and min_vel are taken from:
-        Stefanini...Fusi et al. 2018 (https://doi.org/10.1101/292953)
+def define_immobility(
+    velocity: np.ndarray,
+    framerate: float = 10,
+    threshold: float = 1.0,
+    min_duration: float = 1.0,
+    min_periods: int = 1,
+    center: bool = True,
+):
+    """Define time periods of immobility based on a rolling window of velocity.
 
-        Args:
-            velocity: numpy array
-                The filtered and processed velocity of the mouse.
-            framerate: float
-                The framerate of the velocity data.
-            threshold: float
-                The threshold value for defining immobility.
-            min_duration: float
-                The minimum duration of immobility.
-            min_periods: int
-                The minimum number of periods to consider immobile.
-            center: bool
-                Whether to center the immobile periods.
-        Returns:
-            mobile_immobile: pandas Series
-                A one-dimensional ndarray of booleans, where True signifies mobile
-                times and False signifies immobile times.
+    A Mouse is considered immobile if velocity has not exceeded min_vel for the
+    previous min_dur seconds.
 
-        """
+    Default values for min_dur and min_vel are taken from:
+    Stefanini...Fusi et al. 2018 (https://doi.org/10.1101/292953)
 
-        velocity_series = pd.Series(velocity).astype(float)
-        window_size = int(framerate * min_duration)
-        rolling_max_vel = velocity_series.rolling(
-            window_size, min_periods=min_periods, center=center
-        ).max()
-        mobile_immobile = (rolling_max_vel > threshold).astype(bool)
+    Args:
+        velocity: numpy array
+            The filtered and processed velocity of the mouse.
+        framerate: float
+            The framerate of the velocity data.
+        threshold: float
+            The threshold value for defining immobility.
+        min_duration: float
+            The minimum duration of immobility.
+        min_periods: int
+            The minimum number of periods to consider immobile.
+        center: bool
+            Whether to center the immobile periods.
+    Returns:
+        mobile_immobile: pandas Series
+            A one-dimensional ndarray of booleans, where True signifies mobile
+            times and False signifies immobile times.
 
-        return mobile_immobile
+    """
+
+    velocity_series = pd.Series(velocity).astype(float)
+    window_size = int(framerate * min_duration)
+    rolling_max_vel = velocity_series.rolling(
+        window_size, min_periods=min_periods, center=center
+    ).max()
+    mobile_immobile = (rolling_max_vel > threshold).astype(bool)
+
+    return mobile_immobile
