@@ -5,12 +5,11 @@ TODO: make it so that the script can take single experiment folders as input.
 
 """
 
+import logging
 from argparse import ArgumentParser as AP
 from os.path import join
+
 from src import behavior_class as bc
-
-import logging
-
 
 # Configure logging
 logging.basicConfig(
@@ -40,8 +39,8 @@ def main():
     for behavior_folder in behavior.behavior_folders:
         try:
             logger.info(f"Processing folder: {behavior_folder}")
-            processed_velo = behavior.processed_velocity(behavior_folder)
-            immobility = behavior.define_immobility(velocity=processed_velo)
+            processed_velo = bc.processed_velocity(behavior_folder)
+            immobility = bc.define_immobility(velocity=processed_velo)
             output_path = join(behavior_folder, "mobility_immobility.json")
             immobility.to_json(output_path, orient="records", indent=4)
             logger.info(
