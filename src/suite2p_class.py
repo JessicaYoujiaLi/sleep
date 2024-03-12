@@ -19,7 +19,8 @@ class DirectoryNotFoundError(Exception):
 
 @dataclass
 class Suite2p:
-    """Class for suite2p data"""
+    """Class for suite2p data
+    Initialized with the path to the suite2p folder"""
 
     s2p_folder: str
 
@@ -49,10 +50,14 @@ class Suite2p:
         # Load the plane index
         stat_file = np.load(join(path, "stat.npy"), allow_pickle=True)
         values_iplane = [d["iplane"] for d in stat_file if "iplane" in d]
-        plane_index = np.array(values_iplane) # palne index will be an empty array in case of a single plane dataset
+        plane_index = np.array(
+            values_iplane
+        )  # palne index will be an empty array in case of a single plane dataset
         return is_cell_boolean, raw_signal, plane_index
 
-    def is_cell_signal(self, signal_source: str = "F", plane: Optional[int] = None) -> np.ndarray:
+    def is_cell_signal(
+        self, signal_source: str = "F", plane: Optional[int] = None
+    ) -> np.ndarray:
         """
         Returns the signal of the `is_cell` cells in the Suite2p output directory.
 
@@ -68,23 +73,27 @@ class Suite2p:
                 COMBINED_DIR_NAME, signal_source
             )
         except DirectoryNotFoundError:
-            warnings.warn(f"Combined directory not found, falling back to {PLANE0_DIR_NAME}.")
+            warnings.warn(
+                f"Combined directory not found, falling back to {PLANE0_DIR_NAME}."
+            )
             iscells, raw_signal, plane_index = self._load_data_from_dir(
                 PLANE0_DIR_NAME, signal_source
-            )            
+            )
         if not plane_index.size:
             if plane is not None:
-                warnings.warn(f"Single plane dataset detected, but plane {plane} was specified. Ignoring plane parameter.")
-            signal = np.where(iscells)[0]            
+                warnings.warn(
+                    f"Single plane dataset detected, but plane {plane} was specified. Ignoring plane parameter."
+                )
+            signal = np.where(iscells)[0]
         else:
-            if plane is not None:            
+            if plane is not None:
                 if plane < 0 or plane > np.max(plane_index):
-                    raise ValueError(f"Plane {plane} is out of range")         
+                    raise ValueError(f"Plane {plane} is out of range")
                 signal = np.where(iscells & (plane_index == plane))[0]
-            else:        
+            else:
                 signal = np.where(iscells)[0]
-        
-        return raw_signal[signal, :]        
+
+        return raw_signal[signal, :]
 
     def get_cells(self, plane=None):
         """
@@ -122,18 +131,17 @@ class Suite2p:
         -----------
         plane: int, optional
             The plane number for which to retrieve the spike signal. If not specified, all planes are considered.
-        
+
         Returns:
         -------
         numpy.ndarray: Array of shape (num_cells, num_frames) containing the spike signal for each cell.
         """
         return self.is_cell_signal(signal_source="spks", plane=plane)
-    
 
     def load_avg_image(self):
-        """        
+        """
         TODO: make it plane specific
-        TODO: add ROI masks 
+        TODO: add ROI masks
         Plot and display the time-averaged image(s) from the ops_array.
 
         Args:
@@ -142,7 +150,7 @@ class Suite2p:
         Returns:
             str or None: If save_path is provided, returns the path where the plot is saved. Otherwise, returns None.
         """
-        ops_path = join(self.s2p_folder, "ops1.npy")        
+        ops_path = join(self.s2p_folder, "ops1.npy")
         if not exists(ops_path):
             print(f"File not found: {ops_path}")
             return None
@@ -166,14 +174,12 @@ class Suite2p:
             )
             # the image is flipped upside down to match the FOV
             image_data = np.flipud(ops_array[0]["meanImg"])
-            ax.imshow(
-                image_data, cmap="gray"
-            )  
+            ax.imshow(image_data, cmap="gray")
             ax.set_title("Mean Image")
             ax.axis("off")
 
         # Multiple elements handling
-        else:            
+        else:
             cols = int(np.ceil(np.sqrt(num_elements)))
             rows = int(np.ceil(num_elements / cols))
 
@@ -212,17 +218,19 @@ class Suite2p:
                 finally:
                     plt.close(fig)
             else:
-                warnings.warn(f"File already exists: {full_save_path}, saving new file.")
+                warnings.warn(
+                    f"File already exists: {full_save_path}, saving new file."
+                )
                 filename = f"time_avg_image_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
                 full_save_path = join(save_path, filename)
                 try:
                     fig.savefig(full_save_path)
-                    print(f"Saved new plot to {full_save_path}")                    
+                    print(f"Saved new plot to {full_save_path}")
                 except Exception as e:
                     print(f"Error saving new plot to {full_save_path}: {e}")
                 finally:
                     plt.close(fig)
-            
+
         else:
             plt.show()
             plt.close(fig)
