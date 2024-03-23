@@ -49,7 +49,7 @@ def interval_length_calculator(data, state_column, state_value):
         if pd.isna(stop):
             stop = data.index[-1]
         
-        length = stop - start
+        length = stop - start +1
         rows.append({'start': start, 'stop': stop, 'length': length})
     
     # Create DataFrame from accumulated rows
