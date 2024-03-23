@@ -46,7 +46,9 @@ def interval_length_calculator(data, state_column, state_value):
         # Find the corresponding stop
         stop = data[stops & (data.index > start)].index.min()
         # If there's no corresponding stop, use the last index
-        if pd.isna(stop):
+        if not pd.isna(stop):
+            stop -= 1 
+        else:
             stop = data.index[-1]
         
         length = stop - start +1
