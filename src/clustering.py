@@ -12,6 +12,60 @@ import seaborn as sns
 from scipy.cluster.hierarchy import leaves_list, linkage
 from scipy.spatial.distance import cosine, pdist, squareform
 
+def df_generator(data):
+    """
+    Generate DataFrame based on sleep intervals from the given data.
+
+    Args:
+        data (pd.DataFrame): The input data containing variable suggesting sleep or nrem state.
+
+    Returns:
+        pd.DataFrame: DataFrame containing sleep intervals (start index, end index and inetrval length).
+    """
+    df = pd.DataFrame()
+    index = [1] + [i+1 for i in range(len(data['score'])-1) if data['score'][i] != data['score'][i+1]]
+    for i in range(len(index)-1):
+        start = index[i]
+        end = index[i+1] - 1
+        df = df.append({'n': i, 'sleep': data.iloc[start, 2], 'length': end - start + 2}, ignore_index=True)
+    df['length'] = pd.to_numeric(df['length'])
+    df['sleep'] = df['sleep'].astype(int)
+
+    # Filter out rows where length < 600
+    del_rows = df[df['length'] < 600]['n'].tolist()
+    df_sleep = df[~df['n'].isin(del_rows)].reset_index(drop=True)
+
+    # Update start and end columns
+    df_sleep['n'] = df_sleep.index + 1
+    df_sleep['end'] = df_sleep['length'].cumsum()
+    df_sleep['start'] = df_sleep['end'].shift(1) + 1
+    df_sleep.loc[0, 'start'] = 1
+
+    # Convert columns to integers
+    df_sleep['start'] = df_sleep['start'].astype(int)
+
+    return df_sleep
+
+def process_dfof_mc(dfof, summary_sleep):
+    """
+    Process dF/F data based on awake and sleep intervals.
+
+    Args:
+        dfof (str): The dF/F data.
+        summary_sleep (pd.DataFrame): The summary of awake and sleep intervals.
+
+    Returns:
+        dict: A dictionary containing the processed dF/F data for awake and sleep intervals.
+    """
+    awake = []
+    sleep = []
+    for j in range(1, 21, 2):  # Adjusted range for Python's 0-indexing
+        awake.extend(range(summary_sleep['start'][j-1], summary_sleep['end'][j-1]+1))
+        sleep.extend(range(summary_sleep['start'][j], summary_sleep['end'][j]+1))
+
+    d_awake = dfof.iloc[:, [x-1 for x in awake]]  # Adjust index for Python
+    d_sleep = dfof.iloc[:, [x-1 for x in sleep]]
+    return {'d_awake': d_awake, 'd_sleep': d_sleep}
 
 def interval_length_calculator(data, state_column, state_value):
     """
