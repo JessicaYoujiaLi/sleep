@@ -43,6 +43,8 @@ def df_generator(data):
 
     # Convert columns to integers
     df_sleep['start'] = df_sleep['start'].astype(int)
+    df_sleep['length'] = df_sleep['length'].astype(int)
+    df_sleep['end'] = df_sleep['end'].astype(int)
 
     return df_sleep
 
