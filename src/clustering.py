@@ -74,8 +74,8 @@ def process_dfof_mc(dfof, summary_sleep):
         awake.extend(list(range(summary_sleep['start'][j-1], summary_sleep['end'][j-1]+1)))
         sleep.extend(list(range(summary_sleep['start'][j], summary_sleep['end'][j]+1)))
     
-    d_awake = dfof_data.iloc[:, awake] 
-    d_sleep = dfof_data.iloc[:, sleep]
+    d_awake = dfof.iloc[:, awake] 
+    d_sleep = dfof.iloc[:, sleep]
     return {'d_awake': d_awake, 'd_sleep': d_sleep}
 
 def interval_length_calculator(data, state_column, state_value):
