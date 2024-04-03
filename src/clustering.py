@@ -22,12 +22,21 @@ def df_generator(data):
     Returns:
         pd.DataFrame: DataFrame containing sleep intervals (start index, end index and inetrval length).
     """
-    df = pd.DataFrame()
+    # Assuming data is your original DataFrame containing 'NREM' and 'awake' columns
+    data['score'] = data.apply(lambda row: 1 if row['NREM'] else 0 if row['awake'] else None, axis=1)
+
+    # Initialize an empty list to store dictionaries
+    df_data = []
+
+    # Your existing code for data processing goes here
     index = [1] + [i+1 for i in range(len(data['score'])-1) if data['score'][i] != data['score'][i+1]]
     for i in range(len(index)-1):
         start = index[i]
         end = index[i+1] - 1
-        df = df.append({'n': i, 'sleep': data.iloc[start, 2], 'length': end - start + 2}, ignore_index=True)
+        df_data.append({'n': i, 'sleep': data.iloc[start, 2], 'length': end - start + 2})
+
+    # Create DataFrame from list of dictionaries
+    df = pd.DataFrame(df_data)
     df['length'] = pd.to_numeric(df['length'])
     df['sleep'] = df['sleep'].astype(int)
 
@@ -36,18 +45,17 @@ def df_generator(data):
     df_sleep = df[~df['n'].isin(del_rows)].reset_index(drop=True)
 
     # Update start and end columns
-    df_sleep['n'] = df_sleep.index + 1
-    df_sleep['end'] = df_sleep['length'].cumsum()
-    df_sleep['start'] = df_sleep['end'].shift(1) + 1
-    df_sleep.loc[0, 'start'] = 1
+    df_sleep['n'] = df_sleep.index
+    df_sleep['end'] = df_sleep['length'].cumsum()-1
+    df_sleep['start'] = df_sleep['end'].shift(1)+1
+    df_sleep.loc[0, 'start'] = 0
 
     # Convert columns to integers
     df_sleep['start'] = df_sleep['start'].astype(int)
     df_sleep['length'] = df_sleep['length'].astype(int)
     df_sleep['end'] = df_sleep['end'].astype(int)
-
     return df_sleep
-
+    
 def process_dfof_mc(dfof, summary_sleep):
     """
     Process dF/F data based on awake and sleep intervals.
