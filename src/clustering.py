@@ -17,10 +17,10 @@ def df_generator(data):
     Generate DataFrame based on sleep intervals from the given data.
 
     Args:
-        data (pd.DataFrame): The input data containing variable suggesting sleep or nrem state.
+        data (pd.DataFrame): The input data containing variables suggesting sleep or NREM state.
 
     Returns:
-        pd.DataFrame: DataFrame containing sleep intervals (start index, end index and inetrval length).
+        pd.DataFrame: DataFrame containing sleep intervals (start index, end index, and interval length).
     """
     # Assuming data is your original DataFrame containing 'NREM' and 'awake' columns
     data['score'] = data.apply(lambda row: 1 if row['NREM'] else 0 if row['awake'] else None, axis=1)
@@ -46,8 +46,8 @@ def df_generator(data):
 
     # Update start and end columns
     df_sleep['n'] = df_sleep.index
-    df_sleep['end'] = df_sleep['length'].cumsum()-1
-    df_sleep['start'] = df_sleep['end'].shift(1)+1
+    df_sleep['end'] = df_sleep['length'].cumsum() - 1
+    df_sleep['start'] = df_sleep['end'].shift(1) + 1
     df_sleep.loc[0, 'start'] = 0
 
     # Convert columns to integers
