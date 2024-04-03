@@ -71,8 +71,8 @@ def process_dfof_mc(dfof, summary_sleep):
     sleep = []
     k = len(summary_sleep)-1
     for j in range(1, k, 2):  # Adjusted range for Python's 0-indexing
-        awake.extend(range(summary_sleep['start'][j-1], summary_sleep['end'][j-1]+1))
-        sleep.extend(range(summary_sleep['start'][j], summary_sleep['end'][j]+1))
+        awake.extend(range(summary_sleep['start'][j-1], summary_sleep['end'][j-1]))
+        sleep.extend(range(summary_sleep['start'][j], summary_sleep['end'][j]))
 
     d_awake = dfof.iloc[:, [x-1 for x in awake]]  # Adjust index for Python
     d_sleep = dfof.iloc[:, [x-1 for x in sleep]]
