@@ -23,17 +23,17 @@ def df_generator(data):
         pd.DataFrame: DataFrame containing sleep intervals (start index, end index, and interval length).
     """
     # Assuming data is your original DataFrame containing 'NREM' and 'awake' columns
-    data['score'] = data.apply(lambda row: 1 if row['NREM'] else 0 if row['awake'] else None, axis=1)
+    data['indicator'] = data.apply(lambda row: 1 if row['NREM'] else 0 if row['awake'] else None, axis=1)
 
     # Initialize an empty list to store dictionaries
     df_data = []
 
     # Your existing code for data processing goes here
-    index = [1] + [i+1 for i in range(len(data['score'])-1) if data['score'][i] != data['score'][i+1]]
+    index = [1] + [i+1 for i in range(len(data['indicator'])-1) if data['indicator'][i] != data['indicator'][i+1]]
     for i in range(len(index)-1):
         start = index[i]
         end = index[i+1] - 1
-        df_data.append({'n': i, 'sleep': data.iloc[start, 2], 'length': end - start + 2})
+        df_data.append({'n': i, 'sleep': data.iloc[start, -1], 'length': end - start + 2})
 
     # Create DataFrame from list of dictionaries
     df = pd.DataFrame(df_data)
@@ -50,7 +50,7 @@ def df_generator(data):
     df_sleep.loc[0, 'start'] = 0
 
     # Convert columns to integers
-    df['sleep'] = df['sleep'].astype(int)
+    df_sleep['sleep'] = df_sleep['sleep'].astype(int)
     df_sleep['start'] = df_sleep['start'].astype(int)
     df_sleep['length'] = df_sleep['length'].astype(int)
     df_sleep['end'] = df_sleep['end'].astype(int)
