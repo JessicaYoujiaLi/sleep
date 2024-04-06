@@ -38,7 +38,6 @@ def df_generator(data):
     # Create DataFrame from list of dictionaries
     df = pd.DataFrame(df_data)
     df['length'] = pd.to_numeric(df['length'])
-    df['sleep'] = df['sleep'].astype(int)
 
     # Filter out rows where length < 600
     del_rows = df[df['length'] < 600]['n'].tolist()
@@ -51,6 +50,7 @@ def df_generator(data):
     df_sleep.loc[0, 'start'] = 0
 
     # Convert columns to integers
+    df['sleep'] = df['sleep'].astype(int)
     df_sleep['start'] = df_sleep['start'].astype(int)
     df_sleep['length'] = df_sleep['length'].astype(int)
     df_sleep['end'] = df_sleep['end'].astype(int)
