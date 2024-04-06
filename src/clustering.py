@@ -70,9 +70,11 @@ def process_dfof_mc(dfof, summary_sleep):
     awake = []
     sleep = []
     k = len(summary_sleep) - 1
-    for j in range(1, k, 2): 
-        awake.extend(list(range(summary_sleep['start'][j-1], summary_sleep['end'][j-1]+1)))
-        sleep.extend(list(range(summary_sleep['start'][j], summary_sleep['end'][j]+1)))
+    for j in range(0, k-1): 
+        if summary_sleep['sleep']==1:
+            awake.extend(list(range(summary_sleep['start'][j], summary_sleep['end'][j]+1)))
+        else:
+            sleep.extend(list(range(summary_sleep['start'][j], summary_sleep['end'][j]+1)))
     
     d_awake = dfof.iloc[:, awake] 
     d_sleep = dfof.iloc[:, sleep]
