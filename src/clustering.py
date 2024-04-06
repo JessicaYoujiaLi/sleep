@@ -69,15 +69,14 @@ def process_dfof_mc(dfof, summary_sleep):
     """
     awake = []
     sleep = []
-    k = len(summary_sleep) - 1
-    for j in range(0, k-1): 
-        if summary_sleep['sleep']==1:
-            awake.extend(list(range(summary_sleep['start'][j], summary_sleep['end'][j]+1)))
+    for index, row in df_sleep.iterrows():
+        if row['sleep'] == 0:
+            awake.extend(range(row['start'], row['end'] + 1))
         else:
-            sleep.extend(list(range(summary_sleep['start'][j], summary_sleep['end'][j]+1)))
+            sleep.extend(range(row['start'], row['end'] + 1))
     
-    d_awake = dfof.iloc[:, awake] 
-    d_sleep = dfof.iloc[:, sleep]
+    d_awake = dfof_data.iloc[:, awake] 
+    d_sleep = dfof_data.iloc[:, sleep]
     return {'d_awake': d_awake, 'd_sleep': d_sleep}
 
 def interval_length_calculator(data, state_column, state_value):
