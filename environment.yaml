@@ -12,6 +12,9 @@ dependencies:
   - matplotlib
   - seaborn
   - pandas
+  - jupyter ipywidgets
   - pip:
     - pymysql
+    - ydata-profilingy
+
 

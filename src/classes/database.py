@@ -6,7 +6,6 @@ import time
 
 # import MySQLdb
 # import MySQLdb.cursors
-
 import pymysql
 
 pymysql.install_as_MySQLdb()  # needed for pymysql to work with MySQLdb
@@ -45,8 +44,8 @@ class ExperimentDatabase:
         """Connect to the SQL database."""
 
         host = os.environ.get("DB_HOST", "127.0.0.1")
-        user = os.environ.get("DB_USER")  # TODO: use different credentials
-        password = os.environ.get("DB_PASSWORD")  # TODO: update credentials
+        user = os.environ.get("DB_USER")  
+        password = os.environ.get("DB_PASSWORD")  
         database = os.environ.get("DB_NAME", "experiments")
 
         self._database = pymysql.connect(
