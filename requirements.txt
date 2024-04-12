@@ -6,3 +6,8 @@ setuptools~=65.5.1
 dabest
 # clustering
 tslearn-0.6.3
+# full frame analysis
+tifffile
+# interactive plots
+plotly
+nbformat

@@ -2,6 +2,58 @@ import numpy as np
 from scipy.signal import butter, filtfilt
 
 
+def butter_lowpass(cutoff, fs, order=5):
+    """
+    Design a Butterworth lowpass filter.
+
+    Parameters:
+    - cutoff (float): The cutoff frequency of the filter.
+    - fs (float): The sampling rate of the input signal.
+    - order (int, optional): The order of the filter. Default is 5.
+
+    Returns:
+    - b (ndarray): The numerator coefficients of the filter.
+    - a (ndarray): The denominator coefficients of the filter.
+    """
+    nyq = 0.5 * fs  # Nyquist Frequency
+    normal_cutoff = cutoff / nyq
+    b, a = butter(order, normal_cutoff, btype="low", analog=False)
+    return b, a
+
+
+def butter_lowpass_filter(data, cutoff, fs, order=5, pad_length=150, pad_type="edge"):
+    """
+    Apply a Butterworth lowpass filter to the input data.
+
+    Parameters:
+    - data: numpy array
+        The input data to be filtered.
+    - cutoff: float
+        The cutoff frequency of the filter.
+    - fs: float
+        The sampling frequency of the data.
+    - order: int, optional
+        The order of the Butterworth filter (default is 5).
+    - pad_length: int, optional
+        The length of padding to be applied to the data (default is 150).
+    - pad_type: str, optional
+        The type of padding to be applied (default is "edge"). See numpy.pad for other 
+        options.
+
+    Returns:
+    - y: numpy array
+        The filtered data.
+
+    """
+    b, a = butter_lowpass(cutoff, fs, order=order)
+    # Padding the data using numpy's pad function
+    data_padded = np.pad(data, (pad_length, pad_length), mode=pad_type)
+    # Apply filter
+    y_padded = filtfilt(b, a, data_padded)
+    # Remove padding
+    y = y_padded[pad_length:-pad_length]
+    return y
+
 def bandpass_filter_with_padding(data, lowcut, highcut, fs, order=3, pad_length=50):
     """
     Apply a bandpass filter to the data with padding to reduce edge artifacts.

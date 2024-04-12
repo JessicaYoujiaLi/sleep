@@ -13,6 +13,9 @@ dependencies:
   - seaborn
   - pandas
   - jupyter ipywidgets
+  - tifffile
+  - nbformat
+  - plotly
   - pip:
     - pymysql
     - ydata-profilingy
