@@ -3,7 +3,7 @@ Author: Gergely Turi
 """
 
 from os.path import join
-from typing import Optional
+from typing import Optional, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -11,6 +11,7 @@ import pandas as pd
 import seaborn as sns
 from scipy.cluster.hierarchy import leaves_list, linkage
 from scipy.spatial.distance import cosine, pdist, squareform
+
 
 def df_generator(data):
     """
@@ -56,12 +57,12 @@ def df_generator(data):
     df_sleep['end'] = df_sleep['end'].astype(int)
     return df_sleep
     
-def process_dfof_mc(dfof, summary_sleep):
+def process_dfof_mc(dfof: pd.DataFrame, summary_sleep: pd.DataFrame) -> dict:
     """
     Process dF/F data based on awake and sleep intervals.
 
     Args:
-        dfof (str): The dF/F data.
+        dfof (pd.DataFrame): The dF/F data.
         summary_sleep (pd.DataFrame): The summary of awake and sleep intervals.
 
     Returns:
@@ -79,7 +80,7 @@ def process_dfof_mc(dfof, summary_sleep):
     d_sleep = dfof.iloc[:, sleep]
     return {'d_awake': d_awake, 'd_sleep': d_sleep}
 
-def interval_length_calculator(data, state_column, state_value):
+def interval_length_calculator(data: pd.DataFrame, state_column: str, state_value: int) -> pd.DataFrame:
     """
     Calculate the length, start, and stop indices of intervals for a specific state.
 
@@ -128,7 +129,7 @@ def interval_length_calculator(data, state_column, state_value):
     
     return result
 
-def process_dfof_intervals(dfof: pd.DataFrame, interval_df: pd.DataFrame):
+def process_dfof_intervals(dfof: Union[pd.DataFrame, pd.Series], interval_df: pd.DataFrame):
     """
     Process dF/F data based on specified intervals.
 
@@ -140,6 +141,11 @@ def process_dfof_intervals(dfof: pd.DataFrame, interval_df: pd.DataFrame):
         pd.DataFrame: A DataFrame containing the dF/F data filtered by the specified intervals.
     """
     filtered_dfof = pd.DataFrame()
+    
+    # Ensure dfof is a DataFrame, even if a Series is provided
+    if isinstance(dfof, pd.Series):
+        # Convert the Series to a DataFrame with one row and multiple columns
+        dfof = pd.DataFrame([dfof.values], columns=dfof.index)
 
     # Iterate over each interval
     for _, row in interval_df.iterrows():

@@ -27,7 +27,8 @@ def freq_calc(data: pd.Series, fs: int = 10, resolution: float = 0.01):
         The power spectral density of the input data.
     """
     nperseg = int(fs / resolution)
-    frequencies, psd = signal.welch(data, fs=fs, nperseg=nperseg, detrend="linear")
+    frequencies, psd = signal.welch(data, fs=fs, nperseg=nperseg,
+                                     detrend="linear")
     return frequencies, psd
 
 
@@ -125,6 +126,8 @@ def spectral_density_plot(
     labels: dict = None,
 ) -> plt.Axes:
     """Plot the spectral density of two states
+    
+    Parameters:
     data: pd.DataFrame
     states: list of two states
     ax: plt.Axes

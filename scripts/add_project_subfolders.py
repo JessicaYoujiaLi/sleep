@@ -1,6 +1,7 @@
 import argparse
-from src.imaging_data_class import ImagingData
-from src.sleep_experiment import SleepExperiment
+
+from src.classes.imaging_data_class import ImagingData
+from src.classes.sleep_experiment import SleepExperiment
 
 
 def main():

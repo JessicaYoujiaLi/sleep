@@ -3,10 +3,11 @@ based on lab3
 """
 from abc import ABC, abstractmethod
 
-from src.classes.filters
 import numpy as np
 import pandas as pd
-from suite2p_class import Suite2p
+
+from src.classes import filters
+from src.classes.suite2p_class import Suite2p
 
 
 class DFOFStrategy(ABC):

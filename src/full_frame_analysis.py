@@ -1,5 +1,9 @@
+from typing import Union
+
 import numpy as np
+import pandas as pd
 from scipy.signal import butter, filtfilt
+from statsmodels.tsa.stattools import acf
 
 
 def butter_lowpass(cutoff, fs, order=5):
@@ -20,46 +24,13 @@ def butter_lowpass(cutoff, fs, order=5):
     b, a = butter(order, normal_cutoff, btype="low", analog=False)
     return b, a
 
-
-def butter_lowpass_filter(data, cutoff, fs, order=5, pad_length=150, pad_type="edge"):
-    """
-    Apply a Butterworth lowpass filter to the input data.
-
-    Parameters:
-    - data: numpy array
-        The input data to be filtered.
-    - cutoff: float
-        The cutoff frequency of the filter.
-    - fs: float
-        The sampling frequency of the data.
-    - order: int, optional
-        The order of the Butterworth filter (default is 5).
-    - pad_length: int, optional
-        The length of padding to be applied to the data (default is 150).
-    - pad_type: str, optional
-        The type of padding to be applied (default is "edge"). See numpy.pad for other 
-        options.
-
-    Returns:
-    - y: numpy array
-        The filtered data.
-
-    """
-    b, a = butter_lowpass(cutoff, fs, order=order)
-    # Padding the data using numpy's pad function
-    data_padded = np.pad(data, (pad_length, pad_length), mode=pad_type)
-    # Apply filter
-    y_padded = filtfilt(b, a, data_padded)
-    # Remove padding
-    y = y_padded[pad_length:-pad_length]
-    return y
-
-def bandpass_filter_with_padding(data, lowcut, highcut, fs, order=3, pad_length=50):
+def bandpass_filter_with_padding(data: pd.Series, lowcut: float, highcut: float,
+                                  fs: Union[int,float] , order: int=3, pad_length: int=50):
     """
     Apply a bandpass filter to the data with padding to reduce edge artifacts.
 
     Parameters:
-    - data: array-like, the data to be filtered.
+    - data: pandas.Series, the data to be filtered.
     - lowcut: float, the low cutoff frequency.
     - highcut: float, the high cutoff frequency.
     - fs: int or float, the sampling frequency of the data.
@@ -68,7 +39,8 @@ def bandpass_filter_with_padding(data, lowcut, highcut, fs, order=3, pad_length=
 
     Returns:
     - filtered_data: array-like, the filtered data.
-    """
+    """   
+
     # Pad data by repeating the first and last values
     first_val, last_val = data.iloc[0], data.iloc[-1]
     pad_front = np.full(pad_length, first_val)
@@ -164,3 +136,67 @@ def downsample_boolean_signal(boolean_signal, target_length):
             downsampled_signal[i] = False
 
     return downsampled_signal
+
+def autocorrelation(signal, alpha=0.05):
+    """
+    Compute the autocorrelation of a signal and return both autocorrelation values and confidence intervals.
+
+    Args:
+        signal (array-like): The input signal.
+        alpha (float): Significance level for confidence intervals, default is 0.05 (95% confidence).
+
+    Returns:
+        tuple: Autocorrelation of the signal and confidence intervals.
+    """
+    # Calculate autocorrelation and confidence intervals
+    autocorr, confint = acf(signal, nlags=len(signal) - 1, fft=True, alpha=alpha)
+    return autocorr, confint
+
+def calculate_fft(signal: np.ndarray, fs: float) -> tuple:
+    """
+    Calculate the Fast Fourier Transform (FFT) of a signal and return frequency and magnitude.
+
+    Args:
+        signal (array-like): The signal data.
+        fs (float): Sampling frequency of the signal.
+
+    Returns:
+        tuple: frequency (array), magnitude (array) of the FFT.
+    """
+    # Compute FFT
+    fft_values = np.fft.fft(signal)
+    # Compute the magnitude of the FFT
+    magnitude = np.abs(fft_values)
+    # Compute frequency axis
+    n = len(signal)
+    frequency = np.fft.fftfreq(n, d=1 / fs)
+    # Only take the first half of the spectrum
+    half_n = n // 2
+    return frequency[:half_n], magnitude[:half_n]
+
+def calculate_frequency_components(signal: pd.Series, fs: float, num_components: int=20) -> tuple:
+    """
+    Calculate the main frequency components of a signal using FFT.
+
+    Args:
+        signal (np.array): The signal data.
+        fs (float): The sampling frequency of the signal.
+        num_components (int): Number of top frequency components to return.
+
+    Returns:
+        (np.array, np.array): Arrays of top frequencies and their corresponding PSD values.
+    """
+    # Compute the FFT
+    fft_values = np.fft.fft(signal)
+    # Compute the PSD
+    psd = np.abs(fft_values) ** 2
+    # Frequency axis
+    n = len(signal)
+    frequency = np.fft.fftfreq(n, d=1 / fs)
+    # Only consider the positive half of the spectrum
+    half_n = n // 2
+    main_freq = frequency[:half_n]
+    main_psd = psd[:half_n]
+    # Get the indices of the highest PSD values
+    main_indices = np.argsort(main_psd)[-num_components:]  # Top frequencies
+    return main_freq[main_indices], main_psd[main_indices]

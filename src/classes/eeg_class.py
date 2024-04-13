@@ -8,7 +8,7 @@ from os.path import join
 
 import pandas as pd
 
-from src.imaging_data_class import ImagingData
+from src.classes.imaging_data_class import ImagingData
 
 
 @dataclass
