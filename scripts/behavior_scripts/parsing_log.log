@@ -613,3 +613,389 @@ Traceback (most recent call last):
 FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/sert52b_1/4_4/TSeries-04042023-1023_sess2-002/TSeries-04042023-1023_sess2-002.sima/behavior, or it named other than 'filtered_velo.csv'
 2024-02-10 15:55:36,693 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/sert54a_5/4_4/TSeries-04042023-1023_sess1-001/TSeries-04042023-1023_sess1-001.sima/behavior
 2024-02-10 15:55:36,702 - INFO - Successfully processed and saved data for folder: /data2/gergely/invivo_DATA/sleep/sert54a_5/4_4/TSeries-04042023-1023_sess1-001/TSeries-04042023-1023_sess1-001.sima/behavior
+2024-05-04 17:41:19,934 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_MC_pento-002/TSeries-07072021-0833_MC_pento-002_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:41:19,963 - ERROR - Failed to process folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_MC_pento-002/TSeries-07072021-0833_MC_pento-002_Cycle00001_Element00001.sima/behavior. Error: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_MC_pento-002/TSeries-07072021-0833_MC_pento-002_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+Traceback (most recent call last):
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 74, in processed_velocity
+    with open(join(behavior_folder, file_name), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_MC_pento-002/TSeries-07072021-0833_MC_pento-002_Cycle00001_Element00001.sima/behavior/filtered_velocity.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "export_mobility_immobility.py", line 47, in main
+    processed_velo = bc.processed_velocity(behavior_folder)
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 78, in processed_velocity
+    raise FileNotFoundError(
+FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_MC_pento-002/TSeries-07072021-0833_MC_pento-002_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+2024-05-04 17:41:19,964 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_GC_pento-001/TSeries-07072021-0833_GC_pento-001_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:41:19,964 - ERROR - Failed to process folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_GC_pento-001/TSeries-07072021-0833_GC_pento-001_Cycle00001_Element00001.sima/behavior. Error: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_GC_pento-001/TSeries-07072021-0833_GC_pento-001_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+Traceback (most recent call last):
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 74, in processed_velocity
+    with open(join(behavior_folder, file_name), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_GC_pento-001/TSeries-07072021-0833_GC_pento-001_Cycle00001_Element00001.sima/behavior/filtered_velocity.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "export_mobility_immobility.py", line 47, in main
+    processed_velo = bc.processed_velocity(behavior_folder)
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 78, in processed_velocity
+    raise FileNotFoundError(
+FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_GC_pento-001/TSeries-07072021-0833_GC_pento-001_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+2024-05-04 17:41:19,964 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814_MC-002/TSeries-07022021-0814_MC-002_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:41:19,964 - ERROR - Failed to process folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814_MC-002/TSeries-07022021-0814_MC-002_Cycle00001_Element00001.sima/behavior. Error: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814_MC-002/TSeries-07022021-0814_MC-002_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+Traceback (most recent call last):
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 74, in processed_velocity
+    with open(join(behavior_folder, file_name), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814_MC-002/TSeries-07022021-0814_MC-002_Cycle00001_Element00001.sima/behavior/filtered_velocity.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "export_mobility_immobility.py", line 47, in main
+    processed_velo = bc.processed_velocity(behavior_folder)
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 78, in processed_velocity
+    raise FileNotFoundError(
+FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814_MC-002/TSeries-07022021-0814_MC-002_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+2024-05-04 17:41:19,964 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814-001/TSeries-07022021-0814-001_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:41:19,964 - ERROR - Failed to process folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814-001/TSeries-07022021-0814-001_Cycle00001_Element00001.sima/behavior. Error: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814-001/TSeries-07022021-0814-001_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+Traceback (most recent call last):
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 74, in processed_velocity
+    with open(join(behavior_folder, file_name), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814-001/TSeries-07022021-0814-001_Cycle00001_Element00001.sima/behavior/filtered_velocity.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "export_mobility_immobility.py", line 47, in main
+    processed_velo = bc.processed_velocity(behavior_folder)
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 78, in processed_velocity
+    raise FileNotFoundError(
+FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814-001/TSeries-07022021-0814-001_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+2024-05-04 17:41:19,964 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs_afternoon-002/TSeries-07012021-0854_MCs_afternoon-002_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:41:19,964 - ERROR - Failed to process folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs_afternoon-002/TSeries-07012021-0854_MCs_afternoon-002_Cycle00001_Element00001.sima/behavior. Error: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs_afternoon-002/TSeries-07012021-0854_MCs_afternoon-002_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+Traceback (most recent call last):
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 74, in processed_velocity
+    with open(join(behavior_folder, file_name), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs_afternoon-002/TSeries-07012021-0854_MCs_afternoon-002_Cycle00001_Element00001.sima/behavior/filtered_velocity.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "export_mobility_immobility.py", line 47, in main
+    processed_velo = bc.processed_velocity(behavior_folder)
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 78, in processed_velocity
+    raise FileNotFoundError(
+FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs_afternoon-002/TSeries-07012021-0854_MCs_afternoon-002_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+2024-05-04 17:41:19,964 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs-001/TSeries-07012021-0854_MCs-001_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:41:19,964 - ERROR - Failed to process folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs-001/TSeries-07012021-0854_MCs-001_Cycle00001_Element00001.sima/behavior. Error: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs-001/TSeries-07012021-0854_MCs-001_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+Traceback (most recent call last):
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 74, in processed_velocity
+    with open(join(behavior_folder, file_name), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs-001/TSeries-07012021-0854_MCs-001_Cycle00001_Element00001.sima/behavior/filtered_velocity.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "export_mobility_immobility.py", line 47, in main
+    processed_velo = bc.processed_velocity(behavior_folder)
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 78, in processed_velocity
+    raise FileNotFoundError(
+FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs-001/TSeries-07012021-0854_MCs-001_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+2024-05-04 17:41:19,964 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_12_SD2/TSeries-07122021-0901-002/TSeries-07122021-0901-002_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:41:19,964 - ERROR - Failed to process folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_12_SD2/TSeries-07122021-0901-002/TSeries-07122021-0901-002_Cycle00001_Element00001.sima/behavior. Error: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_12_SD2/TSeries-07122021-0901-002/TSeries-07122021-0901-002_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+Traceback (most recent call last):
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 74, in processed_velocity
+    with open(join(behavior_folder, file_name), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_12_SD2/TSeries-07122021-0901-002/TSeries-07122021-0901-002_Cycle00001_Element00001.sima/behavior/filtered_velocity.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "export_mobility_immobility.py", line 47, in main
+    processed_velo = bc.processed_velocity(behavior_folder)
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 78, in processed_velocity
+    raise FileNotFoundError(
+FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_12_SD2/TSeries-07122021-0901-002/TSeries-07122021-0901-002_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+2024-05-04 17:41:19,965 - INFO - Skipping folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_SD/TSeries-07072021-0833_MC1-002/TSeries-07072021-0833_MC1-002_Cycle00001_Element00001.sima/behavior as file already exists.
+2024-05-04 17:41:19,965 - INFO - Skipping folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_SD/TSeries-07072021-0833_MC2-004/TSeries-07072021-0833_MC2-004_Cycle00001_Element00001.sima/behavior as file already exists.
+2024-05-04 17:41:19,965 - INFO - Skipping folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_SD/TSeries-07072021-0833_GC1-001/TSeries-07072021-0833_GC1-001_Cycle00001_Element00001.sima/behavior as file already exists.
+2024-05-04 17:41:19,965 - INFO - Skipping folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_SD/TSeries-07072021-0833_GC2-003/TSeries-07072021-0833_GC2-003_Cycle00001_Element00001.sima/behavior as file already exists.
+2024-05-04 17:41:19,965 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_15_DOI2/TSeries-07152021-0822-001/TSeries-07152021-0822-001_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:41:19,965 - ERROR - Failed to process folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_15_DOI2/TSeries-07152021-0822-001/TSeries-07152021-0822-001_Cycle00001_Element00001.sima/behavior. Error: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_15_DOI2/TSeries-07152021-0822-001/TSeries-07152021-0822-001_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+Traceback (most recent call last):
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 74, in processed_velocity
+    with open(join(behavior_folder, file_name), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_15_DOI2/TSeries-07152021-0822-001/TSeries-07152021-0822-001_Cycle00001_Element00001.sima/behavior/filtered_velocity.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "export_mobility_immobility.py", line 47, in main
+    processed_velo = bc.processed_velocity(behavior_folder)
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 78, in processed_velocity
+    raise FileNotFoundError(
+FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_15_DOI2/TSeries-07152021-0822-001/TSeries-07152021-0822-001_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+2024-05-04 17:41:19,965 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/6_29/TSeries-06292021-0808-001/TSeries-06292021-0808-001_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:41:20,012 - INFO - Successfully processed and saved data for folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/6_29/TSeries-06292021-0808-001/TSeries-06292021-0808-001_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:41:20,012 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-002/TSeries-07032021-1008_GC-002_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:41:20,012 - ERROR - Failed to process folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-002/TSeries-07032021-1008_GC-002_Cycle00001_Element00001.sima/behavior. Error: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-002/TSeries-07032021-1008_GC-002_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+Traceback (most recent call last):
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 74, in processed_velocity
+    with open(join(behavior_folder, file_name), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-002/TSeries-07032021-1008_GC-002_Cycle00001_Element00001.sima/behavior/filtered_velocity.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "export_mobility_immobility.py", line 47, in main
+    processed_velo = bc.processed_velocity(behavior_folder)
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 78, in processed_velocity
+    raise FileNotFoundError(
+FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-002/TSeries-07032021-1008_GC-002_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+2024-05-04 17:41:20,012 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-001/TSeries-07032021-1008_GC-001_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:41:20,012 - ERROR - Failed to process folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-001/TSeries-07032021-1008_GC-001_Cycle00001_Element00001.sima/behavior. Error: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-001/TSeries-07032021-1008_GC-001_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+Traceback (most recent call last):
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 74, in processed_velocity
+    with open(join(behavior_folder, file_name), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-001/TSeries-07032021-1008_GC-001_Cycle00001_Element00001.sima/behavior/filtered_velocity.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "export_mobility_immobility.py", line 47, in main
+    processed_velo = bc.processed_velocity(behavior_folder)
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 78, in processed_velocity
+    raise FileNotFoundError(
+FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-001/TSeries-07032021-1008_GC-001_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+2024-05-04 17:47:55,666 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_MC_pento-002/TSeries-07072021-0833_MC_pento-002_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:47:55,666 - ERROR - Failed to process folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_MC_pento-002/TSeries-07072021-0833_MC_pento-002_Cycle00001_Element00001.sima/behavior. Error: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_MC_pento-002/TSeries-07072021-0833_MC_pento-002_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+Traceback (most recent call last):
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 74, in processed_velocity
+    with open(join(behavior_folder, file_name), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_MC_pento-002/TSeries-07072021-0833_MC_pento-002_Cycle00001_Element00001.sima/behavior/filtered_velocity.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "export_mobility_immobility.py", line 55, in main
+    processed_velo = bc.processed_velocity(behavior_folder)
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 78, in processed_velocity
+    raise FileNotFoundError(
+FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_MC_pento-002/TSeries-07072021-0833_MC_pento-002_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+2024-05-04 17:47:55,667 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_GC_pento-001/TSeries-07072021-0833_GC_pento-001_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:47:55,667 - ERROR - Failed to process folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_GC_pento-001/TSeries-07072021-0833_GC_pento-001_Cycle00001_Element00001.sima/behavior. Error: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_GC_pento-001/TSeries-07072021-0833_GC_pento-001_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+Traceback (most recent call last):
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 74, in processed_velocity
+    with open(join(behavior_folder, file_name), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_GC_pento-001/TSeries-07072021-0833_GC_pento-001_Cycle00001_Element00001.sima/behavior/filtered_velocity.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "export_mobility_immobility.py", line 55, in main
+    processed_velo = bc.processed_velocity(behavior_folder)
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 78, in processed_velocity
+    raise FileNotFoundError(
+FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_GC_pento-001/TSeries-07072021-0833_GC_pento-001_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+2024-05-04 17:47:55,667 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814_MC-002/TSeries-07022021-0814_MC-002_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:47:55,667 - ERROR - Failed to process folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814_MC-002/TSeries-07022021-0814_MC-002_Cycle00001_Element00001.sima/behavior. Error: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814_MC-002/TSeries-07022021-0814_MC-002_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+Traceback (most recent call last):
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 74, in processed_velocity
+    with open(join(behavior_folder, file_name), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814_MC-002/TSeries-07022021-0814_MC-002_Cycle00001_Element00001.sima/behavior/filtered_velocity.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "export_mobility_immobility.py", line 55, in main
+    processed_velo = bc.processed_velocity(behavior_folder)
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 78, in processed_velocity
+    raise FileNotFoundError(
+FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814_MC-002/TSeries-07022021-0814_MC-002_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+2024-05-04 17:47:55,667 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814-001/TSeries-07022021-0814-001_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:47:55,667 - ERROR - Failed to process folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814-001/TSeries-07022021-0814-001_Cycle00001_Element00001.sima/behavior. Error: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814-001/TSeries-07022021-0814-001_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+Traceback (most recent call last):
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 74, in processed_velocity
+    with open(join(behavior_folder, file_name), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814-001/TSeries-07022021-0814-001_Cycle00001_Element00001.sima/behavior/filtered_velocity.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "export_mobility_immobility.py", line 55, in main
+    processed_velo = bc.processed_velocity(behavior_folder)
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 78, in processed_velocity
+    raise FileNotFoundError(
+FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814-001/TSeries-07022021-0814-001_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+2024-05-04 17:47:55,667 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs_afternoon-002/TSeries-07012021-0854_MCs_afternoon-002_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:47:55,667 - ERROR - Failed to process folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs_afternoon-002/TSeries-07012021-0854_MCs_afternoon-002_Cycle00001_Element00001.sima/behavior. Error: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs_afternoon-002/TSeries-07012021-0854_MCs_afternoon-002_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+Traceback (most recent call last):
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 74, in processed_velocity
+    with open(join(behavior_folder, file_name), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs_afternoon-002/TSeries-07012021-0854_MCs_afternoon-002_Cycle00001_Element00001.sima/behavior/filtered_velocity.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "export_mobility_immobility.py", line 55, in main
+    processed_velo = bc.processed_velocity(behavior_folder)
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 78, in processed_velocity
+    raise FileNotFoundError(
+FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs_afternoon-002/TSeries-07012021-0854_MCs_afternoon-002_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+2024-05-04 17:47:55,668 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs-001/TSeries-07012021-0854_MCs-001_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:47:55,668 - ERROR - Failed to process folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs-001/TSeries-07012021-0854_MCs-001_Cycle00001_Element00001.sima/behavior. Error: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs-001/TSeries-07012021-0854_MCs-001_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+Traceback (most recent call last):
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 74, in processed_velocity
+    with open(join(behavior_folder, file_name), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs-001/TSeries-07012021-0854_MCs-001_Cycle00001_Element00001.sima/behavior/filtered_velocity.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "export_mobility_immobility.py", line 55, in main
+    processed_velo = bc.processed_velocity(behavior_folder)
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 78, in processed_velocity
+    raise FileNotFoundError(
+FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs-001/TSeries-07012021-0854_MCs-001_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+2024-05-04 17:47:55,668 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_12_SD2/TSeries-07122021-0901-002/TSeries-07122021-0901-002_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:47:55,668 - ERROR - Failed to process folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_12_SD2/TSeries-07122021-0901-002/TSeries-07122021-0901-002_Cycle00001_Element00001.sima/behavior. Error: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_12_SD2/TSeries-07122021-0901-002/TSeries-07122021-0901-002_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+Traceback (most recent call last):
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 74, in processed_velocity
+    with open(join(behavior_folder, file_name), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_12_SD2/TSeries-07122021-0901-002/TSeries-07122021-0901-002_Cycle00001_Element00001.sima/behavior/filtered_velocity.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "export_mobility_immobility.py", line 55, in main
+    processed_velo = bc.processed_velocity(behavior_folder)
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 78, in processed_velocity
+    raise FileNotFoundError(
+FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_12_SD2/TSeries-07122021-0901-002/TSeries-07122021-0901-002_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+2024-05-04 17:47:55,668 - INFO - Skipping folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_SD/TSeries-07072021-0833_MC1-002/TSeries-07072021-0833_MC1-002_Cycle00001_Element00001.sima/behavior as file already exists.
+2024-05-04 17:47:55,668 - INFO - Skipping folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_SD/TSeries-07072021-0833_MC2-004/TSeries-07072021-0833_MC2-004_Cycle00001_Element00001.sima/behavior as file already exists.
+2024-05-04 17:47:55,668 - INFO - Skipping folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_SD/TSeries-07072021-0833_GC1-001/TSeries-07072021-0833_GC1-001_Cycle00001_Element00001.sima/behavior as file already exists.
+2024-05-04 17:47:55,668 - INFO - Skipping folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_SD/TSeries-07072021-0833_GC2-003/TSeries-07072021-0833_GC2-003_Cycle00001_Element00001.sima/behavior as file already exists.
+2024-05-04 17:47:55,668 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_15_DOI2/TSeries-07152021-0822-001/TSeries-07152021-0822-001_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:47:55,668 - ERROR - Failed to process folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_15_DOI2/TSeries-07152021-0822-001/TSeries-07152021-0822-001_Cycle00001_Element00001.sima/behavior. Error: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_15_DOI2/TSeries-07152021-0822-001/TSeries-07152021-0822-001_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+Traceback (most recent call last):
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 74, in processed_velocity
+    with open(join(behavior_folder, file_name), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_15_DOI2/TSeries-07152021-0822-001/TSeries-07152021-0822-001_Cycle00001_Element00001.sima/behavior/filtered_velocity.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "export_mobility_immobility.py", line 55, in main
+    processed_velo = bc.processed_velocity(behavior_folder)
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 78, in processed_velocity
+    raise FileNotFoundError(
+FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_15_DOI2/TSeries-07152021-0822-001/TSeries-07152021-0822-001_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+2024-05-04 17:47:55,668 - INFO - Skipping folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/6_29/TSeries-06292021-0808-001/TSeries-06292021-0808-001_Cycle00001_Element00001.sima/behavior as file already exists.
+2024-05-04 17:47:55,668 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-002/TSeries-07032021-1008_GC-002_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:47:55,668 - ERROR - Failed to process folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-002/TSeries-07032021-1008_GC-002_Cycle00001_Element00001.sima/behavior. Error: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-002/TSeries-07032021-1008_GC-002_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+Traceback (most recent call last):
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 74, in processed_velocity
+    with open(join(behavior_folder, file_name), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-002/TSeries-07032021-1008_GC-002_Cycle00001_Element00001.sima/behavior/filtered_velocity.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "export_mobility_immobility.py", line 55, in main
+    processed_velo = bc.processed_velocity(behavior_folder)
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 78, in processed_velocity
+    raise FileNotFoundError(
+FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-002/TSeries-07032021-1008_GC-002_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+2024-05-04 17:47:55,669 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-001/TSeries-07032021-1008_GC-001_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:47:55,669 - ERROR - Failed to process folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-001/TSeries-07032021-1008_GC-001_Cycle00001_Element00001.sima/behavior. Error: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-001/TSeries-07032021-1008_GC-001_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+Traceback (most recent call last):
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 74, in processed_velocity
+    with open(join(behavior_folder, file_name), "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-001/TSeries-07032021-1008_GC-001_Cycle00001_Element00001.sima/behavior/filtered_velocity.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "export_mobility_immobility.py", line 55, in main
+    processed_velo = bc.processed_velocity(behavior_folder)
+  File "/home/gergely/code/sleep/src/classes/behavior_class.py", line 78, in processed_velocity
+    raise FileNotFoundError(
+FileNotFoundError: Could not find processed velocity file in /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-001/TSeries-07032021-1008_GC-001_Cycle00001_Element00001.sima/behavior, or it named other than 'filtered_velo.csv'
+2024-05-04 17:52:01,741 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_MC_pento-002/TSeries-07072021-0833_MC_pento-002_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:52:01,741 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_MC_pento-002/TSeries-07072021-0833_MC_pento-002_Cycle00001_Element00001.sima/behavior not found.
+2024-05-04 17:52:01,741 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_GC_pento-001/TSeries-07072021-0833_GC_pento-001_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:52:01,741 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_GC_pento-001/TSeries-07072021-0833_GC_pento-001_Cycle00001_Element00001.sima/behavior not found.
+2024-05-04 17:52:01,741 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814_MC-002/TSeries-07022021-0814_MC-002_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:52:01,741 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814_MC-002/TSeries-07022021-0814_MC-002_Cycle00001_Element00001.sima/behavior not found.
+2024-05-04 17:52:01,741 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814-001/TSeries-07022021-0814-001_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:52:01,742 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814-001/TSeries-07022021-0814-001_Cycle00001_Element00001.sima/behavior not found.
+2024-05-04 17:52:01,742 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs_afternoon-002/TSeries-07012021-0854_MCs_afternoon-002_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:52:01,742 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs_afternoon-002/TSeries-07012021-0854_MCs_afternoon-002_Cycle00001_Element00001.sima/behavior not found.
+2024-05-04 17:52:01,742 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs-001/TSeries-07012021-0854_MCs-001_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:52:01,742 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs-001/TSeries-07012021-0854_MCs-001_Cycle00001_Element00001.sima/behavior not found.
+2024-05-04 17:52:01,742 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_12_SD2/TSeries-07122021-0901-002/TSeries-07122021-0901-002_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:52:01,742 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_12_SD2/TSeries-07122021-0901-002/TSeries-07122021-0901-002_Cycle00001_Element00001.sima/behavior not found.
+2024-05-04 17:52:01,742 - INFO - Skipping folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_SD/TSeries-07072021-0833_MC1-002/TSeries-07072021-0833_MC1-002_Cycle00001_Element00001.sima/behavior as file already exists.
+2024-05-04 17:52:01,742 - INFO - Skipping folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_SD/TSeries-07072021-0833_MC2-004/TSeries-07072021-0833_MC2-004_Cycle00001_Element00001.sima/behavior as file already exists.
+2024-05-04 17:52:01,742 - INFO - Skipping folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_SD/TSeries-07072021-0833_GC1-001/TSeries-07072021-0833_GC1-001_Cycle00001_Element00001.sima/behavior as file already exists.
+2024-05-04 17:52:01,742 - INFO - Skipping folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_SD/TSeries-07072021-0833_GC2-003/TSeries-07072021-0833_GC2-003_Cycle00001_Element00001.sima/behavior as file already exists.
+2024-05-04 17:52:01,742 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_15_DOI2/TSeries-07152021-0822-001/TSeries-07152021-0822-001_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:52:01,742 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_15_DOI2/TSeries-07152021-0822-001/TSeries-07152021-0822-001_Cycle00001_Element00001.sima/behavior not found.
+2024-05-04 17:52:01,742 - INFO - Skipping folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/6_29/TSeries-06292021-0808-001/TSeries-06292021-0808-001_Cycle00001_Element00001.sima/behavior as file already exists.
+2024-05-04 17:52:01,743 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-002/TSeries-07032021-1008_GC-002_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:52:01,743 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-002/TSeries-07032021-1008_GC-002_Cycle00001_Element00001.sima/behavior not found.
+2024-05-04 17:52:01,743 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-001/TSeries-07032021-1008_GC-001_Cycle00001_Element00001.sima/behavior
+2024-05-04 17:52:01,743 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-001/TSeries-07032021-1008_GC-001_Cycle00001_Element00001.sima/behavior not found.
+2024-05-05 10:55:04,108 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_MC_pento-002/TSeries-07072021-0833_MC_pento-002_Cycle00001_Element00001.sima/behavior
+2024-05-05 10:55:04,108 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_MC_pento-002/TSeries-07072021-0833_MC_pento-002_Cycle00001_Element00001.sima/behavior not found.
+2024-05-05 10:55:04,109 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_GC_pento-001/TSeries-07072021-0833_GC_pento-001_Cycle00001_Element00001.sima/behavior
+2024-05-05 10:55:04,109 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_Zstack_pento/TSeries-07072021-0833_GC_pento-001/TSeries-07072021-0833_GC_pento-001_Cycle00001_Element00001.sima/behavior not found.
+2024-05-05 10:55:04,109 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814_MC-002/TSeries-07022021-0814_MC-002_Cycle00001_Element00001.sima/behavior
+2024-05-05 10:55:04,109 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814_MC-002/TSeries-07022021-0814_MC-002_Cycle00001_Element00001.sima/behavior not found.
+2024-05-05 10:55:04,109 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814-001/TSeries-07022021-0814-001_Cycle00001_Element00001.sima/behavior
+2024-05-05 10:55:04,109 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_2/TSeries-07022021-0814-001/TSeries-07022021-0814-001_Cycle00001_Element00001.sima/behavior not found.
+2024-05-05 10:55:04,109 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs_afternoon-002/TSeries-07012021-0854_MCs_afternoon-002_Cycle00001_Element00001.sima/behavior
+2024-05-05 10:55:04,126 - INFO - Successfully processed and saved data for folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs_afternoon-002/TSeries-07012021-0854_MCs_afternoon-002_Cycle00001_Element00001.sima/behavior
+2024-05-05 10:55:04,126 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs-001/TSeries-07012021-0854_MCs-001_Cycle00001_Element00001.sima/behavior
+2024-05-05 10:55:04,141 - INFO - Successfully processed and saved data for folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_1/TSeries-07012021-0854_MCs-001/TSeries-07012021-0854_MCs-001_Cycle00001_Element00001.sima/behavior
+2024-05-05 10:55:04,141 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_12_SD2/TSeries-07122021-0901-002/TSeries-07122021-0901-002_Cycle00001_Element00001.sima/behavior
+2024-05-05 10:55:04,142 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_12_SD2/TSeries-07122021-0901-002/TSeries-07122021-0901-002_Cycle00001_Element00001.sima/behavior not found.
+2024-05-05 10:55:04,142 - INFO - Skipping folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_SD/TSeries-07072021-0833_MC1-002/TSeries-07072021-0833_MC1-002_Cycle00001_Element00001.sima/behavior as file already exists.
+2024-05-05 10:55:04,142 - INFO - Skipping folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_SD/TSeries-07072021-0833_MC2-004/TSeries-07072021-0833_MC2-004_Cycle00001_Element00001.sima/behavior as file already exists.
+2024-05-05 10:55:04,142 - INFO - Skipping folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_SD/TSeries-07072021-0833_GC1-001/TSeries-07072021-0833_GC1-001_Cycle00001_Element00001.sima/behavior as file already exists.
+2024-05-05 10:55:04,142 - INFO - Skipping folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_7_SD/TSeries-07072021-0833_GC2-003/TSeries-07072021-0833_GC2-003_Cycle00001_Element00001.sima/behavior as file already exists.
+2024-05-05 10:55:04,142 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_15_DOI2/TSeries-07152021-0822-001/TSeries-07152021-0822-001_Cycle00001_Element00001.sima/behavior
+2024-05-05 10:55:04,142 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_15_DOI2/TSeries-07152021-0822-001/TSeries-07152021-0822-001_Cycle00001_Element00001.sima/behavior not found.
+2024-05-05 10:55:04,142 - INFO - Skipping folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/6_29/TSeries-06292021-0808-001/TSeries-06292021-0808-001_Cycle00001_Element00001.sima/behavior as file already exists.
+2024-05-05 10:55:04,142 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-002/TSeries-07032021-1008_GC-002_Cycle00001_Element00001.sima/behavior
+2024-05-05 10:55:04,142 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-002/TSeries-07032021-1008_GC-002_Cycle00001_Element00001.sima/behavior not found.
+2024-05-05 10:55:04,142 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-001/TSeries-07032021-1008_GC-001_Cycle00001_Element00001.sima/behavior
+2024-05-05 10:55:04,142 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/5HT2afl05b_1/7_3/TSeries-07032021-1008_GC-001/TSeries-07032021-1008_GC-001_Cycle00001_Element00001.sima/behavior not found.
+2024-10-28 23:59:58,754 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock13b3/8_4/TSeries-08042024-1156Tseries-002/TSeries-08042024-1156Tseries-002.sima/behavior
+2024-10-28 23:59:58,754 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock13b3/8_4/TSeries-08042024-1156Tseries-002/TSeries-08042024-1156Tseries-002.sima/behavior not found.
+2024-10-28 23:59:58,754 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock13b3/8_4/TSeries-08042024-1156-001/TSeries-08042024-1156-001.sima/behavior
+2024-10-28 23:59:58,792 - INFO - Successfully processed and saved data for folder: /data2/gergely/invivo_DATA/sleep/dock13b3/8_4/TSeries-08042024-1156-001/TSeries-08042024-1156-001.sima/behavior
+2024-10-30 11:58:02,632 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock13b3/8_4/TSeries-08042024-1156Tseries-002/TSeries-08042024-1156Tseries-002.sima/behavior
+2024-10-30 11:58:02,645 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock13b3/8_4/TSeries-08042024-1156Tseries-002/TSeries-08042024-1156Tseries-002.sima/behavior not found.
+2024-10-30 11:58:02,645 - INFO - Skipping folder /data2/gergely/invivo_DATA/sleep/dock13b3/8_4/TSeries-08042024-1156-001/TSeries-08042024-1156-001.sima/behavior as file already exists.
+2024-10-30 11:58:19,379 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock13b1/8_8/TSeries-08082024-1650-001/TSeries-08082024-1650-001.sima/behavior
+2024-10-30 11:58:19,429 - INFO - Successfully processed and saved data for folder: /data2/gergely/invivo_DATA/sleep/dock13b1/8_8/TSeries-08082024-1650-001/TSeries-08082024-1650-001.sima/behavior
+2024-10-30 11:58:19,430 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock13b1/8_8/TSeries-08082024-1650tseries-002/TSeries-08082024-1650tseries-002.sima/behavior
+2024-10-30 11:58:19,430 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock13b1/8_8/TSeries-08082024-1650tseries-002/TSeries-08082024-1650tseries-002.sima/behavior not found.
+2024-10-30 12:23:45,246 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock13a1/8_6/TSeries-08062024-1156tsess2_tseries-004/TSeries-08062024-1156tsess2_tseries-004.sima/behavior
+2024-10-30 12:23:45,246 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock13a1/8_6/TSeries-08062024-1156tsess2_tseries-004/TSeries-08062024-1156tsess2_tseries-004.sima/behavior not found.
+2024-10-30 12:23:45,246 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock13a1/8_6/TSeries-08062024-1156-001/TSeries-08062024-1156-001.sima/behavior
+2024-10-30 12:23:45,246 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock13a1/8_6/TSeries-08062024-1156-001/TSeries-08062024-1156-001.sima/behavior not found.
+2024-10-30 12:23:45,246 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock13a1/8_6/TSeries-08062024-1156tseries-002/TSeries-08062024-1156tseries-002.sima/behavior
+2024-10-30 12:23:45,246 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock13a1/8_6/TSeries-08062024-1156tseries-002/TSeries-08062024-1156tseries-002.sima/behavior not found.
+2024-10-30 12:23:45,246 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock13a1/8_6/TSeries-08062024-1156tsess2-003/TSeries-08062024-1156tsess2-003.sima/behavior
+2024-10-30 12:23:45,246 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock13a1/8_6/TSeries-08062024-1156tsess2-003/TSeries-08062024-1156tsess2-003.sima/behavior not found.
+2024-10-30 12:23:45,246 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock13a1/8_8/TSeries-08082024-1850-001/TSeries-08082024-1850-001.sima/behavior
+2024-10-30 12:23:45,252 - INFO - Successfully processed and saved data for folder: /data2/gergely/invivo_DATA/sleep/dock13a1/8_8/TSeries-08082024-1850-001/TSeries-08082024-1850-001.sima/behavior
+2024-10-30 12:23:45,252 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock13a1/8_8/TSeries-08082024-1850tseries-002/TSeries-08082024-1850tseries-002.sima/behavior
+2024-10-30 12:23:45,252 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock13a1/8_8/TSeries-08082024-1850tseries-002/TSeries-08082024-1850tseries-002.sima/behavior not found.
+2024-10-30 12:23:45,252 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock13a1/7_29/TSeries-07292024-1012-001/TSeries-07292024-1012-001.sima/behavior
+2024-10-30 12:23:45,252 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock13a1/7_29/TSeries-07292024-1012-001/TSeries-07292024-1012-001.sima/behavior not found.

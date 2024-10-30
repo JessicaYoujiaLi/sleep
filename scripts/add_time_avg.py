@@ -4,13 +4,14 @@ date: 1/10/24
 This script adds a time-averaged image to suite2p data.
 
 Usage:
-python -m add_time_avg -d <directory>
+python -m add_time_avg -d <directory> [-t]
 
 Arguments:
 -d, --directory : The directory name under which to find the suite2p data.
+-t, --tif       : Optional flag to save the output as a multipage TIFF instead of PNG.
 
 Example:
-python -m add_time_avg -d /path/to/mouse
+python -m add_time_avg -d /path/to/mouse -t
 """
 import argparse as arg
 import logging
@@ -18,16 +19,17 @@ import sys
 from os import walk
 from os.path import dirname, isdir, join
 
-from src.suite2p_class import Suite2p
+from src.classes.suite2p_class import Suite2p
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def add_time_avg(directory):
+def add_time_avg(directory, save_as_tif=False):
     """
     Add time averaged image to suite2p data.
 
     Args:
         directory (str): The directory name under which to find the suite2p data.
+        save_as_tif (bool): Flag indicating whether to save the output as a TIFF file.
 
     Returns:
         None
@@ -43,11 +45,15 @@ def add_time_avg(directory):
             print(f"Processing suite2p data in: {s2p_path}")
             s2p = Suite2p(s2p_path)
             time_avg_image = s2p.load_avg_image()                      
-            result = s2p.plot_time_avg_image(time_avg_image, save_path=save_dir)
-            if result is None:
-                logging.warning(f"No time-averaged image was saved in: {save_dir}")
+            if save_as_tif:
+                save_path = join(save_dir, "time_avg_image.tif")
+                s2p.save_time_avg_as_tiff(time_avg_image, save_path)
             else:
-                logging.info(f"Time-averaged image saved in: {save_dir}")
+                result = s2p.plot_time_avg_image(time_avg_image, save_path=save_dir)
+                if result is None:
+                    logging.warning(f"No time-averaged image was saved in: {save_dir}")
+                else:
+                    logging.info(f"Time-averaged image saved in: {save_dir}")
 
 
 if __name__ == "__main__":
@@ -58,5 +64,11 @@ if __name__ == "__main__":
         type=str,
         help="directory name under which to find the suite2p data",
     )
+    argparser.add_argument(
+        "-t",
+        "--tif",
+        action='store_true',
+        help="optional flag to save the output as a multipage TIFF instead of PNG",
+    )
     args = argparser.parse_args()
-    add_time_avg(args.directory)
+    add_time_avg(args.directory, save_as_tif=args.tif)

@@ -6,6 +6,7 @@ from typing import Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
+from PIL import Image
 
 COMBINED_DIR_NAME = "combined"
 PLANE0_DIR_NAME = "plane0"
@@ -230,7 +231,43 @@ class Suite2p:
                     print(f"Error saving new plot to {full_save_path}: {e}")
                 finally:
                     plt.close(fig)
-
         else:
             plt.show()
             plt.close(fig)
+
+    def save_time_avg_as_tiff(self, ops_array, save_path):
+        """
+        Save the time-averaged image(s) as a .tiff file.
+
+        Args:
+            ops_array (list): A list of dictionaries containing image data.
+            save_path (str): Path to save the output .tiff file.
+
+        Returns:
+            None
+        """
+        if ops_array is None:
+            return
+
+        num_elements = len(ops_array)
+        tif_images = []  # List to store images for saving as multipage TIFF
+
+        # Loop through each item in ops_array and prepare the image data
+        for ops in ops_array:
+            image_data = np.flipud(ops["meanImg"])
+            
+            # Normalize the image data to be between 0 and 255, similar to plot_time_avg_image
+            image_data = np.clip(image_data, 0, None)  # Clip negative values to 0
+            if image_data.max() > 0:
+                image_data = (image_data / image_data.max()) * 255  # Normalize to 0-255
+            
+            # Convert to uint8 for saving
+            tif_images.append(Image.fromarray(image_data.astype(np.uint8)))
+
+        # Save as multipage TIFF if there are multiple images
+        if num_elements > 1:
+            tif_images[0].save(save_path, save_all=True, append_images=tif_images[1:])
+        else:
+            tif_images[0].save(save_path)
+
+        print(f"Saved time-averaged image(s) to {save_path}")

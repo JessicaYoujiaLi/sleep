@@ -5,3 +5,4 @@ settings.json
 *.pyc
 *.h5
 notebooks/**/*.png
+scriots/behavior_scripts/*.log
