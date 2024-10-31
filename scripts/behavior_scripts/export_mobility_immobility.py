@@ -38,6 +38,7 @@ def main():
     parser = AP(description="Export mobility and immobility data to JSON files.")
     parser.add_argument("mouse_ID", help="the ID of the mouse to analyze.")
     parser.add_argument("-o", "--overwrite", help="overwrite existing files", action="store_true")
+    parser.add_argument("-fr", "--frame_rate", help="frame rate of the recording", type=int, default=10)
     args = parser.parse_args()
 
     # Load the behavior data.
@@ -51,7 +52,7 @@ def main():
         try:
             logger.info(f"Processing folder: {behavior_folder}")
             processed_velo = bc.processed_velocity(behavior_folder)
-            immobility = bc.define_immobility(velocity=processed_velo)            
+            immobility = bc.define_immobility(velocity=processed_velo, framerate=args.frame_rate)            
             immobility.to_json(output_path, orient="records", indent=4)
             logger.info(
                 f"Successfully processed and saved data for folder: {behavior_folder}"
