@@ -999,3 +999,47 @@ FileNotFoundError: Could not find processed velocity file in /data2/gergely/invi
 2024-10-30 12:23:45,252 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock13a1/8_8/TSeries-08082024-1850tseries-002/TSeries-08082024-1850tseries-002.sima/behavior not found.
 2024-10-30 12:23:45,252 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock13a1/7_29/TSeries-07292024-1012-001/TSeries-07292024-1012-001.sima/behavior
 2024-10-30 12:23:45,252 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock13a1/7_29/TSeries-07292024-1012-001/TSeries-07292024-1012-001.sima/behavior not found.
+2024-10-30 22:47:40,024 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11c5/6_13/TSeries-06102024-0742-001/TSeries-06102024-0742-001.sima/behavior
+2024-10-30 22:47:40,029 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock11c5/6_13/TSeries-06102024-0742-001/TSeries-06102024-0742-001.sima/behavior not found.
+2024-10-30 22:47:40,030 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11c5/8_2/TSeries-08022024-1036-001/TSeries-08022024-1036-001.sima/behavior
+2024-10-30 22:47:40,040 - INFO - Successfully processed and saved data for folder: /data2/gergely/invivo_DATA/sleep/dock11c5/8_2/TSeries-08022024-1036-001/TSeries-08022024-1036-001.sima/behavior
+2024-10-30 22:47:40,040 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11c5/8_2/TSeries-08022024-1036-002/TSeries-08022024-1036-002.sima/behavior
+2024-10-30 22:47:40,047 - INFO - Successfully processed and saved data for folder: /data2/gergely/invivo_DATA/sleep/dock11c5/8_2/TSeries-08022024-1036-002/TSeries-08022024-1036-002.sima/behavior
+2024-10-30 22:47:40,047 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11c5/7_29/TSeries-07292024-1012-001/TSeries-07292024-1012-001.sima/behavior
+2024-10-30 22:47:40,047 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock11c5/7_29/TSeries-07292024-1012-001/TSeries-07292024-1012-001.sima/behavior not found.
+2024-10-30 22:47:40,047 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11c5/7_29/TSeries-07292024-1012bid-002/TSeries-07292024-1012bid-002.sima/behavior
+2024-10-30 22:47:40,047 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock11c5/7_29/TSeries-07292024-1012bid-002/TSeries-07292024-1012bid-002.sima/behavior not found.
+2024-10-30 22:47:40,048 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11c5/7_29/TSeries-07292024-1012unidbid-003/TSeries-07292024-1012unidbid-003.sima/behavior
+2024-10-30 22:47:40,048 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock11c5/7_29/TSeries-07292024-1012unidbid-003/TSeries-07292024-1012unidbid-003.sima/behavior not found.
+2024-10-30 22:47:40,048 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11c5/7_29/TSeries-07292024-1012sess2-004/TSeries-07292024-1012sess2-004.sima/behavior
+2024-10-30 22:47:40,048 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock11c5/7_29/TSeries-07292024-1012sess2-004/TSeries-07292024-1012sess2-004.sima/behavior not found.
+2024-10-30 22:47:40,048 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11c5/7_29/TSeries-07292024-1012sess3-005/TSeries-07292024-1012sess3-005.sima/behavior
+2024-10-30 22:47:40,048 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock11c5/7_29/TSeries-07292024-1012sess3-005/TSeries-07292024-1012sess3-005.sima/behavior not found.
+2024-10-30 22:48:50,781 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11b2/6_13/TSeries-06102024-0742-002/TSeries-06102024-0742-002.sima/behavior
+2024-10-30 22:48:50,781 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock11b2/6_13/TSeries-06102024-0742-002/TSeries-06102024-0742-002.sima/behavior not found.
+2024-10-30 22:48:50,781 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11b2/6_13/TSeries-06102024-0742-001/TSeries-06102024-0742-001.sima/behavior
+2024-10-30 22:48:50,781 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock11b2/6_13/TSeries-06102024-0742-001/TSeries-06102024-0742-001.sima/behavior not found.
+2024-10-30 22:48:50,781 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11b2/6_17/TSeries-06172024-0946-003/TSeries-06172024-0946-003.sima/behavior
+2024-10-30 22:48:50,790 - INFO - Successfully processed and saved data for folder: /data2/gergely/invivo_DATA/sleep/dock11b2/6_17/TSeries-06172024-0946-003/TSeries-06172024-0946-003.sima/behavior
+2024-10-30 22:48:50,790 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11b2/6_17/TSeries-06172024-0946-001/TSeries-06172024-0946-001.sima/behavior
+2024-10-30 22:48:50,798 - INFO - Successfully processed and saved data for folder: /data2/gergely/invivo_DATA/sleep/dock11b2/6_17/TSeries-06172024-0946-001/TSeries-06172024-0946-001.sima/behavior
+2024-10-30 22:48:50,798 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11b2/8_2/TSeries-08022024-1036-001/TSeries-08022024-1036-001.sima/behavior
+2024-10-30 22:48:50,798 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock11b2/8_2/TSeries-08022024-1036-001/TSeries-08022024-1036-001.sima/behavior not found.
+2024-10-30 22:48:50,798 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11b2/7_30/TSeries-07292024-1012-000/TSeries-07292024-1012-000.sima/behavior
+2024-10-30 22:48:50,798 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock11b2/7_30/TSeries-07292024-1012-000/TSeries-07292024-1012-000.sima/behavior not found.
+2024-10-30 22:48:50,798 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11b2/7_30/TSeries-07292024-1012-001/TSeries-07292024-1012-001.sima/behavior
+2024-10-30 22:48:50,798 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock11b2/7_30/TSeries-07292024-1012-001/TSeries-07292024-1012-001.sima/behavior not found.
+2024-10-30 22:49:06,320 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11b1/7_31/TSeries-07312024-1030-002/TSeries-07312024-1030-002.sima/behavior
+2024-10-30 22:49:06,326 - INFO - Successfully processed and saved data for folder: /data2/gergely/invivo_DATA/sleep/dock11b1/7_31/TSeries-07312024-1030-002/TSeries-07312024-1030-002.sima/behavior
+2024-10-30 22:49:06,326 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11b1/7_31/TSeries-07312024-1030-001/TSeries-07312024-1030-001.sima/behavior
+2024-10-30 22:49:06,326 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock11b1/7_31/TSeries-07312024-1030-001/TSeries-07312024-1030-001.sima/behavior not found.
+2024-10-30 22:49:06,326 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11b1/6_13/TSeries-06102024-0742-002/TSeries-06102024-0742-002.sima/behavior
+2024-10-30 22:49:06,327 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock11b1/6_13/TSeries-06102024-0742-002/TSeries-06102024-0742-002.sima/behavior not found.
+2024-10-30 22:49:06,327 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11b1/6_13/TSeries-06102024-0742-001/TSeries-06102024-0742-001.sima/behavior
+2024-10-30 22:49:06,327 - WARNING - Folder /data2/gergely/invivo_DATA/sleep/dock11b1/6_13/TSeries-06102024-0742-001/TSeries-06102024-0742-001.sima/behavior not found.
+2024-10-30 22:49:06,327 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11b1/6_17/TSeries-06172024-0946-001/TSeries-06172024-0946-001.sima/behavior
+2024-10-30 22:49:06,334 - INFO - Successfully processed and saved data for folder: /data2/gergely/invivo_DATA/sleep/dock11b1/6_17/TSeries-06172024-0946-001/TSeries-06172024-0946-001.sima/behavior
+2024-10-30 22:49:06,334 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11b1/8_3/TSeries-08022024-1036-001/TSeries-08022024-1036-001.sima/behavior
+2024-10-30 22:49:06,341 - INFO - Successfully processed and saved data for folder: /data2/gergely/invivo_DATA/sleep/dock11b1/8_3/TSeries-08022024-1036-001/TSeries-08022024-1036-001.sima/behavior
+2024-10-30 22:49:06,341 - INFO - Processing folder: /data2/gergely/invivo_DATA/sleep/dock11b1/8_3/TSeries-08022024-1036-002/TSeries-08022024-1036-002.sima/behavior
+2024-10-30 22:49:06,347 - INFO - Successfully processed and saved data for folder: /data2/gergely/invivo_DATA/sleep/dock11b1/8_3/TSeries-08022024-1036-002/TSeries-08022024-1036-002.sima/behavior
