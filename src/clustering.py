@@ -80,9 +80,12 @@ def process_dfof_mc(dfof: pd.DataFrame, summary_sleep: pd.DataFrame) -> dict:
     d_sleep = dfof.iloc[:, sleep]
     return {'d_awake': d_awake, 'd_sleep': d_sleep}
 
-def interval_length_calculator(data: pd.DataFrame, state_column: str, state_value: int) -> pd.DataFrame:
+def interval_length_calculator(data: pd.DataFrame,
+                                state_column: str,
+                                  state_value: int) -> pd.DataFrame:
     """
-    Calculate the length, start, and stop indices of intervals for a specific state.
+    Calculates the length, start, and stop indices of intervals for a
+      specific state.
 
     Args:
         data (pd.DataFrame): The DataFrame containing interval data.
