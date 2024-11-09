@@ -1,111 +1,96 @@
 """Data class dealing with EEG data.
 author: @gergelyturi
-date: 2023-10-16"""
+date: 2023-10-16
+204-11-09: major refactoring"""
 
-from dataclasses import dataclass, field
-from os import walk
+from dataclasses import dataclass
 from os.path import join
 
 import pandas as pd
 
-from src.classes.imaging_data_class import ImagingData
-
 
 @dataclass
-class eegData(ImagingData):
+class EegData:
     """
-    EEG data for a mouse.
-
-    Example usage:
-    >>> eeg = eegData("mouse_id")
+    Class for EEG data.
+    Initialized with the path to the EEG folder.
+    
     """
 
-    eeg_folders: list = field(default_factory=list)
+    eeg_folder: str
 
-    def __post_init__(self):
-        super().__post_init__()
-        if not self.eeg_folders:
-            self.eeg_folders = self.find_eeg_folders()
-
-    def find_eeg_folders(self) -> list:
+    def _load_csv_file(self, file_path: str) -> pd.DataFrame:
         """
-        Finds all eeg folders in a given root folder.
+        Helper function to load a CSV file with error handling for missing files.
+
+        Parameters:
+        ----------
+        file_path : str
+            The path to the CSV file to be loaded.
 
         Returns:
-            list: A list of all eeg folders found in the root folder.
+        -------
+        pd.DataFrame
+            A DataFrame containing the loaded data.
 
         Raises:
-            ValueError: If no eeg folders are found in the root folder.
+        ------
+        FileNotFoundError
+            If the file is not found at the specified path.
         """
+        try:
+            return pd.read_csv(file_path, index_col=None)
+        except FileNotFoundError as e:
+            raise FileNotFoundError(f"Could not find the file at '{file_path}'. Please ensure the file path is correct.") from e
 
-        print(f"Searching for eeg folders in {self.imaging_folders}")
-        folders = []
-        for dirpath, dirnames, subdirnames in walk(self.imaging_folders):
-            if "eeg" in dirnames or "eeg" in subdirnames:
-                folders.append(join(dirpath, "eeg"))
-        if len(folders) == 0:
-            raise ValueError(f"No eeg folders found in {self.imaging_folders}")
-        return folders
+    def import_scored_eeg(self, eeg_file: str, processed: bool = True) -> pd.DataFrame:
+        """
+        Imports scored EEG data from a CSV file. The file should be located
+        in the specified EEG folder.
 
+        Parameters:
+        ----------
+        eeg_file : str
+            The name of the scored EEG file.
+        processed : bool, optional
+            If True, the function will add columns for the different brain states.
 
-def import_scored_eeg(
-    eeg_folder: str, eeg_file: str, processed: bool = True
-) -> pd.DataFrame:
-    # TODO this always need to generate 'awake_immobile' 'awake_mobile' and 'other' columns
-    # awake immoble and mobile is based on the define immobility function in behavior class.
-    """
-    imports scored eeg data from a csv file. The file should be located
-    in a subfolder named 'eeg' within the sima folder
+        Returns:
+        -------
+        pd.DataFrame
+            A DataFrame containing the scored EEG data with optional brain state columns.
+        """
+        scored_eeg_data_path = join(self.eeg_folder, eeg_file)
+        eeg_df = self._load_csv_file(scored_eeg_data_path)
+        eeg_df.columns = ["time", "score"]
+        if processed:
+            eeg_df["score"] = eeg_df["score"].astype(int)
+            eeg_df["awake"] = eeg_df["score"] == 0
+            eeg_df["NREM"] = eeg_df["score"] == 1
+            eeg_df["REM"] = eeg_df["score"] == 2
+            eeg_df["other"] = eeg_df["score"] == 3
+            # replace True/False with 1/0
+            eeg_df[["awake", "NREM", "REM", "other"]] = eeg_df[
+                ["awake", "NREM", "REM", "other"]
+            ].astype(int)
+        return eeg_df
 
-    Parameters:
-    ===========
-    imaging_exp: ImagingExperiment object
-    eeg_file: str
-        file name of the scored eeg file
-    processed: bool, optional
-        if True, the function will add columns for the different brain states
-    Return:
-    ======
-    eeg_df: pandas DataFrame
+    def load_processed_velocity_eeg(self, file_name: str = "velo_eeg.csv") -> pd.DataFrame:
+        """
+        Loads the processed velocity data from the specified CSV file.
 
-    """
-    eeg_data_path = join(eeg_folder, eeg_file)
-    eeg_df = pd.read_csv(eeg_data_path, names=["time", "score"])
-    if processed:
-        eeg_df["score"] = eeg_df["score"].astype(int)
-        eeg_df["awake"] = eeg_df["score"] == 0
-        eeg_df["NREM"] = eeg_df["score"] == 1
-        eeg_df["REM"] = eeg_df["score"] == 2
-        eeg_df["other"] = eeg_df["score"] == 3
-        # replace True/False with 1/0
-        eeg_df[["awake", "NREM", "REM", "other"]] = eeg_df[
-            ["awake", "NREM", "REM", "other"]
-        ].astype(int)
-    return eeg_df
+        Parameters:
+        ----------
+        file_name : str, optional
+            The name of the file containing the processed velocity data.
 
-
-def load_processed_velocity_eeg(file_name: str = "velo_eeg.csv") -> pd.DataFrame:
-    """
-    Returns the processed velocity of the mouse.
-
-    Parameters:
-    -----------
-    file_name : str, optional
-        The name of the file containing the processed velocity data.
-
-    Returns:
-    --------
-    filtered_velocity : pandas DataFrame
-        The processed velocity data.
-    """
-    try:
-        filtered_velocity = pd.read_csv(file_name, index_col=None)
-    except FileNotFoundError as e:
-        raise FileNotFoundError(
-            f"Could not find processed velocity {file_name}, or it named other than 'velo_eeg.csv'"
-        ) from e
-    return filtered_velocity
-
+        Returns:
+        -------
+        pd.DataFrame
+            A DataFrame containing the processed velocity data.
+        """
+        processed_velo_eeg_file_path = join(self.eeg_folder, file_name)
+        return self._load_csv_file(processed_velo_eeg_file_path)
 
 def brain_state_filter(velo_eeg_df: pd.DataFrame, states: list) -> pd.DataFrame:
     """

@@ -1,6 +1,6 @@
 import argparse
 
-from src.classes.imaging_data_class import ImagingData
+from src.classes.mouse_class import MouseData
 from src.classes.sleep_experiment import SleepExperiment
 
 
@@ -17,7 +17,7 @@ def main():
     parser.add_argument("mouse_id", type=str, help="Enter the mouse ID")
     args = parser.parse_args()
 
-    imaging_data = ImagingData(args.mouse_id)
+    imaging_data = MouseData(args.mouse_id)
     tseries_folders = imaging_data.find_tseries_folders()
 
     for tseries_folder in tseries_folders:
