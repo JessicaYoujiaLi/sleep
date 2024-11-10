@@ -2,7 +2,8 @@ import datetime
 import warnings
 from dataclasses import dataclass
 from os.path import exists, isdir, join
-from typing import Optional
+from pathlib import Path
+from typing import Optional, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -23,7 +24,11 @@ class Suite2p:
     """Class for suite2p data
     Initialized with the path to the suite2p folder"""
 
-    s2p_folder: str
+    s2p_folder: Union[str, Path]
+
+    def __post_init__(self):
+        if isinstance(self.s2p_folder, str):
+            self.s2p_folder = Path(self.s2p_folder)
 
     def _load_data_from_dir(self, subdir_name, signal_source):
         """

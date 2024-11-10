@@ -1,5 +1,5 @@
 """
-Script to export mobility and immobility data to JSON file.
+Script to export mobility and mobility data to JSON file.
 """
 
 from argparse import ArgumentParser as AP
@@ -12,10 +12,10 @@ from src.classes.logging_setup import LoggingSetup  # Import the logging setup m
 
 def main(args):
     """
-    Export mobility and immobility data to JSON files.
+    Export mobility and mobility data to JSON files.
 
     Args:
-        args: Parsed command-line arguments containing mouse_ID, overwrite, and frame_rate.
+        args: Parsed command-line arguments containing mouse_ID and overwrite.
     """
     # Initialize MouseData object
     mouse_data = mc.MouseData(args.mouse_ID)
@@ -35,12 +35,12 @@ def main(args):
         try:
             logger.info(f"Processing folder: {behavior_folder}")
             
-            # Process velocity and define immobility
+            # Process velocity and define mobility
             processed_velo = behavior.processed_velocity()
-            immobility = behavior.define_mobility(velocity=processed_velo, framerate=args.frame_rate)
+            mobility = behavior.define_mobility(velocity=processed_velo)
             
-            # Save immobility data to JSON
-            immobility.to_json(output_path, orient="records", indent=4)
+            # Save mobility data to JSON
+            mobility.to_json(output_path, orient="records", indent=4)
             logger.info(f"Successfully processed and saved data for folder: {behavior_folder}")
         
         except FileNotFoundError:
@@ -55,10 +55,9 @@ if __name__ == "__main__":
     logger = LoggingSetup.configure_logger("export_mobility_immobility.log")
 
     # Parsing command-line arguments
-    parser = AP(description="Export mobility and immobility data to JSON files.")
+    parser = AP(description="Export mobility and immobility data to JSON files (mobility = 1).")
     parser.add_argument("mouse_ID", help="the ID of the mouse to analyze.")
     parser.add_argument("-o", "--overwrite", help="overwrite existing files", action="store_true")
-    parser.add_argument("-fr", "--frame_rate", help="frame rate of the recording", type=int, default=10)
     args = parser.parse_args()
 
     # Call the main function with the parsed arguments

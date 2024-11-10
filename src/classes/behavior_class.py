@@ -1,6 +1,8 @@
 import json
 from dataclasses import dataclass
 from os.path import dirname, join
+from pathlib import Path
+from typing import Union
 
 import numpy as np
 import pandas as pd
@@ -14,7 +16,12 @@ class BehaviorData:
     Initialized with the path to the behavior folder.
     """
 
-    behavior_folder: str
+    behavior_dir: Union[str, Path]
+
+    def __post_init__(self):
+        if isinstance(self.behavior_dir, str):
+            self.behavior_dir = Path(self.behavior_dir)
+
 
     def processed_velocity(self, file_name: str = "filtered_velocity.json") -> np.ndarray:
         """
@@ -31,15 +38,15 @@ class BehaviorData:
         - ValueError: If the velocity file cannot be read as valid JSON.
         """
         try:
-            with open(join(self.behavior_folder, file_name), "r") as f:
+            with open(join(self.behavior_dir, file_name), "r") as f:
                 processed_velocity = np.array(json.load(f))
         except FileNotFoundError:
             raise FileNotFoundError(
-                f"Could not find processed velocity file '{file_name}' in {self.behavior_folder}."
+                f"Could not find processed velocity file '{file_name}' in {self.behavior_dir}."
             )
         except json.JSONDecodeError:
             raise ValueError(
-                f"Could not decode JSON from velocity file '{file_name}' in {self.behavior_folder}."
+                f"Could not decode JSON from velocity file '{file_name}' in {self.behavior_dir}."
             )
         return processed_velocity
 
@@ -71,7 +78,7 @@ class BehaviorData:
             times and True signifies mobile times.
         """
         # Getting the framerate from the imaging metadata
-        tSeries_path = dirname(dirname(self.behavior_folder))
+        tSeries_path = (self.behavior_dir).parents[1]
         imaging = ic.Imaging(tSeries_path)
         imaging_metadata = imaging.get_imaging_metadata()
 

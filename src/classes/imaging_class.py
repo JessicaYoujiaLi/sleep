@@ -1,8 +1,9 @@
 """Class dealing with imaging metadata and data"""
-
 import json
 from dataclasses import dataclass
 from os.path import join
+from pathlib import Path
+from typing import Union
 
 
 @dataclass
@@ -10,7 +11,11 @@ class Imaging:
     """Class for imaging metadata and data.
     Initialized with a t-series folder path."""
 
-    tseries_dir: str
+    tseries_dir: Union[str, Path]
+
+    def __post_init__(self):
+        if isinstance(self.tseries_dir, str):
+            self.tseries_dir = Path(self.tseries_dir)
 
     def get_imaging_metadata(self):
         """Returns the imaging metadata from the t-series folder."""

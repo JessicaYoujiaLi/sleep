@@ -43,7 +43,7 @@ class EegData:
         except FileNotFoundError as e:
             raise FileNotFoundError(f"Could not find the file at '{file_path}'. Please ensure the file path is correct.") from e
 
-    def import_scored_eeg(self, eeg_file: str, processed: bool = True) -> pd.DataFrame:
+    def import_scored_eeg(self, eeg_file: str = "sleep.csv", processed: bool = True) -> pd.DataFrame:
         """
         Imports scored EEG data from a CSV file. The file should be located
         in the specified EEG folder.
@@ -51,7 +51,7 @@ class EegData:
         Parameters:
         ----------
         eeg_file : str
-            The name of the scored EEG file.
+            The name of the scored EEG file. Default is 'sleep.csv'.
         processed : bool, optional
             If True, the function will add columns for the different brain states.
 
@@ -62,18 +62,32 @@ class EegData:
         """
         scored_eeg_data_path = join(self.eeg_folder, eeg_file)
         eeg_df = self._load_csv_file(scored_eeg_data_path)
-        eeg_df.columns = ["time", "score"]
+
+        # Check if the DataFrame has only one column
+        if eeg_df.shape[1] == 1:
+            # Rename the column to "score" and create a "time" column from the index
+            eeg_df.columns = ["score"]
+            eeg_df["time"] = eeg_df.index
+            eeg_df = eeg_df[["time", "score"]]  # Ensure it is a DataFrame
+        elif eeg_df.shape[1] == 2:
+            # If the DataFrame already has two columns, rename them to "time" and "score"
+            eeg_df.columns = ["time", "score"]
+        else:
+            raise ValueError(f"Unexpected number of columns in {eeg_file}: {eeg_df.shape[1]}")
+
+        # Reorder columns to have "time" first
+        eeg_df = eeg_df[["time", "score"]]
+
         if processed:
+            # Process scores into brain state columns
             eeg_df["score"] = eeg_df["score"].astype(int)
-            eeg_df["awake"] = eeg_df["score"] == 0
-            eeg_df["NREM"] = eeg_df["score"] == 1
-            eeg_df["REM"] = eeg_df["score"] == 2
-            eeg_df["other"] = eeg_df["score"] == 3
-            # replace True/False with 1/0
-            eeg_df[["awake", "NREM", "REM", "other"]] = eeg_df[
-                ["awake", "NREM", "REM", "other"]
-            ].astype(int)
+            eeg_df["awake"] = (eeg_df["score"] == 0).astype(int)
+            eeg_df["NREM"] = (eeg_df["score"] == 1).astype(int)
+            eeg_df["REM"] = (eeg_df["score"] == 2).astype(int)
+            eeg_df["other"] = (eeg_df["score"] == 3).astype(int)
+
         return eeg_df
+
 
     def load_processed_velocity_eeg(self, file_name: str = "velo_eeg.csv") -> pd.DataFrame:
         """
