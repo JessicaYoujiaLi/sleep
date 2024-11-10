@@ -1,70 +1,65 @@
 """
 Script to export mobility and immobility data to JSON file.
-
 """
 
-import logging
-import sys
 from argparse import ArgumentParser as AP
 from os.path import exists, join
 
 from src.classes import behavior_class as bc
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    filename="parsing_log.log",
-    filemode="a",
-)  # Append to the log file
-
-# Add a StreamHandler to print log messages to the terminal
-console_handler = logging.StreamHandler(sys.stdout)
-console_handler.setLevel(logging.INFO)
-formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-console_handler.setFormatter(formatter)
-logging.getLogger().addHandler(console_handler)
-
-logger = logging.getLogger(__name__)
+from src.classes import mouse_class as mc
+from src.classes.logging_setup import LoggingSetup  # Import the logging setup module
 
 
-def main():
+def main(args):
     """
     Export mobility and immobility data to JSON files.
 
     Args:
-        mouse_ID (str): The ID of the mouse to analyze.
+        args: Parsed command-line arguments containing mouse_ID, overwrite, and frame_rate.
     """
+    # Initialize MouseData object
+    mouse_data = mc.MouseData(args.mouse_ID)
+    
+    # Find behavior folders
+    behavior_folders = mouse_data.find_behavior_folders()
+    
+    for behavior_folder in behavior_folders:
+        behavior = bc.BehaviorData(behavior_folder)
+        output_path = join(behavior_folder, "mobility_immobility.json")
+        
+        # Skip folder if JSON file exists and overwrite flag is not set
+        if exists(output_path) and not args.overwrite:
+            logger.info(f"Skipping folder {behavior_folder} as file already exists.")
+            continue
+
+        try:
+            logger.info(f"Processing folder: {behavior_folder}")
+            
+            # Process velocity and define immobility
+            processed_velo = behavior.processed_velocity()
+            immobility = behavior.define_immobility(velocity=processed_velo, framerate=args.frame_rate)
+            
+            # Save immobility data to JSON
+            immobility.to_json(output_path, orient="records", indent=4)
+            logger.info(f"Successfully processed and saved data for folder: {behavior_folder}")
+        
+        except FileNotFoundError:
+            logger.warning(f"Folder {behavior_folder} not found.")
+        
+        except Exception as e:
+            logger.error(f"Failed to process folder {behavior_folder}. Error: {e}", exc_info=True)
+            # Continue with the next folder without stopping the script
+
+if __name__ == "__main__":
+    # Configure the logger using the LoggingSetup class
+    logger = LoggingSetup.configure_logger("export_mobility_immobility.log")
+
+    # Parsing command-line arguments
     parser = AP(description="Export mobility and immobility data to JSON files.")
     parser.add_argument("mouse_ID", help="the ID of the mouse to analyze.")
     parser.add_argument("-o", "--overwrite", help="overwrite existing files", action="store_true")
     parser.add_argument("-fr", "--frame_rate", help="frame rate of the recording", type=int, default=10)
     args = parser.parse_args()
 
-    # Load the behavior data.
-    behavior = bc.behaviorData(args.mouse_ID)
-
-    for behavior_folder in behavior.behavior_folders:
-        output_path = join(behavior_folder, "mobility_immobility.json")
-        if exists(output_path) and not args.overwrite:
-            logger.info(f"Skipping folder {behavior_folder} as file already exists.")
-            continue
-        try:
-            logger.info(f"Processing folder: {behavior_folder}")
-            processed_velo = bc.processed_velocity(behavior_folder)
-            immobility = bc.define_immobility(velocity=processed_velo, framerate=args.frame_rate)            
-            immobility.to_json(output_path, orient="records", indent=4)
-            logger.info(
-                f"Successfully processed and saved data for folder: {behavior_folder}"
-            )
-        except FileNotFoundError:
-            logger.warning(f"Folder {behavior_folder} not found.")
-        except Exception as e:
-            logger.error(
-                f"Failed to process folder {behavior_folder}. Error: {e}", exc_info=True
-            )
-            # Continue with the next folder without stopping the script
-
-
-if __name__ == "__main__":
-    main()
+    # Call the main function with the parsed arguments
+    main(args)

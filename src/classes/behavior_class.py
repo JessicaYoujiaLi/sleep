@@ -1,9 +1,11 @@
 import json
 from dataclasses import dataclass
-from os.path import join
+from os.path import dirname, join
 
 import numpy as np
 import pandas as pd
+
+from src.classes import imaging_class as ic
 
 
 @dataclass
@@ -26,20 +28,24 @@ class BehaviorData:
 
         Raises:
         - FileNotFoundError: If the velocity file is not found in the specified folder.
+        - ValueError: If the velocity file cannot be read as valid JSON.
         """
         try:
             with open(join(self.behavior_folder, file_name), "r") as f:
                 processed_velocity = np.array(json.load(f))
         except FileNotFoundError:
             raise FileNotFoundError(
-                f"Could not find processed velocity file in {self.behavior_folder}, or it is named differently."
+                f"Could not find processed velocity file '{file_name}' in {self.behavior_folder}."
+            )
+        except json.JSONDecodeError:
+            raise ValueError(
+                f"Could not decode JSON from velocity file '{file_name}' in {self.behavior_folder}."
             )
         return processed_velocity
 
-    def define_immobility(
+    def define_mobility(
         self,
-        velocity: np.ndarray,
-        framerate: float = 10,
+        velocity: np.ndarray,        
         threshold: float = 1.0,
         min_duration: float = 1.0,
         min_periods: int = 1,
@@ -51,26 +57,47 @@ class BehaviorData:
         previous min_duration seconds.
 
         Default values for min_duration and threshold are taken from:
-        Stefanini...Fusi et al. 2018 (https://doi.org/10.1101/292953)
+        Stefanini et al., 2018 (https://doi.org/10.1101/292953)
 
         Args:
             velocity (np.ndarray): The filtered and processed velocity of the mouse.
-            framerate (float): The framerate of the velocity data.
             threshold (float): The threshold value for defining immobility.
-            min_duration (float): The minimum duration of immobility.
-            min_periods (int): The minimum number of periods to consider immobile.
-            center (bool): Whether to center the immobile periods.
+            min_duration (float): The minimum duration (in seconds) to consider the mouse immobile.
+            min_periods (int): The minimum number of observations required to be considered immobile.
+            center (bool): Whether to center the rolling window.
 
         Returns:
-            pd.Series: A one-dimensional series of booleans, where True signifies mobile
-            times and False signifies immobile times.
+            pd.Series: A one-dimensional series of booleans, where False signifies immobile
+            times and True signifies mobile times.
         """
+        # Getting the framerate from the imaging metadata
+        tSeries_path = dirname(dirname(self.behavior_folder))
+        imaging = ic.Imaging(tSeries_path)
+        imaging_metadata = imaging.get_imaging_metadata()
 
+        sequence_type = imaging_metadata.get("sequence_type")
+        if sequence_type == "single plane":
+            framerate = float(round(imaging_metadata.get("fps", 0), 2))
+        elif sequence_type == "multi plane":
+            framerate = imaging.multiplane_frame_rate()
+            if isinstance(framerate, str) or framerate == 0.0:
+                raise ValueError(f"Invalid frame rate obtained for multiplane imaging: {framerate}")
+        else:
+            raise ValueError(f"Unknown imaging sequence type: {sequence_type}")
+
+        # Calculating mobile/immobile periods
         velocity_series = pd.Series(velocity).astype(float)
         window_size = int(framerate * min_duration)
+        
+        # Ensure window_size is at least 1 to avoid rolling errors
+        if window_size < 1:
+            raise ValueError(f"Calculated window size must be at least 1, but got {window_size}.")
+
         rolling_max_vel = velocity_series.rolling(
             window_size, min_periods=min_periods, center=center
         ).max()
-        mobile_immobile = (rolling_max_vel > threshold).astype(bool)
 
-        return mobile_immobile
+        # Define mobility/immobility periods
+        mobility = (rolling_max_vel > threshold).astype(bool)
+
+        return mobility
