@@ -37,7 +37,7 @@ def main(args):
             
             # Process velocity and define immobility
             processed_velo = behavior.processed_velocity()
-            immobility = behavior.define_immobility(velocity=processed_velo, framerate=args.frame_rate)
+            immobility = behavior.define_mobility(velocity=processed_velo, framerate=args.frame_rate)
             
             # Save immobility data to JSON
             immobility.to_json(output_path, orient="records", indent=4)
