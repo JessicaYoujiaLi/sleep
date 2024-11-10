@@ -1,20 +1,18 @@
 # created by: @gergelyturi
-"""Core functions for the project."""
+"""Functions designed to interact with Google Sheets and Google Drive.
+still WIP and mostly untested."""
 from __future__ import print_function
-from pprint import pprint
 
 from pathlib import Path
-import pandas as pd
-
-from google.colab import auth
-import gspread
-from google.auth import default
-from google.colab import drive
+from pprint import pprint
 
 import google.auth
+import gspread
+import pandas as pd
+from google.auth import default
+from google.colab import auth, drive
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-
 
 
 class GoogleDrive:

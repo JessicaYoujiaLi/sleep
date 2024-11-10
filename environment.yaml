@@ -19,5 +19,6 @@ dependencies:
   - pip:
     - pymysql
     - ydata-profilingy
+    - h5py
 
 

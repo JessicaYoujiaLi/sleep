@@ -11,3 +11,4 @@ tifffile
 # interactive plots
 plotly
 nbformat
+h5py
