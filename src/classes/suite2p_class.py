@@ -60,6 +60,47 @@ class Suite2p:
             values_iplane
         )  # palne index will be an empty array in case of a single plane dataset
         return is_cell_boolean, raw_signal, plane_index
+    
+    def get_iscell_positions(self, iscell_file: str = "iscell", plane: Optional[int] = None) -> np.ndarray:
+        """
+        Get the positions (indices) of cells marked as '1' in the iscell.npy file,
+        with an optional plane filter.
+
+        Args:
+            iscell_file (str, optional): The name of the iscell file. Defaults to 'iscell.npy'.
+            plane (int, optional): The plane index. If provided, returns positions of cells in the specified plane.
+
+        Returns:
+            np.ndarray: An array of indices where the first column of iscell.npy is 1.
+
+        Raises:
+            FileNotFoundError: If the iscell file cannot be found in either directory.
+        """
+        try:
+            # Load data from combined directory
+            iscells, _, plane_index = self._load_data_from_dir(COMBINED_DIR_NAME, iscell_file)
+        except DirectoryNotFoundError:
+            # Fallback to plane0 directory if combined not found
+            warnings.warn(f"Combined directory not found, falling back to {PLANE0_DIR_NAME}.")
+            iscells, _, plane_index = self._load_data_from_dir(PLANE0_DIR_NAME, iscell_file)
+
+        # Extract positions where the first column is 1
+        positions_of_ones = np.where(iscells)[0]
+
+        # Filter by plane if applicable
+        if plane_index.size == 0:
+            if plane is not None:
+                warnings.warn(
+                    f"Single plane dataset detected, but plane {plane} was specified. Ignoring plane parameter."
+                )
+        else:
+            if plane is not None:
+                if plane < 0 or plane > np.max(plane_index):
+                    raise ValueError(f"Plane {plane} is out of range")
+                positions_of_ones = positions_of_ones[plane_index[positions_of_ones] == plane]
+
+        return positions_of_ones
+
 
     def is_cell_signal(
         self, signal_source: str = "F", plane: Optional[int] = None
