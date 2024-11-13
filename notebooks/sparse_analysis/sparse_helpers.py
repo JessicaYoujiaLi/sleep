@@ -3,6 +3,7 @@ author: @gergelyturi
 date: 11/10/2024
 """
 
+import json
 from os.path import join
 
 import matplotlib.pyplot as plt
@@ -111,28 +112,32 @@ def data_calculation(dataframe: pd.DataFrame, cond1: str, cond2: str,
     
     return calculated_data
 
-def calculate_mean_correlations_triangle(dataframe: pd.DataFrame, cond1: str = "awake pearson",
-                                          cond2: str = "NREM pearson") -> dict:
+def calculate_mean_correlations_triangle(dataframe: pd.DataFrame, sima_folder: str, cell_id: int,
+                                        cond1: str = "awake pearson", cond2: str = "NREM pearson",
+                                        save_data: bool = True) -> dict:
     """
     Calculate the mean correlations for the "soma" and non-"soma" labels in the lower triangle
-    of correlation matrices.
+    of correlation matrices and optionally save the results as a JSON file.
     
     Args:
         dataframe (pd.DataFrame): DataFrame containing the correlation data with columns
             for retained labels and conditions.
         cond1 (str, optional): The column name for the first condition's correlation values.
-          Defaults to "awake pearson".
+            Defaults to "awake pearson".
         cond2 (str, optional): The column name for the second condition's correlation values.
-          Defaults to "NREM pearson".
+            Defaults to "NREM pearson".
+        save_data (bool, optional): Whether to save the results as a JSON file. Defaults to True.
+        save_path (str, optional): The path where to save the JSON file. Defaults to the current directory.
+        cell_id (int, optional): An identifier for the cell being analyzed. Defaults to 0.
     
     Returns:
         dict: A dictionary containing the mean correlation values for "soma" and non-"soma"
           labels for both conditions.
             The keys are formatted as follows:
-            - "soma_mean_<cond1>"
-            - "non_soma_mean_<cond1>"
-            - "soma_mean_<cond2>"
-            - "non_soma_mean_<cond2>"
+            - "soma_dendrite_<cond1>"
+            - "dendrite_dendrite_mean_<cond1>"
+            - "soma_dendrite_<cond2>"
+            - "dendrite_dendrite_mean_<cond2>"
     
     Raises:
         ValueError: If the label "soma" is not found in the unique labels extracted from the retained labels.
@@ -173,33 +178,46 @@ def calculate_mean_correlations_triangle(dataframe: pd.DataFrame, cond1: str = "
         cond2_matrix[soma_index, :soma_index],  # Values left of the diagonal in the "soma" row
         cond2_matrix[(soma_index+1):, soma_index]  # Values below the diagonal in the "soma" column
     ))
-
+    
     # Extract the rest of the values in the lower triangle excluding the "soma" row/column for both conditions
-    cond1_non_soma_values = [
+    cond1_dendrite_dendrite_values = [
         cond1_matrix[i, j]
         for i, j in zip(lower_triangle_indices[0], lower_triangle_indices[1])
         if i != soma_index and j != soma_index
     ]
-    cond2_non_soma_values = [
+    cond2_dendrite_dendrite_values = [
         cond2_matrix[i, j]
         for i, j in zip(lower_triangle_indices[0], lower_triangle_indices[1])
         if i != soma_index and j != soma_index
     ]
     
     # Calculate the mean for "soma" and non-"soma" for both conditions
-    soma_mean_cond1 = np.mean(cond1_soma_values)
-    non_soma_mean_cond1 = np.mean(cond1_non_soma_values)
+    soma_dendrite_cond1 = np.mean(cond1_soma_values)
+    dendrite_dendrite_mean_cond1 = np.mean(cond1_dendrite_dendrite_values)
 
-    soma_mean_cond2 = np.mean(cond2_soma_values)
-    non_soma_mean_cond2 = np.mean(cond2_non_soma_values)
+    soma_dendrite_cond2 = np.mean(cond2_soma_values)
+    dendrite_dendrite_mean_cond2 = np.mean(cond2_dendrite_dendrite_values)
 
     # Return the results as a dictionary
     results = {
-        f"soma_mean_{cond1}": soma_mean_cond1,
-        f"non_soma_mean_{cond1}": non_soma_mean_cond1,
-        f"soma_mean_{cond2}": soma_mean_cond2,
-        f"non_soma_mean_{cond2}": non_soma_mean_cond2,
+        f"soma_dendrite_{cond1}": soma_dendrite_cond1,
+        f"dendrite_dendrite_mean_{cond1}": dendrite_dendrite_mean_cond1,
+        f"soma_dendrite_{cond2}": soma_dendrite_cond2,
+        f"dendrite_dendrite_mean_{cond2}": dendrite_dendrite_mean_cond2,
     }
+
+    # Save results as a JSON file if requested
+    if save_data:
+        cell_num = str(cell_id)
+        save_filename = f"mean_correlations_{cond1}_{cond2}_cell_{cell_num}.json"
+        save_filepath = join(sima_folder, save_filename)
+
+        try:
+            with open(save_filepath, 'w') as json_file:
+                json.dump(results, json_file, indent=4)
+            print(f"Results saved to {save_filepath}")
+        except Exception as e:
+            print(f"Error saving results to {save_filepath}: {e}")
 
     return results
 
@@ -476,10 +494,10 @@ def plot_correlation_heatmap(dataframe: pd.DataFrame, cond1: str, cond2: str,
     if savefig:
         cell_num = str(cell_id)
         plt.savefig(
-            join(sima_folder, f"correlation_heatmap_{cond1}_{cond2}_{cell_num}.png"), dpi=300
+            join(sima_folder, f"soma_dend_corr_{cond1}_{cond2}_{cell_num}.png"), dpi=300
         )
         plt.savefig(
-            join(sima_folder, f"correlation_heatmap_{cond1}_{cond2}_{cell_num}.svg"),
+            join(sima_folder, f"soma_dend_corr_{cond1}_{cond2}_{cell_num}.svg"),
             format="svg",
             dpi=300,
         )
@@ -487,56 +505,74 @@ def plot_correlation_heatmap(dataframe: pd.DataFrame, cond1: str, cond2: str,
     # Display the plot
     plt.show()
 
-def plot_mean_correlations_line(results: dict, cond1: str = "awake pearson", cond2: str = "NREM pearson"):
+def plot_mean_correlations_line(results: dict, sima_folder: str, cell_id: int,
+                                cond1: str = "awake pearson", cond2: str = "NREM pearson",
+                                savefig: bool = True):
     """
     Plots the mean correlations for two conditions (default: "awake pearson" and "NREM pearson") 
-    for soma and non-soma data.
+    for soma-dendrite and non-soma (dendrite-dendrite) data on a single figure.
 
     Parameters:
-    results (dict): A dictionary containing the mean correlation values. The keys should be in the 
-                    format "soma_mean_<condition>" and "non_soma_mean_<condition>".
-    cond1 (str): The first condition to plot (default is "awake pearson").
-    cond2 (str): The second condition to plot (default is "NREM pearson").
+    results (dict): Dictionary containing the mean correlation values for soma and non-soma data.
+                    Expected keys are 'soma_dendrite_<cond1>', 'dendrite_dendrite_mean_<cond1>', 
+                    'soma_dendrite_<cond2>', and 'dendrite_dendrite_mean_<cond2>'.
+    sima_folder (str): Path to the folder where the plot images will be saved.
+    cell_id (int): Identifier for the cell being analyzed.
+    cond1 (str, optional): Label for the first condition. Default is "awake pearson".
+    cond2 (str, optional): Label for the second condition. Default is "NREM pearson".
+    savefig (bool, optional): If True, saves the plot as PNG and SVG files in the specified folder. Default is True.
 
-    The function creates a 1 row, 2 column figure with shared y-axis limits. Each subplot shows 
-    the mean correlations for soma and non-soma data for the specified conditions.
+    Returns:
+    None
     """
     # Extract values for plotting
-    soma_mean_cond1 = results[f"soma_mean_{cond1}"]
-    non_soma_mean_cond1 = results[f"non_soma_mean_{cond1}"]
+    soma_dendrite_cond1 = results[f"soma_dendrite_{cond1}"]
+    dendrite_dendrite_mean_cond1 = results[f"dendrite_dendrite_mean_{cond1}"]
 
-    soma_mean_cond2 = results[f"soma_mean_{cond2}"]
-    non_soma_mean_cond2 = results[f"non_soma_mean_{cond2}"]
+    soma_dendrite_cond2 = results[f"soma_dendrite_{cond2}"]
+    dendrite_dendrite_mean_cond2 = results[f"dendrite_dendrite_mean_{cond2}"]
 
     # Determine the y-axis limits based on the minimum and maximum values in the results dictionary
-    all_values = [soma_mean_cond1, non_soma_mean_cond1, soma_mean_cond2, non_soma_mean_cond2]
+    all_values = [soma_dendrite_cond1, dendrite_dendrite_mean_cond1, soma_dendrite_cond2, dendrite_dendrite_mean_cond2]
     y_min = min(all_values) * 0.9  # Add a bit of margin for visibility
     y_max = max(all_values) * 1.1  # Add a bit of margin for visibility
 
-    # Create a 1 row, 2 column figure
-    fig, axes = plt.subplots(1, 2, figsize=(15, 5), sharey=True)
-
     # Labels for the x-axis
-    x_labels = ['Soma', 'Non-Soma']
+    x_labels = ['Soma-Dendrite', 'Dendrite-Dendrite']
     x_positions = range(len(x_labels))
 
+    # Create a figure for the combined plot
+    plt.figure(figsize=(10, 6))
+
     # Plot for cond1 (awake pearson)
-    axes[0].plot(x_positions, [soma_mean_cond1, non_soma_mean_cond1], marker='o', linestyle='-', color='#66c2a5', linewidth=2)
-    axes[0].set_title(f"Mean Correlations ({cond1})")
-    axes[0].set_xticks(x_positions)
-    axes[0].set_xticklabels(x_labels)
-    axes[0].set_ylabel("Mean Correlation")
-    axes[0].set_ylim([y_min, y_max])
+    plt.plot(x_positions, [soma_dendrite_cond1, dendrite_dendrite_mean_cond1], marker='o',
+              linestyle='-', color='#66c2a5', linewidth=2, label=f"{cond1}")
 
     # Plot for cond2 (NREM pearson)
-    axes[1].plot(x_positions, [soma_mean_cond2, non_soma_mean_cond2], marker='o', linestyle='-', color='#fc8d62', linewidth=2)
-    axes[1].set_title(f"Mean Correlations ({cond2})")
-    axes[1].set_xticks(x_positions)
-    axes[1].set_xticklabels(x_labels)
-    axes[1].set_ylim([y_min, y_max])
+    plt.plot(x_positions, [soma_dendrite_cond2, dendrite_dendrite_mean_cond2],
+              marker='o', linestyle='-', color='#fc8d62', linewidth=2, label=f"{cond2}")
 
-    # Tight layout for better spacing
-    plt.tight_layout()
+    # Set the x-ticks, labels, and y-axis limits
+    plt.xticks(x_positions, x_labels)
+    plt.ylabel("Mean Correlation")
+    plt.ylim([y_min, y_max])
+
+    # Add a title and legend
+    plt.title("Mean Correlations for Soma-Dendrite and Dendrite-Dendrite")
+    plt.legend()
+
+    # Save the plot if needed
+    if savefig:
+        cell_num = str(cell_id)
+        plt.savefig(
+            join(sima_folder, f"soma_dend_corr_combined_{cond1}_{cond2}_{cell_num}.png"), dpi=300
+        )
+        plt.savefig(
+            join(sima_folder, f"soma_dend_corr_combined_{cond1}_{cond2}_{cell_num}.svg"),
+            format="svg",
+            dpi=300,
+        )
 
     # Show the plot
+    plt.tight_layout()
     plt.show()
