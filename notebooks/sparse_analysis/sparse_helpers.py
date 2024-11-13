@@ -13,6 +13,18 @@ import seaborn as sns
 # ----------------------------- Dataframe filtering functions -----------------------------
 
 def filter_dataframe(df: pd.DataFrame, condition: str) -> pd.DataFrame:
+    """
+    Filters a DataFrame based on a given condition and drops unwanted columns.
+
+    Parameters:
+    df (pd.DataFrame): The input DataFrame to be filtered.
+    condition (str): The condition to filter rows. Rows where the column
+    specified by this condition is True will be retained.
+
+    Returns:
+    pd.DataFrame: The filtered DataFrame with unwanted columns dropped.
+    list: A list of columns that are retained in the filtered DataFrame.
+    """
     # Filter rows based on the given condition and drop unwanted columns
     filtered_df = df[df[condition] == True]
     # Dynamically drop columns that are not needed for correlation calculation
@@ -28,7 +40,26 @@ def filter_dataframe(df: pd.DataFrame, condition: str) -> pd.DataFrame:
 
 def data_calculation(dataframe: pd.DataFrame, cond1: str, cond2: str,
                     sima_folder: str, cell_id: int, calculation: str,
-                    save_data: bool = True) -> pd.DataFrame:    
+                    save_data: bool = True) -> pd.DataFrame:
+    """
+    Perform data calculations (Pearson correlation or standard deviation) on a DataFrame 
+    filtered by two conditions and optionally save the results to a CSV file.
+    
+    Parameters:
+    dataframe (pd.DataFrame): The input DataFrame containing the data.
+    cond1 (str): The first condition to filter the DataFrame.
+    cond2 (str): The second condition to filter the DataFrame.
+    sima_folder (str): The folder path where the CSV file will be saved.
+    cell_id (int): The cell identifier used in the CSV file name.
+    calculation (str): The type of calculation to perform ('pearson' or 'stdev').
+    save_data (bool): Whether to save the calculated data to a CSV file (default is True).
+    
+    Returns:
+    pd.DataFrame: A DataFrame containing the calculated data for plotting.
+    Raises:
+    ValueError: If an invalid calculation method is provided.
+    """
+    
     # Make a copy of the original DataFrame to avoid modifying it directly
     df = dataframe.copy()
 
@@ -80,7 +111,32 @@ def data_calculation(dataframe: pd.DataFrame, cond1: str, cond2: str,
     
     return calculated_data
 
-def calculate_mean_correlations_triangle(dataframe: pd.DataFrame, cond1: str = "awake pearson", cond2: str = "NREM pearson") -> dict:
+def calculate_mean_correlations_triangle(dataframe: pd.DataFrame, cond1: str = "awake pearson",
+                                          cond2: str = "NREM pearson") -> dict:
+    """
+    Calculate the mean correlations for the "soma" and non-"soma" labels in the lower triangle
+    of correlation matrices.
+    
+    Args:
+        dataframe (pd.DataFrame): DataFrame containing the correlation data with columns
+            for retained labels and conditions.
+        cond1 (str, optional): The column name for the first condition's correlation values.
+          Defaults to "awake pearson".
+        cond2 (str, optional): The column name for the second condition's correlation values.
+          Defaults to "NREM pearson".
+    
+    Returns:
+        dict: A dictionary containing the mean correlation values for "soma" and non-"soma"
+          labels for both conditions.
+            The keys are formatted as follows:
+            - "soma_mean_<cond1>"
+            - "non_soma_mean_<cond1>"
+            - "soma_mean_<cond2>"
+            - "non_soma_mean_<cond2>"
+    
+    Raises:
+        ValueError: If the label "soma" is not found in the unique labels extracted from the retained labels.
+    """
     # Extract retained labels and correlation values for both conditions
     retained_labels = dataframe["Retained Labels"].values
     cond1_values = dataframe[cond1].values
@@ -149,11 +205,29 @@ def calculate_mean_correlations_triangle(dataframe: pd.DataFrame, cond1: str = "
 
 # ----------------------------- plotting functions -----------------------------
 
-def plot_soma_denrite_traces(dataframe: pd.DataFrame, sima_folder: str,
+def plot_soma_denrite_traces(dataframe: pd.DataFrame, sima_folder: str,                            
                               cell_id: int, savefig: bool = True):
     """
-    Plot the traces of the soma and dendrite of a neuron. This will try to plot everything in the dataframe.
+    Plots soma and dendrite activity traces with mobility states color-coded.
+    
+    Parameters:
+    -----------
+    dataframe : pd.DataFrame
+        DataFrame containing the activity data. Each column represents a cell's activity,
+        and there should be a column named 'mobility' indicating the mobility state.
+    sima_folder : str
+        Path to the folder where the figures will be saved.
+    cell_id : int
+        Identifier for the cell, used in the filename of the saved figures.
+    savefig : bool, optional
+        If True, the figure will be saved as both PNG and SVG files in the specified folder.
+        Default is True.
+    
+    Returns:
+    --------
+    None
     """
+    
     df = dataframe.copy()
     # Downsample the data by a factor of 10
     downsampled_df = df.iloc[::10, :]
@@ -218,8 +292,23 @@ def plot_soma_denrite_traces(dataframe: pd.DataFrame, sima_folder: str,
         )
     plt.show()
 
-def plot_xcorr_scatter(xcorr_dataframe: pd.DataFrame, cond1:str, cond2: str,
-                                  sima_folder: str, cell_id: int, savefig: bool = True):
+def plot_xcorr_scatter(xcorr_dataframe: pd.DataFrame,
+                        cond1:str, cond2: str, sima_folder: str, cell_id: int, savefig: bool = True):    
+    """
+    Plots a scatter plot of Pearson correlations between two conditions and optionally saves the figure.
+
+    Parameters:
+    xcorr_dataframe (pd.DataFrame): DataFrame containing the Pearson correlation data.
+    cond1 (str): The first condition to be plotted on the x-axis.
+    cond2 (str): The second condition to be plotted on the y-axis.
+    sima_folder (str): The folder path where the figure will be saved.
+    cell_id (int): The cell identifier used in the filename when saving the figure.
+    savefig (bool, optional): If True, saves the figure as both PNG and SVG files. Default is True.
+    
+    Returns:
+    None
+    """
+
     calculated_data = xcorr_dataframe.copy()
     # Create the scatter plot
     plt.figure(figsize=(10, 6))
@@ -257,7 +346,21 @@ def plot_xcorr_scatter(xcorr_dataframe: pd.DataFrame, cond1:str, cond2: str,
     plt.show()
 
 def plot_std_dev_bars(std_dev_dataframe: pd.DataFrame, cond1: str, cond2: str,
-                      sima_folder: str, cell_id: int, savefig: bool = True):
+                       sima_folder: str, cell_id: int, savefig: bool = True):
+    """
+    Plots a bar chart comparing the standard deviations of two conditions and optionally saves the figure.
+
+    Parameters:
+    std_dev_dataframe (pd.DataFrame): DataFrame containing the standard deviation data and retained labels.
+    cond1 (str): The first condition to compare.
+    cond2 (str): The second condition to compare.
+    sima_folder (str): The folder path where the figure will be saved if savefig is True.
+    cell_id (int): The ID of the cell being analyzed, used in the filename if savefig is True.
+    savefig (bool): Whether to save the figure as a PNG and SVG file. Default is True.
+
+    Returns:
+    None
+    """
     # Extract the labels for the x-axis from the 'Retained Labels' column
     retained_labels = std_dev_dataframe["Retained Labels"].values
 
@@ -291,8 +394,30 @@ def plot_std_dev_bars(std_dev_dataframe: pd.DataFrame, cond1: str, cond2: str,
     # Display the plot
     plt.show()
 
-def plot_correlation_heatmap(dataframe: pd.DataFrame, cond1: str, cond2: str,
+def plot_correlation_heatmap(dataframe: pd.DataFrame, cond1: str, cond2: str,                            
                              sima_folder: str, cell_id: int, savefig: bool = True):
+    """
+    Plots a correlation heatmap for two conditions and saves the figure if specified.
+    Parameters:
+    -----------
+    dataframe : pd.DataFrame
+        DataFrame containing the correlation data with columns for retained labels and 
+        Pearson correlation values for the specified conditions.
+    cond1 : str
+        The first condition to plot.
+    cond2 : str
+        The second condition to plot.
+    sima_folder : str
+        The folder path where the figure will be saved.
+    cell_id : int
+        The cell identifier used in the filename when saving the figure.
+    savefig : bool, optional
+        If True, the figure will be saved to the specified folder. Default is True.
+    Returns:
+    --------
+    None
+    """
+
     # Extract the retained labels and correlation values
     retained_labels = dataframe["Retained Labels"].values
     cond1_values = dataframe[f"{cond1} pearson"].values
@@ -363,6 +488,19 @@ def plot_correlation_heatmap(dataframe: pd.DataFrame, cond1: str, cond2: str,
     plt.show()
 
 def plot_mean_correlations_line(results: dict, cond1: str = "awake pearson", cond2: str = "NREM pearson"):
+    """
+    Plots the mean correlations for two conditions (default: "awake pearson" and "NREM pearson") 
+    for soma and non-soma data.
+
+    Parameters:
+    results (dict): A dictionary containing the mean correlation values. The keys should be in the 
+                    format "soma_mean_<condition>" and "non_soma_mean_<condition>".
+    cond1 (str): The first condition to plot (default is "awake pearson").
+    cond2 (str): The second condition to plot (default is "NREM pearson").
+
+    The function creates a 1 row, 2 column figure with shared y-axis limits. Each subplot shows 
+    the mean correlations for soma and non-soma data for the specified conditions.
+    """
     # Extract values for plotting
     soma_mean_cond1 = results[f"soma_mean_{cond1}"]
     non_soma_mean_cond1 = results[f"non_soma_mean_{cond1}"]
