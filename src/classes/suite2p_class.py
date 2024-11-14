@@ -79,6 +79,8 @@ class Suite2p:
         try:
             # Load data from combined directory
             iscells, _, plane_index = self._load_data_from_dir(COMBINED_DIR_NAME, iscell_file)
+            if iscell_file != "iscell":
+                NotImplementedError("Only iscell.npy is supported for combined directory.")
         except DirectoryNotFoundError:
             # Fallback to plane0 directory if combined not found
             warnings.warn(f"Combined directory not found, falling back to {PLANE0_DIR_NAME}.")
