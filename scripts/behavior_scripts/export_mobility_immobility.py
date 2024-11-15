@@ -36,7 +36,7 @@ def main(args):
             logger.info(f"Processing folder: {behavior_folder}")
             
             # Process velocity and define mobility
-            processed_velo = behavior.processed_velocity()
+            processed_velo = behavior.load_processed_velocity()
             mobility = behavior.define_mobility(velocity=processed_velo)
             
             # Save mobility data to JSON
