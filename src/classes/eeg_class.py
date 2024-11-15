@@ -5,6 +5,8 @@ date: 2023-10-16
 
 from dataclasses import dataclass
 from os.path import join
+from pathlib import Path
+from typing import Union
 
 import pandas as pd
 
@@ -17,7 +19,11 @@ class EegData:
     
     """
 
-    eeg_folder: str
+    eeg_dir: Union[str, Path]
+
+    def __post_init__(self):
+        if isinstance(self.behavior_dir, str):
+            self.behavior_dir = Path(self.behavior_dir)
 
     def _load_csv_file(self, file_path: str) -> pd.DataFrame:
         """
