@@ -1,6 +1,6 @@
 import json
 from dataclasses import dataclass
-from os.path import dirname, join
+from os.path import join
 from pathlib import Path
 from typing import Union
 
@@ -23,7 +23,7 @@ class BehaviorData:
             self.behavior_dir = Path(self.behavior_dir)
 
 
-    def processed_velocity(self, file_name: str = "filtered_velocity.json") -> np.ndarray:
+    def load_processed_velocity(self, file_name: str = "filtered_velocity.json") -> np.ndarray:
         """
         Return the processed velocity of the mouse.
 
