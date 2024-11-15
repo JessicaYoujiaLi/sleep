@@ -66,7 +66,7 @@ class EegData:
         pd.DataFrame
             A DataFrame containing the scored EEG data with optional brain state columns.
         """
-        scored_eeg_data_path = join(self.eeg_folder, eeg_file)
+        scored_eeg_data_path = join(self.eeg_dir, eeg_file)
         eeg_df = self._load_csv_file(scored_eeg_data_path)
 
         # Check if the DataFrame has only one column
@@ -109,52 +109,56 @@ class EegData:
         pd.DataFrame
             A DataFrame containing the processed velocity data.
         """
-        processed_velo_eeg_file_path = join(self.eeg_folder, file_name)
+        processed_velo_eeg_file_path = join(self.eeg_dir, file_name)
         return self._load_csv_file(processed_velo_eeg_file_path)
 
-def brain_state_filter(velo_eeg_df: pd.DataFrame, states: list) -> pd.DataFrame:
-    """
-    Filters the given DataFrame based on the specified brain states.
+    def brain_state_filter(self, states: list = ["awake_immobile",
+                                                 "awake_mobile",
+                                                 "NREM",
+                                                 "REM",
+                                                 "other"]) -> pd.DataFrame:
+        """
+        Filters the given DataFrame based on the specified brain states.
 
-    Args:
-    - velo_eeg_df: A pandas DataFrame containing EEG data.
-    - states: A list of strings representing the brain states to filter for.
+        Args:
+        - velo_eeg_df: A pandas DataFrame containing EEG data.
+        - states: A list of strings representing the brain states to filter for.
 
-    Returns:
-    - A pandas DataFrame containing the filtered EEG data.
-    """
-    conditions = {}
-    for state in states:
-        if state == "awake_immobile":
-            conditions[state] = (
-                ~velo_eeg_df["NREM"]
-                & ~velo_eeg_df["REM"]
-                & ~velo_eeg_df["mobile_immobile"]
-                & ~velo_eeg_df["other"]
-            )
-        elif state == "awake_mobile":
-            conditions[state] = (
-                ~velo_eeg_df["NREM"]
-                & ~velo_eeg_df["REM"]
-                & velo_eeg_df["mobile_immobile"]
-                & ~velo_eeg_df["other"]
-            )
-        elif state == "NREM":
-            conditions[state] = (
-                velo_eeg_df["NREM"]
-                & ~velo_eeg_df["REM"]
-                & ~velo_eeg_df["other"]
-                & ~velo_eeg_df["mobile_immobile"]
-            )
-        elif state == "REM":
-            conditions[state] = (
-                ~velo_eeg_df["NREM"]
-                & velo_eeg_df["REM"]
-                & ~velo_eeg_df["other"]
-                & ~velo_eeg_df["mobile_immobile"]
-            )
-        elif state == "other":
-            conditions[state] = velo_eeg_df["other"]
-        else:
-            print("Unknown state:", state)
-    return pd.concat(conditions, axis=1)
+        Returns:
+        - A pandas DataFrame containing the filtered EEG data.
+        """   
+        conditions = {}
+        for state in states:
+            if state == "awake_immobile":
+                conditions[state] = (
+                    ~velo_eeg_df["NREM"]
+                    & ~velo_eeg_df["REM"]
+                    & ~velo_eeg_df["mobile_immobile"]
+                    & ~velo_eeg_df["other"]
+                )
+            elif state == "awake_mobile":
+                conditions[state] = (
+                    ~velo_eeg_df["NREM"]
+                    & ~velo_eeg_df["REM"]
+                    & velo_eeg_df["mobile_immobile"]
+                    & ~velo_eeg_df["other"]
+                )
+            elif state == "NREM":
+                conditions[state] = (
+                    velo_eeg_df["NREM"]
+                    & ~velo_eeg_df["REM"]
+                    & ~velo_eeg_df["other"]
+                    & ~velo_eeg_df["mobile_immobile"]
+                )
+            elif state == "REM":
+                conditions[state] = (
+                    ~velo_eeg_df["NREM"]
+                    & velo_eeg_df["REM"]
+                    & ~velo_eeg_df["other"]
+                    & ~velo_eeg_df["mobile_immobile"]
+                )
+            elif state == "other":
+                conditions[state] = velo_eeg_df["other"]
+            else:
+                print("Unknown state:", state)
+        return pd.concat(conditions, axis=1)

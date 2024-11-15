@@ -58,7 +58,8 @@ class BehaviorData:
         min_periods: int = 1,
         center: bool = True,
     ) -> pd.Series:
-        """Define time periods of immobility based on a rolling window of velocity.
+        """
+        Define time periods of immobility based on a rolling window of velocity.
 
         A Mouse is considered immobile if velocity has not exceeded the threshold for the
         previous min_duration seconds.
