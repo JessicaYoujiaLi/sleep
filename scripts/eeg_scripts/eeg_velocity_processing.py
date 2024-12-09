@@ -60,7 +60,8 @@ def main(eeg_folder_path, file_name: str = "sleep.csv"):
     velocity_loaded = False
     for activity_file_name in activity_file_names:
         try:
-            activity_file_path = join(dirname(dirname(eeg_folder_path)), "behavior", activity_file_name)
+            activity_file_path = join(dirname(eeg_folder_path), "behavior", activity_file_name)
+            print(f"Attempting to load velocity data from {activity_file_path}...")
             if activity_file_name.endswith(".csv"):
                 velocity = pd.read_csv(activity_file_path)
             elif activity_file_name.endswith(".json"):

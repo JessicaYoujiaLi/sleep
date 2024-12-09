@@ -22,8 +22,8 @@ class EegData:
     eeg_dir: Union[str, Path]
 
     def __post_init__(self):
-        if isinstance(self.behavior_dir, str):
-            self.behavior_dir = Path(self.behavior_dir)
+        if isinstance(self.eeg_dir, str):
+            self.eeg_dir = Path(self.eeg_dir)
 
     def _load_csv_file(self, file_path: str) -> pd.DataFrame:
         """
