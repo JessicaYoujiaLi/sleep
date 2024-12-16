@@ -1,3 +1,22 @@
+"""Class for handling Suite2p data.
+Attributes:
+    s2p_folder (Union[str, Path]): Path to the Suite2p folder.
+    iscell_filename (str): Name of the iscell file. Defaults to "iscell".
+Methods:
+    __post_init__():
+        Converts s2p_folder to a Path object if it is a string.
+    _load_data_from_dir(subdir_name, signal_source):
+    _get_raw_signal(signal_source="F", plane=None):
+    get_iscell_indices(plane=None):
+        Get the positions (indices) of cells marked as '1' in the iscell.npy file, with an optional plane filter.
+    get_cells(plane=None):
+    get_npil(plane=None):
+    get_spikes(plane=None):
+    load_avg_image():
+    plot_time_avg_image(ops_array, save_path=None):
+    _save_or_display_plot(fig, save_path=None):
+    save_time_avg_as_tiff(ops_array, save_path):"""
+
 import datetime
 import warnings
 from dataclasses import dataclass
@@ -25,6 +44,7 @@ class Suite2p:
     Initialized with the path to the suite2p folder"""
 
     s2p_folder: Union[str, Path]
+    iscell_filename: str = "iscell"
 
     def __post_init__(self):
         if isinstance(self.s2p_folder, str):
@@ -48,7 +68,11 @@ class Suite2p:
         if not isdir(path):
             raise DirectoryNotFoundError(f"Directory {path} does not exist")
 
-        iscells = np.load(join(path, "iscell.npy"), allow_pickle=True)
+        iscell_path = join(path, f"{self.iscell_filename}.npy")
+        if not exists(iscell_path):
+            raise FileNotFoundError(f"File {self.iscell_filename} not found in {path}")
+
+        iscells = np.load(iscell_path, allow_pickle=True)
         # Extract and convert the first column to boolean
         is_cell_boolean = iscells[:, 0].astype(bool)
 
@@ -61,50 +85,7 @@ class Suite2p:
         )  # palne index will be an empty array in case of a single plane dataset
         return is_cell_boolean, raw_signal, plane_index
     
-    def get_iscell_positions(self, iscell_file: str = "iscell", plane: Optional[int] = None) -> np.ndarray:
-        """
-        Get the positions (indices) of cells marked as '1' in the iscell.npy file,
-        with an optional plane filter.
-
-        Args:
-            iscell_file (str, optional): The name of the iscell file. Defaults to 'iscell.npy'.
-            plane (int, optional): The plane index. If provided, returns positions of cells in the specified plane.
-
-        Returns:
-            np.ndarray: An array of indices where the first column of iscell.npy is 1.
-
-        Raises:
-            FileNotFoundError: If the iscell file cannot be found in either directory.
-        """
-        try:
-            # Load data from combined directory
-            iscells, _, plane_index = self._load_data_from_dir(COMBINED_DIR_NAME, iscell_file)
-            if iscell_file != "iscell":
-                NotImplementedError("Only iscell.npy is supported for combined directory.")
-        except DirectoryNotFoundError:
-            # Fallback to plane0 directory if combined not found
-            warnings.warn(f"Combined directory not found, falling back to {PLANE0_DIR_NAME}.")
-            iscells, _, plane_index = self._load_data_from_dir(PLANE0_DIR_NAME, iscell_file)
-
-        # Extract positions where the first column is 1
-        positions_of_ones = np.where(iscells)[0]
-
-        # Filter by plane if applicable
-        if plane_index.size == 0:
-            if plane is not None:
-                warnings.warn(
-                    f"Single plane dataset detected, but plane {plane} was specified. Ignoring plane parameter."
-                )
-        else:
-            if plane is not None:
-                if plane < 0 or plane > np.max(plane_index):
-                    raise ValueError(f"Plane {plane} is out of range")
-                positions_of_ones = positions_of_ones[plane_index[positions_of_ones] == plane]
-
-        return positions_of_ones
-
-
-    def is_cell_signal(
+    def _get_raw_signal(
         self, signal_source: str = "F", plane: Optional[int] = None
     ) -> np.ndarray:
         """
@@ -143,6 +124,47 @@ class Suite2p:
                 signal = np.where(iscells)[0]
 
         return raw_signal[signal, :]
+    
+    def get_iscell_indices(self, plane: Optional[int] = None) -> np.ndarray:
+        """
+        Get the positions (indices) of cells marked as '1' in the iscell.npy file,
+        with an optional plane filter.
+
+        Args:
+            iscell_file (str, optional): The name of the iscell file. Defaults to 'iscell.npy'.
+            plane (int, optional): The plane index. If provided, returns positions of cells in the specified plane.
+
+        Returns:
+            np.ndarray: An array of indices where the first column of iscell.npy is 1.
+
+        Raises:
+            FileNotFoundError: If the iscell file cannot be found in either directory.
+        """
+        try:
+            # Load data from combined directory
+            iscells, _, plane_index = self._load_data_from_dir(COMBINED_DIR_NAME, self.iscell_filename)
+        except DirectoryNotFoundError:
+            # Fallback to plane0 directory if combined not found
+            warnings.warn(f"Combined directory not found, falling back to {PLANE0_DIR_NAME}.")
+            iscells, _, plane_index = self._load_data_from_dir(PLANE0_DIR_NAME, self.iscell_filename)
+
+        # Extract positions where the first column is 1
+        positions_of_ones = np.where(iscells)[0]
+
+        # Filter by plane if applicable
+        if plane_index.size == 0:
+            if plane is not None:
+                warnings.warn(
+                    f"Single plane dataset detected, but plane {plane} was specified. Ignoring plane parameter."
+                )
+        else:
+            if plane is not None:
+                if plane < 0 or plane > np.max(plane_index):
+                    raise ValueError(f"Plane {plane} is out of range")
+                positions_of_ones = positions_of_ones[plane_index[positions_of_ones] == plane]
+
+        return positions_of_ones
+
 
     def get_cells(self, plane=None):
         """
@@ -154,7 +176,7 @@ class Suite2p:
         Returns:
             numpy.ndarray: An array of cell signals for the fluorescence data.
         """
-        return self.is_cell_signal(signal_source="F", plane=plane)
+        return self._get_raw_signal(signal_source="F", plane=plane)
 
     def get_npil(self, plane=None):
         """
@@ -170,7 +192,7 @@ class Suite2p:
         npil : numpy.ndarray
             The neuropil signal for each cell.
         """
-        return self.is_cell_signal(signal_source="Fneu", plane=plane)
+        return self._get_raw_signal(signal_source="Fneu", plane=plane)
 
     def get_spikes(self, plane=None):
         """
@@ -185,7 +207,7 @@ class Suite2p:
         -------
         numpy.ndarray: Array of shape (num_cells, num_frames) containing the spike signal for each cell.
         """
-        return self.is_cell_signal(signal_source="spks", plane=plane)
+        return self._get_raw_signal(signal_source="spks", plane=plane)
 
     def load_avg_image(self):
         """
@@ -208,6 +230,21 @@ class Suite2p:
         return ops_array
 
     def plot_time_avg_image(self, ops_array, save_path=None):
+        """
+        Plots the time-averaged images from the given ops_array.
+
+        Parameters:
+        ops_array (list): A list of dictionaries, each containing an image under the key "meanImg".
+        save_path (str, optional): The path where the plot should be saved. If None, the plot will be displayed.
+
+        Returns:
+        matplotlib.figure.Figure: The figure object containing the plot, or None if ops_array is None.
+
+        Notes:
+        - If ops_array contains only one element, a single plot will be created.
+        - If ops_array contains multiple elements, a grid of subplots will be created.
+        - The images are flipped upside down to match the field of view (FOV).
+        """
         if ops_array is None:
             return None
 
@@ -222,7 +259,7 @@ class Suite2p:
                 figsize=(plot_width_per_image, plot_height_per_image)
             )
             # the image is flipped upside down to match the FOV
-            image_data = np.flipud(ops_array[0]["meanImg"])
+            image_data = ops_array[0]["meanImg"]
             ax.imshow(image_data, cmap="gray")
             ax.set_title("Mean Image")
             ax.axis("off")
@@ -242,7 +279,7 @@ class Suite2p:
 
             # Loop through each item and plot
             for i, ops in enumerate(ops_array):
-                image_data = np.flipud(ops["meanImg"])
+                image_data = ops["meanImg"]
                 axes[i].imshow(image_data, cmap="gray")
                 axes[i].set_title(f"Mean Image {i+1}")
                 axes[i].axis("off")
@@ -255,6 +292,17 @@ class Suite2p:
         return fig
 
     def _save_or_display_plot(self, fig, save_path=None):
+        """
+        Save or display a matplotlib figure.
+
+        Parameters:
+        fig (matplotlib.figure.Figure): The figure to save or display.
+        save_path (str, optional): The directory path where the figure should be saved. 
+                                   If None, the figure will be displayed instead of saved.
+
+        Returns:
+        None
+        """
         if save_path is not None:
             filename = "time_avg_image.png"
             full_save_path = join(save_path, filename)
@@ -302,7 +350,7 @@ class Suite2p:
 
         # Loop through each item in ops_array and prepare the image data
         for ops in ops_array:
-            image_data = np.flipud(ops["meanImg"])
+            image_data = ops["meanImg"]
             
             # Normalize the image data to be between 0 and 255, similar to plot_time_avg_image
             image_data = np.clip(image_data, 0, None)  # Clip negative values to 0
